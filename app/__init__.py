@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -33,11 +33,10 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(portfolio_bp, url_prefix='/portfolio')
 
-    # redirect root to products listing
+    # Página de construcción en la ruta raíz
     @app.route('/')
     def index():
-        from flask import redirect, url_for
-        return redirect(url_for('products.list'))
+        return render_template('coming_soon.html')
 
     with app.app_context():
         db.create_all()

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almapunt - Próximamente</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+        
+        .logo-container {
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .message {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-number {
+            display: block;
+            font-size: 3rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            min-width: 80px;
+        }
+        
+        .countdown-label {
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .notify-form {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        .notify-form .input-group {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .notify-form .form-control {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            flex: 1;
+        }
+        
+        .notify-form .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .notify-form .form-control:focus {
+            background: transparent;
+            box-shadow: none;
+            color: white;
+        }
+        
+        .notify-form .btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .notify-form .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            opacity: 0.8;
+        }
+        
+        .social-links a:hover {
+            opacity: 1;
+            transform: translateY(-3px);
+        }
+        
+        .team-access {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .team-access p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+        
+        .team-access .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .team-access .btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .team-access .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .countdown {
+                gap: 1rem;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+                min-width: 60px;
+                padding: 0.75rem 1rem;
+            }
+            
+            .notify-form .input-group {
+                flex-direction: column;
+                border-radius: 12px;
+            }
+            
+            .notify-form .btn {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles background -->
+    <div class="particles">
+        <div class="particle" style="width: 80px; height: 80px; left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 60px; height: 60px; left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 100px; height: 100px; left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 40px; height: 40px; left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="width: 70px; height: 70px; left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="width: 50px; height: 50px; left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="width: 90px; height: 90px; left: 70%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 45px; height: 45px; left: 80%; animation-delay: 4s;"></div>
+        <div class="particle" style="width: 65px; height: 65px; left: 90%; animation-delay: 1s;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='img/brand/logo.png') }}" alt="Almapunt Logo" class="logo">
+        </div>
+
+        <!-- Main heading -->
+        <h1>¡Próximamente!</h1>
+        <p class="subtitle">Estamos trabajando en algo especial</p>
+
+        <!-- Message -->
+        <p class="message">
+            Nuestra nueva tienda online está en construcción. 
+            Muy pronto podrás descubrir nuestra colección de productos artesanales únicos, 
+            hechos con amor y dedicación para ti.
+        </p>
+
+        <!-- Countdown (optional, can be dynamic) -->
+        <div class="countdown">
+            <div class="countdown-item">
+                <span class="countdown-number" id="days">00</span>
+                <span class="countdown-label">Días</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="hours">00</span>
+                <span class="countdown-label">Horas</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="minutes">00</span>
+                <span class="countdown-label">Min</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="seconds">00</span>
+                <span class="countdown-label">Seg</span>
+            </div>
+        </div>
+
+        <!-- Notify form (placeholder) -->
+        <form class="notify-form" onsubmit="event.preventDefault(); alert('¡Gracias! Te avisaremos cuando estemos listos.');">
+            <div class="input-group">
+                <input type="email" class="form-control" placeholder="Tu email para avisarte del lanzamiento" required>
+                <button type="submit" class="btn">
+                    <i class="bi bi-bell"></i> Avisarme
+                </button>
+            </div>
+        </form>
+
+        <!-- Social links (optional) -->
+        <div class="social-links">
+            <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" title="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" title="Twitter"><i class="bi bi-twitter-x"></i></a>
+            <a href="mailto:contacto@almapunt.es" title="Email"><i class="bi bi-envelope"></i></a>
+        </div>
+
+        <!-- Team access links -->
+        <div class="team-access">
+            <p>Acceso para el equipo:</p>
+            <div class="btn-group">
+                <a href="/products/" class="btn">
+                    <i class="bi bi-grid"></i> Productos
+                </a>
+                <a href="/portfolio/" class="btn">
+                    <i class="bi bi-images"></i> Portfolio
+                </a>
+                <a href="/admin/" class="btn">
+                    <i class="bi bi-gear"></i> Admin
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown script -->
+    <script>
+        // Set launch date (15 days from now as example)
+        const launchDate = new Date();
+        launchDate.setDate(launchDate.getDate() + 15);
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
