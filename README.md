@@ -343,6 +343,115 @@ python -m pytest tests/
 
 ---
 
+## 🎛️ Control de Versiones (Git/GitHub)
+
+### Repositorio Oficial
+```
+URL: https://github.com/soralis05-ai/carrito.git
+Rama: main
+```
+
+### Configuración de Git
+
+**Git instalado en:** `C:\Program Files\Git\bin\git.exe`  
+**Credenciales:** Guardadas en Credential Manager de Windows
+
+### Token de Desarrollo
+
+| Característica | Detalle |
+|----------------|---------|
+| **Ubicación** | `%USERPROFILE%\AppData\Local\Git\credentials` |
+| **Permisos** | Lectura/Escritura (`repo`, `workflow`) |
+| **Seguridad** | Encriptado por Windows, solo Git puede leerlo |
+| **NO está en** | Ningún archivo .md, .txt, ni en GitHub |
+
+### Gestión de Credenciales
+
+Para ver, cambiar o eliminar el token guardado:
+
+```cmd
+scripts\git-credentials.bat
+```
+
+Este script proporciona un menú interactivo para:
+1. ✅ Verificar que el token está guardado
+2. ⚠️ Ver el token (no recomendado en público)
+3. 🗑️ Eliminar credenciales (para cambiar token)
+4. 🔌 Verificar conexión con GitHub
+
+### Flujo de Trabajo Diario
+
+```cmd
+# Antes de empezar a trabajar:
+git pull origin main
+
+# Después de hacer cambios:
+git add .
+git commit -m "Descripción clara del cambio"
+git push origin main    # No pide token, ya está guardado
+
+# Ver estado del repositorio:
+git status
+
+# Ver historial de commits:
+git log --oneline
+
+# Ver cambios sin subir:
+git diff
+```
+
+### Cambio de Token
+
+Si necesitas cambiar el token de desarrollo:
+
+1. Ejecuta: `scripts\git-credentials.bat`
+2. Selecciona opción 3 (Eliminar credenciales)
+3. La próxima vez que hagas `git push`, Git te pedirá el nuevo token
+4. Pega tu nuevo token de GitHub
+
+### Token de Producción
+
+Para desplegar en producción (Vercel, Railway, etc.):
+
+1. **Crea un token NUEVO** en GitHub:
+   - URL: https://github.com/settings/tokens/new
+   - Nombre: `almapunt-production`
+   - Permisos: `public_repo` (solo lectura)
+
+2. **Configúralo en el servidor** como variable de entorno:
+   ```
+   GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
+   ```
+
+3. **NUNCA uses tu token de desarrollo en producción**
+
+### Archivos de Configuración
+
+| Archivo | Propósito | ¿En GitHub? |
+|---------|-----------|-------------|
+| `scripts/git-credentials.bat` | Gestor visual de tokens | ✅ Sí |
+| `docs/GITHUB_SETUP.md` | Guía detallada de configuración | ✅ Sí |
+| `.git-config-local.txt` | Referencia de configuración local | ✅ Sí |
+| `.gitignore` | Excluye .env, .venv, __pycache__ | ✅ Sí |
+| `.env` | Variables de entorno reales | ❌ No (seguridad) |
+
+### Solución de Problemas
+
+| Problema | Solución |
+|----------|----------|
+| "Permission denied" al hacer push | Token expirado. Elimina credenciales y vuelve a ingresar |
+| "Git no se reconoce" | Usa ruta completa: `"C:\Program Files\Git\bin\git.exe"` |
+| Conflictos de merge | Edita archivos, busca `<<<<<<<`, resuelve y haz commit |
+| Olvidé hacer commit | `git commit --amend -m "Nuevo mensaje"` |
+
+### Más Información
+
+- **Guía completa:** `docs/GITHUB_SETUP.md`
+- **Gestor de tokens:** `scripts/git-credentials.bat`
+- **Referencia local:** `.git-config-local.txt`
+
+---
+
 ## 📧 Contacto
 
 - **Dominio:** almapunt.com
