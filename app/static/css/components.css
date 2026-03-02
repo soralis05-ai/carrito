@@ -1,0 +1,141 @@
+/* Product Grid & Cards */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.product-card {
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    border: none;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    background: #f8f9fa;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.image-container .watermark {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.7);
+    background: rgba(102, 126, 234, 0.8);
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.product-card h3 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.price {
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.2rem;
+}
+
+/* Product Detail Page */
+.image-container-large {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f8f9fa;
+}
+
+.image-container-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Carousel styles */
+.carousel-inner {
+    border-radius: 12px;
+    height: 100%;
+}
+
+.carousel-item {
+    height: 600px;
+}
+
+.carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 40px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.watermark-large {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.8);
+    background: rgba(102, 126, 234, 0.8);
+    padding: 3px 6px;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.price-large {
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+}
+
+.product-info {
+    padding: 1rem;
+}
+
+.product-detail {
+    max-width: 1200px;
+    margin: 0 auto;
+}

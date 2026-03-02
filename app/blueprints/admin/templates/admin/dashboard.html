@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Panel de Administración</h1>
+
+    <h3 class="mb-3">Gestión de Productos</h3>
+    <div class="row g-4 mb-4">
+        <!-- Tarjeta: Subir Producto -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-primary mb-3">
+                        <i class="bi bi-cloud-upload"></i>
+                    </div>
+                    <h5 class="card-title">Subir Producto</h5>
+                    <p class="card-text text-muted">Agrega nuevos productos con su imagen, precio y descripción.</p>
+                    <a href="{{ url_for('admin.upload_product') }}" class="btn btn-primary">Ir a Subir</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Listar Productos -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-success mb-3">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h5 class="card-title">Ver Productos</h5>
+                    <p class="card-text text-muted">Consulta y gestiona el catálogo completo de productos.</p>
+                    <a href="{{ url_for('admin.list_products') }}" class="btn btn-success">Ver Catálogo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Configuración -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-info mb-3">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                    <h5 class="card-title">Configuración</h5>
+                    <p class="card-text text-muted">Ajustes del sitio y dominio.</p>
+                    <div class="mt-3">
+                        <span class="badge bg-secondary">Dominio: {{ config.DOMAIN }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Portfolio Personal</h3>
+    <div class="row g-4">
+        <!-- Tarjeta: Portfolio Dashboard -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-warning mb-3">
+                        <i class="bi bi-images"></i>
+                    </div>
+                    <h5 class="card-title">Gestionar Portfolio</h5>
+                    <p class="card-text text-muted">Administra tu página de presentación y fotos destacadas.</p>
+                    <a href="{{ url_for('portfolio.admin_dashboard') }}" class="btn btn-warning text-white">Ir al Portfolio</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta: Ver Portfolio Público -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-secondary mb-3">
+                        <i class="bi bi-eye"></i>
+                    </div>
+                    <h5 class="card-title">Ver Portfolio Público</h5>
+                    <p class="card-text text-muted">Visualiza cómo ven los visitantes tu página de portfolio.</p>
+                    <a href="{{ url_for('portfolio.show') }}" class="btn btn-outline-secondary" target="_blank">Ver Página</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de información -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="alert alert-info d-flex align-items-center">
+                <i class="bi bi-info-circle me-3 fs-4"></i>
+                <div>
+                    <strong>Información:</strong> Las imágenes se redimensionan automáticamente y se convierten a formato WEBP para optimización.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

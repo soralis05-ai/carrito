@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Información - Portfolio{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('portfolio.admin_dashboard') }}" class="text-decoration-none">Portfolio</a></li>
+                    <li class="breadcrumb-item active">Información</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-circle"></i> Información del Portfolio</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control", placeholder="Tu nombre o el de tu negocio") }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small">{{ form.name.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control", placeholder="Ej: Artesanía y Productos Únicos") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control", rows=5, placeholder="Cuéntanos sobre ti y tus productos...") }}
+                            {% if form.bio.errors %}
+                                <div class="text-danger small">{{ form.bio.errors[0] }}</div>
+                            {% endif %}
+                            <div class="form-text">Máximo 1000 caracteres</div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="mb-3">Datos de Contacto</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control", type="email", placeholder="tu@email.com") }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small">{{ form.email.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control", placeholder="+34 600 000 000") }}
+                                {% if form.phone.errors %}
+                                    <div class="text-danger small">{{ form.phone.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('portfolio.admin_dashboard') }}" class="btn btn-secondary">Cancelar</a>
+                            {{ form.submit(class="btn btn-success") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

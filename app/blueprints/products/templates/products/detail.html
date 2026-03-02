@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <!-- Carrusel de imágenes -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0">
+                <div class="image-container-large">
+                    {% if product.images and product.images|length > 1 %}
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            {% for image in product.images %}
+                            <button type="button" data-bs-target="#productCarousel" data-bs-slide-to="{{ loop.index0 }}" 
+                                    {% if loop.first %}class="active" aria-current="true"{% endif %}
+                                    aria-label="Imagen {{ loop.index }}"></button>
+                            {% endfor %}
+                        </div>
+                        <div class="carousel-inner">
+                            {% for image in product.images %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <img src="{{ url_for('static', filename='img/productos/' + image) }}" 
+                                     alt="{{ product.name }} - {{ loop.index }}" 
+                                     class="d-block w-100">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+                    {% else %}
+                    <!-- Single image without carousel -->
+                    <img src="{{ url_for('static', filename='img/productos/' + product.image) }}"
+                         alt="{{ product.name }}"
+                         class="img-fluid rounded">
+                    {% endif %}
+                    <span class="watermark-large">{{ config.DOMAIN }}</span>
+                </div>
+                
+                <!-- Miniaturas -->
+                {% if product.images and product.images|length > 1 %}
+                <div class="row mt-3 g-2">
+                    {% for image in product.images %}
+                    <div class="col-2">
+                        <img src="{{ url_for('static', filename='img/productos/' + image) }}" 
+                             alt="{{ product.name }}" 
+                             class="img-thumbnail {% if loop.first %}border-primary{% endif %}" 
+                             style="width: 100%; height: 80px; object-fit: cover; cursor: pointer;"
+                             data-bs-target="#productCarousel" 
+                             data-bs-slide-to="{{ loop.index0 }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Información del producto -->
+        <div class="col-md-6">
+            <div class="product-info">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('products.list') }}" class="text-decoration-none">Productos</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+                    </ol>
+                </nav>
+                <h1 class="mb-3">{{ product.name }}</h1>
+                <p class="price-large text-primary mb-4">{{ product.price }}</p>
+                <div class="description mb-4">
+                    <h5 class="mb-2">Descripción</h5>
+                    <p class="text-muted">{{ product.description }}</p>
+                </div>
+                
+                <!-- Selector de cantidad -->
+                <div class="mb-4">
+                    <label class="form-label">Cantidad:</label>
+                    <div class="input-group" style="max-width: 150px;">
+                        <button class="btn btn-outline-secondary" type="button" onclick="decreaseQty()">-</button>
+                        <input type="number" id="quantity" class="form-control text-center" value="1" min="1" max="99">
+                        <button class="btn btn-outline-secondary" type="button" onclick="increaseQty()">+</button>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex">
+                    <button class="btn btn-primary btn-lg" type="button">
+                        <i class="bi bi-cart-plus"></i> Añadir al Carrito
+                    </button>
+                    <a href="{{ url_for('products.list') }}" class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                </div>
+                
+                <!-- Información adicional -->
+                <div class="mt-4 p-3 bg-light rounded">
+                    <ul class="list-unstyled mb-0 small">
+                        <li><i class="bi bi-check-circle text-success"></i> Envío en 24-48 horas</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Devolución gratuita</li>
+                        <li><i class="bi bi-check-circle text-success"></i> Pago seguro</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function increaseQty() {
+    const input = document.getElementById('quantity');
+    if (input.value < 99) input.value = parseInt(input.value) + 1;
+}
+
+function decreaseQty() {
+    const input = document.getElementById('quantity');
+    if (input.value > 1) input.value = parseInt(input.value) - 1;
+}
+
+// Click en miniaturas para cambiar slide
+document.querySelectorAll('.img-thumbnail').forEach(thumb => {
+    thumb.addEventListener('click', function() {
+        // Remover borde activo de todas
+        document.querySelectorAll('.img-thumbnail').forEach(t => t.classList.remove('border-primary'));
+        // Añadir a la actual
+        this.classList.add('border-primary');
+    });
+});
+</script>
+{% endblock %}

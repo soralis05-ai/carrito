@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Producto - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Subir Producto</li>
+                </ol>
+            </nav>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Producto</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control", placeholder="Ej: Conejito de Peluche") }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small">{{ form.name.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                {{ form.price.label(class="form-label") }}
+                                <div class="input-group">
+                                    {{ form.price(class="form-control", placeholder="19.99", step="0.01") }}
+                                    <span class="input-group-text">€</span>
+                                </div>
+                                {% if form.price.errors %}
+                                    <div class="text-danger small">{{ form.price.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows=4, placeholder="Descripción del producto...") }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h5 class="mb-3"><i class="bi bi-images"></i> Imágenes del Producto</h5>
+                        <p class="text-muted small">Sube hasta 5 imágenes. La primera es obligatoria y será la imagen principal.</p>
+                        
+                        <!-- Imagen 1 (Obligatoria) -->
+                        <div class="mb-3">
+                            {{ form.image.label(class="form-label") }} <span class="text-danger">*</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.image(class="form-control") }}
+                                    {% if form.image.errors %}
+                                        <div class="text-danger small">{% for error in form.image.errors %}{{ error }}<br>{% endfor %}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="preview1" class="border rounded p-2 text-center" style="min-height: 100px;">
+                                        <span class="text-muted small">Vista previa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Imagen 2 (Opcional) -->
+                        <div class="mb-3">
+                            {{ form.image2.label(class="form-label") }} <span class="text-muted">(Opcional)</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.image2(class="form-control") }}
+                                    {% if form.image2.errors %}
+                                        <div class="text-danger small">{% for error in form.image2.errors %}{{ error }}<br>{% endfor %}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="preview2" class="border rounded p-2 text-center" style="min-height: 100px;">
+                                        <span class="text-muted small">Vista previa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Imagen 3 (Opcional) -->
+                        <div class="mb-3">
+                            {{ form.image3.label(class="form-label") }} <span class="text-muted">(Opcional)</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.image3(class="form-control") }}
+                                    {% if form.image3.errors %}
+                                        <div class="text-danger small">{% for error in form.image3.errors %}{{ error }}<br>{% endfor %}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="preview3" class="border rounded p-2 text-center" style="min-height: 100px;">
+                                        <span class="text-muted small">Vista previa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Imagen 4 (Opcional) -->
+                        <div class="mb-3">
+                            {{ form.image4.label(class="form-label") }} <span class="text-muted">(Opcional)</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.image4(class="form-control") }}
+                                    {% if form.image4.errors %}
+                                        <div class="text-danger small">{% for error in form.image4.errors %}{{ error }}<br>{% endfor %}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="preview4" class="border rounded p-2 text-center" style="min-height: 100px;">
+                                        <span class="text-muted small">Vista previa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Imagen 5 (Opcional) -->
+                        <div class="mb-3">
+                            {{ form.image5.label(class="form-label") }} <span class="text-muted">(Opcional)</span>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.image5(class="form-control") }}
+                                    {% if form.image5.errors %}
+                                        <div class="text-danger small">{% for error in form.image5.errors %}{{ error }}<br>{% endfor %}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="preview5" class="border rounded p-2 text-center" style="min-height: 100px;">
+                                        <span class="text-muted small">Vista previa</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancelar</a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Vista previa de imágenes
+function setupImagePreview(inputId, previewId) {
+    document.getElementById(inputId).addEventListener('change', function(e) {
+        const preview = document.getElementById(previewId);
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Vista previa" style="max-height: 150px; max-width: 100%; border-radius: 4px;">';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<span class="text-muted small">Vista previa</span>';
+        }
+    });
+}
+
+setupImagePreview('image', 'preview1');
+setupImagePreview('image2', 'preview2');
+setupImagePreview('image3', 'preview3');
+setupImagePreview('image4', 'preview4');
+setupImagePreview('image5', 'preview5');
+</script>
+{% endblock %}

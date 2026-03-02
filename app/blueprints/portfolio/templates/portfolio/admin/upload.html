@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Foto - Portfolio{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('portfolio.admin_dashboard') }}" class="text-decoration-none">Portfolio</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('portfolio.admin_items') }}" class="text-decoration-none">Items</a></li>
+                    <li class="breadcrumb-item active">Subir Foto</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0"><i class="bi bi-cloud-upload"></i> Nuevo Item del Portfolio</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {{ form.title(class="form-control", placeholder="Ej: Colección de Primavera") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small">{{ form.title.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows=3, placeholder="Descripción opcional del producto...") }}
+                            {% if form.description.errors %}
+                                <div class="text-danger small">{{ form.description.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.image.label(class="form-label") }} <span class="text-danger">*</span>
+                                {{ form.image(class="form-control") }}
+                                <div class="form-text">Formatos: JPG, PNG, WEBP, AVIF</div>
+                                {% if form.image.errors %}
+                                    <div class="text-danger small">{% for error in form.image.errors %}{{ error }}<br>{% endfor %}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Vista Previa</label>
+                                <div id="imagePreview" class="border rounded p-2 text-center" style="min-height: 150px;">
+                                    <span class="text-muted small">La vista previa aparecerá aquí</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.order.label(class="form-label") }}
+                            {{ form.order(class="form-control", placeholder="999", maxlength=3) }}
+                            <div class="form-text">Número para ordenar (menor = primero). Default: 999</div>
+                            {% if form.order.errors %}
+                                <div class="text-danger small">{{ form.order.errors[0] }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('portfolio.admin_items') }}" class="btn btn-secondary">Cancelar</a>
+                            {{ form.submit(class="btn btn-info text-white") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Vista previa de imagen
+document.getElementById('image').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const file = e.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" alt="Vista previa" style="max-height: 200px; max-width: 100%; border-radius: 8px;">';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

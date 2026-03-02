@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.flaskenv
+!.env.example
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+temp/
+
+# Uploaded files
+app/static/img/productos/*.jpg
+app/static/img/productos/*.png
+app/static/img/productos/*.webp
+app/static/img/productos/*.avif
+app/static/img/productos/*_temp*
+app/static/img/productos/*_thumb*
+app/static/img/productos/*_detail*
+app/static/img/portfolio/*.webp
+app/static/img/portfolio/*_temp*
+app/static/img/portfolio/*_thumb*
+app/static/img/portfolio/*_detail*
+
+# Test coverage
+htmlcov/
+.coverage
+.pytest_cache/

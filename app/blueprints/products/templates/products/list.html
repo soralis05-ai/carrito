@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Productos - Almapunt{% endblock %}
+
+{% block hero %}
+<section class="hero-portfolio">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1><i class="bi bi-grid-3x3-gap"></i> Nuestros Productos</h1>
+                <p class="subtitle">Descubre nuestra colección de productos artesanales únicos</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('portfolio.show') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-images"></i> Ver Portfolio
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <div class="product-grid">
+        {% for product in products %}
+        <a href="{{ url_for('products.detail', id=product.id) }}" class="product-card">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='img/productos/' + product.image) }}" alt="{{ product.name }}">
+                <span class="watermark">{{ config.DOMAIN }}</span>
+            </div>
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }}</p>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

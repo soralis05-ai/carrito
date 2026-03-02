@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ info.name }} - {{ info.title }}</title>
+    <!-- Bootwatch Minty Theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/minty/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 40px;
+        }
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .hero-section .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .portfolio-item {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        .portfolio-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .portfolio-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .portfolio-content {
+            padding: 1.5rem;
+        }
+        .portfolio-content h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        .portfolio-content p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .contact-info {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+        }
+        .back-to-shop {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botón volver a la tienda -->
+    <a href="{{ url_for('products.list') }}" class="btn btn-light shadow back-to-shop">
+        <i class="bi bi-shop"></i> Ver Tienda
+    </a>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1>{{ info.name }}</h1>
+                    <p class="subtitle">{{ info.title }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Bio Section -->
+        {% if info.bio %}
+        <div class="row mb-5">
+            <div class="col-lg-10 mx-auto text-center">
+                <h2 class="mb-4">Sobre Nosotros</h2>
+                <p class="lead text-muted">{{ info.bio }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Portfolio Grid -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4">Nuestros Productos Destacados</h2>
+            </div>
+        </div>
+        
+        <div class="portfolio-grid">
+            {% for item in items %}
+            <div class="portfolio-item">
+                <img src="{{ url_for('static', filename='img/portfolio/' + item.image) }}" 
+                     alt="{{ item.title }}" 
+                     class="portfolio-image">
+                <div class="portfolio-content">
+                    <h3>{{ item.title }}</h3>
+                    {% if item.description %}
+                    <p>{{ item.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Próximamente mostraremos nuestros productos destacados.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Contact Section -->
+        {% if info.email or info.phone %}
+        <div class="contact-info">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h3 class="mb-4 text-center">Contacto</h3>
+                    <div class="row text-center">
+                        {% if info.email %}
+                        <div class="col-md-6 mb-3">
+                            <i class="bi bi-envelope fs-3 text-primary"></i>
+                            <p class="mt-2 mb-0">{{ info.email }}</p>
+                        </div>
+                        {% endif %}
+                        {% if info.phone %}
+                        <div class="col-md-6 mb-3">
+                            <i class="bi bi-phone fs-3 text-primary"></i>
+                            <p class="mt-2 mb-0">{{ info.phone }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <footer class="mt-5 py-4 text-center text-muted border-top">
+            <p>&copy; 2024 {{ info.name }}. Todos los derechos reservados.</p>
+            <p class="small">
+                <a href="{{ url_for('products.list') }}" class="text-decoration-none">Ver Tienda Completa</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

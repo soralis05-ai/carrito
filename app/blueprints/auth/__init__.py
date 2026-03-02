@@ -1,0 +1,6 @@
+from flask import Blueprint
+
+# blueprint for authentication pages
+auth_bp = Blueprint('auth', __name__, template_folder='templates')
+
+from . import routes  # noqa: F401
