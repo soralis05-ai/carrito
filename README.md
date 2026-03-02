@@ -101,7 +101,7 @@ pip install -r requirements.txt
 # 5. Configurar variables de entorno
 # Editar .env con tus valores:
 # SECRET_KEY=tu_clave_secreta
-# DOMAIN=almapunt.com
+# DOMAIN=almapunt.es
 
 # 6. Ejecutar la aplicación
 python run.py
@@ -454,8 +454,8 @@ Para desplegar en producción (Vercel, Railway, etc.):
 
 ## 📧 Contacto
 
-- **Dominio:** almapunt.com
-- **Email:** contacto@almapunt.com
+- **Dominio:** almapunt.es
+- **Email:** contacto@almapunt.es
 - **Ubicación:** España
 
 ---
