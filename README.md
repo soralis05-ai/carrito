@@ -8,7 +8,8 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 **Última actualización:** 28 de febrero de 2024  
 **Framework:** Flask 3.1+  
 **Python:** 3.14  
-**Frontend:** Bootstrap 5.3.3 + Bootstrap Icons
+**Frontend:** Bootstrap 5.3.3 + Bootstrap Icons  
+**Repositorio:** https://github.com/soralis05-ai/carrito.git
 
 ---
 
