@@ -12,11 +12,14 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
+    login_manager.login_message = 'Debes iniciar sesión para acceder a esta página'
+    login_manager.login_message_category = 'warning'
 
-    # minimal user loader (no users yet)
+    # User loader para Flask-Login
     @login_manager.user_loader
     def load_user(user_id):
-        return None
+        from app.models import User
+        return User.query.get(int(user_id))
     
     # Registrar blueprints
     from app.blueprints.auth import auth_bp

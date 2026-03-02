@@ -343,6 +343,112 @@ python -m pytest tests/
 
 ---
 
+## 🗄️ Base de Datos
+
+### Motor: SQLite (Desarrollo y Producción)
+
+**Configuración:**
+- **Desarrollo (Windows):** `sqlite:///app.db`
+- **Producción (Hetzner/Debian):** `sqlite:///app.db` (mismo archivo)
+- **Sin dependencias adicionales:** No requiere instalar MySQL/PostgreSQL
+
+### Modelos Disponibles
+
+| Modelo | Tabla | Descripción |
+|--------|-------|-------------|
+| `User` | `users` | Usuarios con Flask-Login (admin, clientes) |
+| `Product` | `products` | Productos con imágenes (JSON), stock, categorías |
+| `Category` | `categories` | Categorías de productos |
+| `CartItem` | `cart_items` | Items del carrito (usuarios o sesiones) |
+| `Order` | `orders` | Pedidos con estados y totales |
+| `OrderItem` | `order_items` | Items individuales de cada pedido |
+
+### Inicializar Base de Datos
+
+```cmd
+# Crear tablas y datos de ejemplo
+python scripts/init_db.py
+```
+
+**Datos de ejemplo creados:**
+- 4 categorías (Peluches, Accesorios, Hogar, Papelería)
+- 6 productos de ejemplo
+- 1 usuario admin (username: `admin`, email: `admin@almapunt.es`)
+
+### Servicios Conectados a la DB
+
+| Servicio | Métodos Principales |
+|----------|---------------------|
+| `ProductsService` | `get_all()`, `get_by_id()`, `search()`, `get_featured()` |
+| `CartService` | `add_item()`, `remove_item()`, `calculate_total()`, `clear_cart()` |
+| `AuthService` | `login()`, `register()`, `logout()` (con password hashing) |
+
+### Migrar a Producción (Hetzner)
+
+```bash
+# Opción 1: Copiar la DB existente
+scp app.db user@hetzner:/var/www/almapunt/
+
+# Opción 2: Inicializar en el servidor
+ssh user@hetzner
+cd /var/www/almapunt
+source .venv/bin/activate
+python scripts/init_db.py
+```
+
+### Backup de la DB
+
+```bash
+# Copiar archivo SQLite
+cp app.db app.db.backup
+
+# O comprimir
+tar -czf db-backup-$(date +%Y%m%d).tar.gz app.db
+```
+
+---
+
+## 🔐 Autenticación
+
+### Características
+
+- **Flask-Login** integrado para gestión de sesiones
+- **Password hashing** con Werkzeug (SHA256)
+- **Roles:** Usuario normal y Admin
+- **Carrito persistente** por usuario o sesión (invitados)
+
+### Registro de Usuarios
+
+```python
+from werkzeug.security import generate_password_hash
+
+# Crear usuario con password seguro
+password_hash = generate_password_hash('tu_password')
+```
+
+### Login en Templates
+
+```html
+{% if current_user.is_authenticated %}
+    <p>Bienvenido, {{ current_user.username }}</p>
+{% else %}
+    <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
+{% endif %}
+```
+
+### Rutas Protegidas
+
+```python
+from flask_login import login_required
+
+@app.route('/admin')
+@login_required
+def admin_panel():
+    return render_template('admin.html')
+```
+
+---
+
 ## 🎛️ Control de Versiones (Git/GitHub)
 
 ### Repositorio Oficial
