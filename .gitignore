@@ -37,6 +37,7 @@ env/
 .env
 .flaskenv
 !.env.example
+.git-config-local.txt
 
 # Database
 *.db
