@@ -5,21 +5,24 @@
 {% block content %}
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-12">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Subir Producto</li>
                 </ol>
             </nav>
-            
+
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Producto</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" id="productForm">
                         {{ form.hidden_tag() }}
+
+                        <!-- Información Básica -->
+                        <h5 class="mb-3 text-primary"><i class="bi bi-info-circle"></i> Información del Producto</h5>
                         
                         <div class="row">
                             <div class="col-md-8 mb-3">
@@ -32,7 +35,7 @@
                             <div class="col-md-4 mb-3">
                                 {{ form.price.label(class="form-label") }}
                                 <div class="input-group">
-                                    {{ form.price(class="form-control", placeholder="19.99", step="0.01") }}
+                                    {{ form.price(class="form-control", placeholder="19.99", step="0.01", id="precio_venta") }}
                                     <span class="input-group-text">€</span>
                                 </div>
                                 {% if form.price.errors %}
@@ -40,7 +43,7 @@
                                 {% endif %}
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             {{ form.description.label(class="form-label") }}
                             {{ form.description(class="form-control", rows=4, placeholder="Descripción del producto...") }}
@@ -48,6 +51,143 @@
                                 <div class="text-danger small">{{ form.description.errors[0] }}</div>
                             {% endif %}
                         </div>
+
+                        <!-- Costos de Producción -->
+                        <h5 class="mb-3 text-success mt-4">
+                            <i class="bi bi-calculator"></i> Costos de Producción (Amigurumi)
+                        </h5>
+                        <p class="text-muted small">Completa los costos para calcular automáticamente el precio sugerido</p>
+
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Lana -->
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary"><i class="bi bi-circle"></i> Lana</h6>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <label class="form-label small">Costo Rollo (€)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-sm costo-lana-rollo" placeholder="5.00">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small">Peso Rollo (g)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-sm peso-lana-rollo" placeholder="50">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-label small">Peso Usado (g)</label>
+                                            <input type="number" step="0.01" class="form-control form-control-sm peso-lana-usado" placeholder="30">
+                                        </div>
+                                        
+                                        <div class="alert alert-info py-2 small">
+                                            <strong>Costo Lana:</strong> <span class="costo-lana-total">0.00</span> €
+                                        </div>
+                                    </div>
+
+                                    <!-- Relleno -->
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary"><i class="bi bi-cloud"></i> Relleno</h6>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <label class="form-label small">Costo Bolsa (€)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-sm costo-relleno-bolsa" placeholder="3.00">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label small">Peso Bolsa (g)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-sm peso-relleno-bolsa" placeholder="100">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <label class="form-label small">Peso Usado (g)</label>
+                                            <input type="number" step="0.01" class="form-control form-control-sm peso-relleno-usado" placeholder="20">
+                                        </div>
+                                        
+                                        <div class="alert alert-info py-2 small">
+                                            <strong>Costo Relleno:</strong> <span class="costo-relleno-total">0.00</span> €
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Ojos -->
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <h6 class="text-primary"><i class="bi bi-eye"></i> Ojos de Seguridad</h6>
+                                        
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input ojos-usar" type="checkbox" id="ojosUsar">
+                                            <label class="form-check-label" for="ojosUsar">
+                                                ¿Lleva ojos de seguridad?
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="row ojos-container" style="display: none;">
+                                            <div class="col-md-4">
+                                                <label class="form-label small">Costo por Par (€)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-sm ojos-costo" placeholder="0.50">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small">Cantidad de Pares</label>
+                                                <input type="number" step="1" class="form-control form-control-sm ojos-cantidad" placeholder="1">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="alert alert-info py-2 small mt-4">
+                                                    <strong>Costo Ojos:</strong> <span class="costo-ojos-total">0.00</span> €
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Resumen de Costos -->
+                                <div class="row mt-4">
+                                    <div class="col-md-12">
+                                        <div class="card border-success">
+                                            <div class="card-body bg-success text-white">
+                                                <div class="row text-center">
+                                                    <div class="col-md-3">
+                                                        <small>Costo Lana</small>
+                                                        <h4 class="mb-0"><span class="costo-lana-resumen">0.00</span> €</h4>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <small>Costo Relleno</small>
+                                                        <h4 class="mb-0"><span class="costo-relleno-resumen">0.00</span> €</h4>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <small>Costo Ojos</small>
+                                                        <h4 class="mb-0"><span class="costo-ojos-resumen">0.00</span> €</h4>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <small>Costo Total</small>
+                                                        <h4 class="mb-0"><span class="costo-total-resumen">0.00</span> €</h4>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2 bg-white">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <small>Margen de Ganancia (%)</small>
+                                                        <input type="number" class="form-control form-control-sm margen-ganancia" value="100" min="0" max="500">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <small>Precio Sugerido de Venta</small>
+                                                        <h3 class="mb-0 text-warning"><span class="precio-sugerido">0.00</span> €</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Imágenes -->
+                        <h5 class="mb-3 text-info mt-4">
+                            <i class="bi bi-images"></i> Imágenes del Producto
+                        </h5>
+                        <p class="text-muted small">Sube hasta 5 imágenes. La primera es obligatoria y será la imagen principal.</p>
                         
                         <hr class="my-4">
                         <h5 class="mb-3"><i class="bi bi-images"></i> Imágenes del Producto</h5>
@@ -160,7 +300,7 @@ function setupImagePreview(inputId, previewId) {
     document.getElementById(inputId).addEventListener('change', function(e) {
         const preview = document.getElementById(previewId);
         const file = e.target.files[0];
-        
+
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -178,5 +318,114 @@ setupImagePreview('image2', 'preview2');
 setupImagePreview('image3', 'preview3');
 setupImagePreview('image4', 'preview4');
 setupImagePreview('image5', 'preview5');
+
+// ============================================
+// CÁLCULO DE COSTOS DE AMIGURUMIS
+// ============================================
+
+function getVal(selector) {
+    const val = document.querySelector(selector)?.value;
+    return val ? parseFloat(val) : 0;
+}
+
+function setVal(selector, value) {
+    const el = document.querySelector(selector);
+    if (el) {
+        el.textContent = value.toFixed(2);
+    }
+}
+
+function calcularCostos() {
+    // Lana
+    const costoLanaRollo = getVal('.costo-lana-rollo');
+    const pesoLanaRollo = getVal('.peso-lana-rollo');
+    const pesoLanaUsado = getVal('.peso-lana-usado');
+    
+    let costoLana = 0;
+    if (costoLanaRollo > 0 && pesoLanaRollo > 0 && pesoLanaUsado > 0) {
+        costoLana = (costoLanaRollo / pesoLanaRollo) * pesoLanaUsado;
+    }
+    setVal('.costo-lana-total', costoLana);
+    setVal('.costo-lana-resumen', costoLana);
+    
+    // Relleno
+    const costoRellenoBolsa = getVal('.costo-relleno-bolsa');
+    const pesoRellenoBolsa = getVal('.peso-relleno-bolsa');
+    const pesoRellenoUsado = getVal('.peso-relleno-usado');
+    
+    let costoRelleno = 0;
+    if (costoRellenoBolsa > 0 && pesoRellenoBolsa > 0 && pesoRellenoUsado > 0) {
+        costoRelleno = (costoRellenoBolsa / pesoRellenoBolsa) * pesoRellenoUsado;
+    }
+    setVal('.costo-relleno-total', costoRelleno);
+    setVal('.costo-relleno-resumen', costoRelleno);
+    
+    // Ojos
+    let costoOjos = 0;
+    const ojosUsar = document.querySelector('.ojos-usar')?.checked;
+    
+    if (ojosUsar) {
+        const ojosCosto = getVal('.ojos-costo');
+        const ojosCantidad = getVal('.ojos-cantidad');
+        
+        if (ojosCosto > 0 && ojosCantidad > 0) {
+            costoOjos = ojosCosto * ojosCantidad;
+        }
+    }
+    setVal('.costo-ojos-total', costoOjos);
+    setVal('.costo-ojos-resumen', costoOjos);
+    
+    // Costo Total
+    const costoTotal = costoLana + costoRelleno + costoOjos;
+    setVal('.costo-total-resumen', costoTotal);
+    
+    // Precio Sugerido (con margen)
+    const margen = getVal('.margen-ganancia') || 100;
+    const precioSugerido = costoTotal * (1 + (margen / 100));
+    setVal('.precio-sugerido', precioSugerido);
+}
+
+// Event listeners para cálculo automático
+document.addEventListener('DOMContentLoaded', function() {
+    // Inputs de lana
+    document.querySelectorAll('.costo-lana-rollo, .peso-lana-rollo, .peso-lana-usado').forEach(input => {
+        input.addEventListener('input', calcularCostos);
+    });
+    
+    // Inputs de relleno
+    document.querySelectorAll('.costo-relleno-bolsa, .peso-relleno-bolsa, .peso-relleno-usado').forEach(input => {
+        input.addEventListener('input', calcularCostos);
+    });
+    
+    // Inputs de ojos
+    document.querySelectorAll('.ojos-costo, .ojos-cantidad').forEach(input => {
+        input.addEventListener('input', calcularCostos);
+    });
+    
+    // Margen de ganancia
+    document.querySelector('.margen-ganancia')?.addEventListener('input', calcularCostos);
+    
+    // Checkbox de ojos
+    document.querySelector('.ojos-usar')?.addEventListener('change', function() {
+        const ojosContainer = document.querySelector('.ojos-container');
+        if (ojosContainer) {
+            ojosContainer.style.display = this.checked ? 'flex' : 'none';
+        }
+        calcularCostos();
+    });
+    
+    // Click en "Aplicar precio sugerido"
+    document.querySelector('.precio-sugerido')?.parentElement?.addEventListener('click', function() {
+        const precioSugerido = document.querySelector('.precio-sugerido')?.textContent;
+        const precioVentaInput = document.querySelector('#precio_venta');
+        if (precioSugerido && precioVentaInput && parseFloat(precioSugerido) > 0) {
+            if (confirm('¿Aplicar precio sugerido de ' + precioSugerido + ' € al producto?')) {
+                precioVentaInput.value = precioSugerido;
+                precioVentaInput.classList.add('border-success');
+                setTimeout(() => precioVentaInput.classList.remove('border-success'), 2000);
+            }
+        }
+    });
+});
 </script>
 {% endblock %}
