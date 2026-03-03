@@ -21,10 +21,16 @@ def login():
             login_user(user, remember=remember)
             flash('¡Bienvenido!', 'success')
             
-            # Redirigir al siguiente o al dashboard
+            # Redirigir al siguiente o según rol
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
+            
+            # Si es admin, ir al dashboard
+            if user.is_admin:
+                return redirect(url_for('admin.dashboard'))
+            
+            # Si es usuario normal, ir a productos
             return redirect(url_for('products.list'))
         else:
             flash('Email o contraseña incorrectos', 'danger')

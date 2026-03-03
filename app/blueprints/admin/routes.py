@@ -1,19 +1,25 @@
 import os
 import uuid
 from flask import render_template, redirect, url_for, flash, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 from . import admin_bp
 from .forms import ProductUploadForm
+from app.utils.decorators import admin_required
 from app.utils.image_processor import process_image, validate_image
 
 
 @admin_bp.route('/')
+@login_required
+@admin_required
 def dashboard():
     """Panel principal de administración."""
     return render_template('admin/dashboard.html')
 
 
 @admin_bp.route('/products/upload', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def upload_product():
     """Subir nuevo producto con imagenes."""
     form = ProductUploadForm()
@@ -79,6 +85,8 @@ def upload_product():
 
 
 @admin_bp.route('/products')
+@login_required
+@admin_required
 def list_products():
     """Listar productos para administración."""
     from app.blueprints.products.services import ProductsService
