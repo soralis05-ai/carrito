@@ -561,7 +561,7 @@ Para desplegar en producción (Vercel, Railway, etc.):
 ## 📧 Contacto
 
 - **Dominio:** almapunt.es
-- **Email:** contacto@almapunt.es
+- **Email:** soralis05@gmail.com
 - **Ubicación:** España
 
 ---
