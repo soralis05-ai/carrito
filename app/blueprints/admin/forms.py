@@ -52,8 +52,26 @@ class CostosAmigurumiForm(FlaskForm):
         NumberRange(min=0, message='Debe ser mayor o igual a 0')
     ])
     
+    # Mano de Obra
+    mano_obra_usar = BooleanField('¿Considerar mano de obra?')
+    mano_obra_costo_hora = FloatField('Costo por Hora de Trabajo (€)', validators=[
+        Optional(),
+        NumberRange(min=0, message='Debe ser mayor o igual a 0')
+    ])
+    mano_obra_horas = FloatField('Horas Dedicadas', validators=[
+        Optional(),
+        NumberRange(min=0, message='Debe ser mayor o igual a 0')
+    ])
+    
+    # Utilidad (Opcional)
+    utilidad_usar = BooleanField('¿Agregar utilidad adicional?')
+    utilidad_porcentaje = FloatField('Porcentaje de Utilidad (%)', validators=[
+        Optional(),
+        NumberRange(min=0, max=500, message='Entre 0 y 500%')
+    ])
+    
     # Margen de ganancia (porcentaje)
-    margen_ganancia = FloatField('Margen de Ganancia (%)', validators=[
+    margen_ganancia = FloatField('Margen de Ganancia Estándar (%)', validators=[
         Optional(),
         NumberRange(min=0, max=500, message='Entre 0 y 500%')
     ], default=100)
