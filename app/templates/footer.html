@@ -22,7 +22,7 @@
             </div>
         </div>
         <hr class="my-3 opacity-50">
-        <p class="mb-0 small">&copy; 2024 Almapunt. Todos los derechos reservados.</p>
+        <p class="mb-0 small">&copy; <span id="currentYear">2024</span> Almapunt. Todos los derechos reservados.</p>
     </div>
 </footer>
 
@@ -31,3 +31,7 @@ footer a:hover {
     opacity: 1 !important;
 }
 </style>
+
+<script>
+document.getElementById('currentYear').textContent = new Date().getFullYear();
+</script>

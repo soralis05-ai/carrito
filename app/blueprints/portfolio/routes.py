@@ -12,7 +12,7 @@ DEFAULT_PORTFOLIO_INFO = {
     'name': 'Almapunt',
     'title': 'Artesanía y Productos Únicos',
     'bio': 'Somos una tienda especializada en productos artesanales y únicos. Cada pieza está seleccionada con cuidado para ofrecer calidad y originalidad a nuestros clientes.',
-    'email': 'contacto@almapunt.es',
+    'email': 'soralis05@gmail.com',
     'phone': ''
 }
 

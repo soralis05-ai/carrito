@@ -231,17 +231,16 @@
                                                 </div>
                                                 <hr class="my-2 bg-white">
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <small>Margen de Ganancia (%)</small>
-                                                        <input type="number" class="form-control form-control-sm margen-ganancia" value="100" min="0" max="500">
-                                                    </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-6">
                                                         <small>Costo Total + Utilidad</small>
                                                         <h5 class="mb-0 text-info"><span class="costo-mas-utilidad">0.00</span> €</h5>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <small>Precio Sugerido de Venta</small>
-                                                        <h3 class="mb-0 text-warning"><span class="precio-sugerido">0.00</span> €</h3>
+                                                    <div class="col-md-6">
+                                                        <small>Precio de Venta (se calcula automáticamente)</small>
+                                                        <div class="input-group">
+                                                            <input type="number" step="0.01" class="form-control form-control-lg text-warning fw-bold" id="precio_venta" readonly>
+                                                            <span class="input-group-text bg-warning text-dark fw-bold">€</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -478,10 +477,12 @@ function calcularCostos() {
     const costoMasUtilidad = costoTotal + utilidad;
     setVal('.costo-mas-utilidad', costoMasUtilidad);
     
-    // Precio Sugerido (con margen sobre costo + utilidad)
-    const margen = getVal('.margen-ganancia') || 100;
-    const precioSugerido = costoMasUtilidad * (1 + (margen / 100));
-    setVal('.precio-sugerido', precioSugerido);
+    // Precio de Venta (se calcula automáticamente = costo + utilidad)
+    const precioVenta = costoMasUtilidad;
+    const precioVentaInput = document.querySelector('#precio_venta');
+    if (precioVentaInput) {
+        precioVentaInput.value = precioVenta.toFixed(2);
+    }
 }
 
 // Event listeners para cálculo automático
@@ -509,9 +510,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inputs de utilidad
     document.querySelector('.utilidad-porcentaje')?.addEventListener('input', calcularCostos);
     
-    // Margen de ganancia
-    document.querySelector('.margen-ganancia')?.addEventListener('input', calcularCostos);
-    
     // Checkbox de ojos
     document.querySelector('.ojos-usar')?.addEventListener('change', function() {
         const ojosContainer = document.querySelector('.ojos-container');
@@ -537,19 +535,6 @@ document.addEventListener('DOMContentLoaded', function() {
             utilidadContainer.style.display = this.checked ? 'flex' : 'none';
         }
         calcularCostos();
-    });
-    
-    // Click en "Aplicar precio sugerido"
-    document.querySelector('.precio-sugerido')?.parentElement?.addEventListener('click', function() {
-        const precioSugerido = document.querySelector('.precio-sugerido')?.textContent;
-        const precioVentaInput = document.querySelector('#precio_venta');
-        if (precioSugerido && precioVentaInput && parseFloat(precioSugerido) > 0) {
-            if (confirm('¿Aplicar precio sugerido de ' + precioSugerido + ' € al producto?')) {
-                precioVentaInput.value = precioSugerido;
-                precioVentaInput.classList.add('border-success');
-                setTimeout(() => precioVentaInput.classList.remove('border-success'), 2000);
-            }
-        }
     });
 });
 </script>

@@ -70,11 +70,7 @@ class CostosAmigurumiForm(FlaskForm):
         NumberRange(min=0, max=500, message='Entre 0 y 500%')
     ])
     
-    # Margen de ganancia (porcentaje)
-    margen_ganancia = FloatField('Margen de Ganancia Estándar (%)', validators=[
-        Optional(),
-        NumberRange(min=0, max=500, message='Entre 0 y 500%')
-    ], default=100)
+    submit = SubmitField('Guardar Producto')
 
 
 class ProductUploadForm(FlaskForm):
@@ -84,7 +80,7 @@ class ProductUploadForm(FlaskForm):
         Length(max=100, message='Máximo 100 caracteres')
     ])
     price = FloatField('Precio de Venta (€)', validators=[
-        DataRequired(message='El precio es requerido'),
+        Optional(),  # Ahora es opcional, se calcula automáticamente
     ])
     description = TextAreaField('Descripción', validators=[
         DataRequired(message='La descripción es requerida'),
@@ -108,8 +104,5 @@ class ProductUploadForm(FlaskForm):
     image5 = FileField('Imagen 5 (Opcional)', validators=[
         FileAllowed(ALLOWED_EXTENSIONS, f'Solo: {EXTENSIONS_STRING}')
     ])
-    
-    # Costos de producción (amigurumis)
-    costos = FieldList(FormField(CostosAmigurumiForm), min_entries=1)
     
     submit = SubmitField('Guardar Producto')
