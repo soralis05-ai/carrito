@@ -231,16 +231,15 @@
                                                 </div>
                                                 <hr class="my-2 bg-white">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12 text-center">
                                                         <small>Costo Total + Utilidad</small>
-                                                        <h5 class="mb-0 text-info"><span class="costo-mas-utilidad">0.00</span> €</h5>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <small>Precio de Venta (se calcula automáticamente)</small>
-                                                        <div class="input-group">
-                                                            <input type="number" step="0.01" class="form-control form-control-lg text-warning fw-bold" id="precio_venta" readonly>
-                                                            <span class="input-group-text bg-warning text-dark fw-bold">€</span>
-                                                        </div>
+                                                        <h4 class="mb-0 text-info"><span class="costo-mas-utilidad">0.00</span> €</h4>
+                                                        <p class="small text-warning mt-2">
+                                                            <i class="bi bi-calculator"></i> Este valor se puede copiar al campo "Precio de Venta"
+                                                        </p>
+                                                        <button type="button" class="btn btn-warning btn-sm mt-2" onclick="copiarPrecio()">
+                                                            <i class="bi bi-clipboard-check"></i> Copiar al Precio de Venta
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -476,12 +475,22 @@ function calcularCostos() {
     // Costo + Utilidad
     const costoMasUtilidad = costoTotal + utilidad;
     setVal('.costo-mas-utilidad', costoMasUtilidad);
-    
-    // Precio de Venta (se calcula automáticamente = costo + utilidad)
-    const precioVenta = costoMasUtilidad;
+}
+
+// Función para copiar el precio calculado al campo de Precio de Venta
+function copiarPrecio() {
+    const costoMasUtilidad = document.querySelector('.costo-mas-utilidad')?.textContent;
     const precioVentaInput = document.querySelector('#precio_venta');
-    if (precioVentaInput) {
-        precioVentaInput.value = precioVenta.toFixed(2);
+    
+    if (costoMasUtilidad && precioVentaInput && parseFloat(costoMasUtilidad) > 0) {
+        precioVentaInput.value = costoMasUtilidad;
+        precioVentaInput.classList.add('border-success');
+        precioVentaInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Quitar el destaque después de 2 segundos
+        setTimeout(() => {
+            precioVentaInput.classList.remove('border-success');
+        }, 2000);
     }
 }
 
