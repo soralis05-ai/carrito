@@ -4,12 +4,14 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.0.0  
-**Última actualización:** 28 de febrero de 2024  
+**Versión:** 1.1.0  
+**Última actualización:** 11 de marzo de 2026  
 **Framework:** Flask 3.1+  
 **Python:** 3.14  
 **Frontend:** Bootstrap 5.3.3 + Bootstrap Icons  
-**Repositorio:** https://github.com/soralis05-ai/carrito.git
+**Repositorio:** https://github.com/soralis05-ai/carrito.git  
+**Dominio:** almapunt.es  
+**Email:** soralis05@gmail.com
 
 ---
 
@@ -19,8 +21,9 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 
 - **Tienda completa** - Catálogo de productos con carrito de compras
 - **Portfolio personal** - Página de presentación con galería de fotos destacadas
-- **Panel de administración** - Gestión de productos y contenido del portfolio
+- **Panel de administración** - Gestión de productos con calculadora de costos
 - **Procesamiento de imágenes** - Subida multi-formato con redimensionamiento automático
+- **Calculadora de Amigurumis** - Cálculo automático de precios basado en costos
 
 ---
 
@@ -408,6 +411,131 @@ tar -czf db-backup-$(date +%Y%m%d).tar.gz app.db
 
 ---
 
+## 🧮 Calculadora de Costos para Amigurumis
+
+### Descripción
+
+El panel de administración incluye una calculadora automática de costos para productos artesanales (amigurumis). El **precio de venta se calcula automáticamente** basado en los costos de materiales y mano de obra.
+
+### Fórmula de Cálculo
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  CÁLCULO AUTOMÁTICO DE PRECIO DE VENTA                 │
+├─────────────────────────────────────────────────────────┤
+│  1. MATERIALES:                                         │
+│     Lana = (costo_rollo / peso_rollo) × peso_usado     │
+│     Relleno = (costo_bolsa / peso_bolsa) × peso_usado  │
+│     Ojos = costo_unitario × cantidad                    │
+│     ─────────────────────────────────────────────────  │
+│     Subtotal Materiales = Lana + Relleno + Ojos        │
+│                                                         │
+│  2. MANO DE OBRA (Opcional ☑):                          │
+│     Mano de Obra = costo_hora × horas_dedicadas        │
+│                                                         │
+│  3. COSTO TOTAL:                                        │
+│     Costo Total = Materiales + Mano de Obra            │
+│                                                         │
+│  4. UTILIDAD ADICIONAL (Opcional ☑):                    │
+│     Utilidad = Costo Total × (porcentaje / 100)        │
+│                                                         │
+│  5. PRECIO DE VENTA (Automático):                       │
+│     Precio = Costo Total + Utilidad                     │
+│     (Se calcula SOLO en el campo de Precio de Venta)   │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Ejemplo Práctico
+
+**Datos ingresados:**
+
+```
+MATERIALES:
+  Lana:    5.00€ (rollo 50g) → Usa 30g      = 3.00€
+  Relleno: 3.00€ (bolsa 100g) → Usa 20g    = 0.60€
+  Ojos:    0.50€ × 1 par                    = 0.50€
+  ────────────────────────────────────────────────
+  Subtotal Materiales:                      = 4.10€
+
+MANO DE OBRA ☑:
+  Costo por Hora: 10.00€
+  Horas Dedicadas: 2 horas
+  ────────────────────────────────────────────────
+  Mano de Obra: 10.00 × 2                   = 20.00€
+
+COSTO TOTAL: 4.10 + 20.00                   = 24.10€
+
+UTILIDAD ADICIONAL ☑:
+  Porcentaje: 20%
+  Utilidad: 24.10 × 0.20                    = 4.82€
+
+┌─────────────────────────────────────────────────────┐
+│  PRECIO DE VENTA: 24.10 + 4.82 = 28.92€ (AUTO)     │
+└─────────────────────────────────────────────────────┘
+```
+
+### Interfaz de Usuario
+
+**Flujo en el formulario:**
+
+1. **Información Básica** (arriba):
+   - Nombre del producto
+   - **Precio de Venta** ← Se calcula automáticamente (readonly)
+   - Descripción
+
+2. **Costos de Producción** (abajo):
+   - ☑ Lana (costo, peso, usado)
+   - ☑ Relleno (costo, peso, usado)
+   - ☑ Ojos (checkbox, costo, cantidad)
+   - ☑ Mano de Obra (checkbox, costo/hora, horas)
+   - ☑ Utilidad (checkbox, porcentaje)
+
+3. **Referencia**:
+   - Muestra "Costo Total + Utilidad" como referencia
+   - El precio se actualiza automáticamente mientras escribes
+
+### Características
+
+| Característica | Descripción |
+|----------------|-------------|
+| **Auto-cálculo** | El precio se actualiza en tiempo real |
+| **Campo readonly** | No editable manualmente (solo cálculo) |
+| **Opcional** | Mano de obra y utilidad son opcionales (checkbox) |
+| **Referencia** | Muestra el desglose como referencia |
+| **JavaScript** | Cálculo instantáneo sin recargar |
+
+### Código JavaScript
+
+```javascript
+function calcularCostos() {
+    // Lana
+    const costoLana = (costoLanaRollo / pesoLanaRollo) * pesoLanaUsado;
+    
+    // Relleno
+    const costoRelleno = (costoRellenoBolsa / pesoRellenoBolsa) * pesoRellenoUsado;
+    
+    // Ojos (si checkbox activo)
+    const costoOjos = ojosUsar ? (ojosCosto * ojosCantidad) : 0;
+    
+    // Mano de Obra (si checkbox activo)
+    const costoManoObra = manoObraUsar ? (manoObraCostoHora * manoObraHoras) : 0;
+    
+    // Utilidad (si checkbox activo)
+    const utilidad = utilidadUsar ? ((costoLana + costoRelleno + costoOjos + costoManoObra) * (utilidadPorcentaje / 100)) : 0;
+    
+    // Costo Total
+    const costoTotal = costoLana + costoRelleno + costoOjos + costoManoObra;
+    
+    // Precio de Venta (Automático)
+    const precioVenta = costoTotal + utilidad;
+    
+    // Actualizar campo de Precio de Venta (readonly)
+    document.querySelector('#precio_venta').value = precioVenta.toFixed(2);
+}
+```
+
+---
+
 ## 🔐 Autenticación
 
 ### Características
@@ -568,8 +696,45 @@ Para desplegar en producción (Vercel, Railway, etc.):
 
 ## 📄 Licencia
 
-Todos los derechos reservados © 2024 Almapunt
+Todos los derechos reservados © 2024-2026 Almapunt
 
 ---
 
-*Documento generado el 28 de febrero de 2024*
+## 📝 Historial de Cambios
+
+### Versión 1.1.0 (11 de marzo de 2026)
+
+**Calculadora de Costos:**
+- ✅ Precio de venta se calcula automáticamente
+- ✅ Campo de precio readonly (no editable manualmente)
+- ✅ Cálculo basado en: materiales + mano de obra + utilidad
+- ✅ Mano de obra opcional (checkbox)
+- ✅ Utilidad adicional opcional (checkbox)
+
+**Página de Construcción:**
+- ✅ Eliminados botones de acceso a Productos y Portfolio
+- ✅ Solo muestra countdown y redes sociales
+
+**Actualizaciones Generales:**
+- ✅ Email actualizado a `soralis05@gmail.com` en todo el sitio
+- ✅ Año dinámico en footer (2026 o futuro)
+- ✅ Coming Soon sin acceso a Admin
+
+**Base de Datos:**
+- ✅ Modelos: User, Product, Category, CartItem, Order, OrderItem
+- ✅ SQLite para desarrollo y producción (sin dependencias extra)
+- ✅ Script `init_db.py` para inicializar con datos de ejemplo
+
+**Autenticación:**
+- ✅ Panel de administración protegido (login + rol admin)
+- ✅ Login funcional con redirección por rol
+- ✅ Registro de usuarios con validaciones
+
+**Tema Visual:**
+- ✅ Gradiente morado/azul signature (`#667eea` → `#764ba2`)
+- ✅ Navbar, footer y cards con tema personalizado
+- ✅ Responsive y moderno
+
+---
+
+*Documento actualizado el 11 de marzo de 2026*
