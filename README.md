@@ -511,11 +511,51 @@ python -c "from waitress import serve; from app import create_app; serve(create_
 # Redimensionar imágenes existentes
 python scripts/resize_images.py
 
+# Migración: Agregar columna costos a products
+python scripts/add_costos_column.py
+
+# Migración: Crear tablas del portfolio
+python scripts/add_portfolio_tables.py
+
 # Ver rutas registradas
 python -c "from app import create_app; app = create_app(); [print(r) for r in app.url_map.iter_rules()]"
 
 # Tests
 python -m pytest tests/
+```
+
+### Migraciones de Base de Datos
+
+**Para producción (Hetzner/Debian):**
+
+```bash
+# 1. Conectarse al servidor
+ssh user@hetzner
+
+# 2. Navegar al directorio del proyecto
+cd /var/www/almapunt
+
+# 3. Activar entorno virtual
+source .venv/bin/activate
+
+# 4. Ejecutar migración de costos
+python scripts/add_costos_column.py
+
+# 5. Ejecutar migración de portfolio
+python scripts/add_portfolio_tables.py
+
+# 6. Reiniciar la aplicación
+sudo systemctl restart almapunt
+```
+
+**Verificar migraciones:**
+
+```bash
+# Ver columnas de products
+sqlite3 app.db ".schema products"
+
+# Ver tablas
+sqlite3 app.db ".tables"
 ```
 
 ---
