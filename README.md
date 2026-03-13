@@ -4,7 +4,7 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.3.3
+**Versión:** 1.3.4
 **Última actualización:** 13 de marzo de 2026
 **Framework:** Flask 3.1+
 **Python:** 3.14
@@ -77,6 +77,15 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 - ✅ Models separados en `app/models/`
 - ✅ Utils compartidos en `app/utils/`
 
+### 8. 🔐 Variables de Entorno Seguras
+**Nunca crear ni subir `.env.example` al repositorio.**
+
+- ✅ `.env` contiene secretos reales (SECRET_KEY, DATABASE_URL)
+- ✅ `.env` está en `.gitignore` y nunca se sube
+- ✅ Documentar variables requeridas directamente en el README
+- ✅ En producción usar variables de entorno del servidor
+- ✅ No crear `.env.example` o `.env.template` (regla de seguridad)
+
 ---
 
 ## 📋 Descripción
@@ -88,6 +97,35 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 - **Panel de administración** - Gestión de productos con calculadora de costos
 - **Procesamiento de imágenes** - Subida multi-formato con redimensionamiento automático
 - **Calculadora de Amigurumis** - Cálculo automático de precios basado en costos
+
+---
+
+## 🆕 Novedades (v1.3.4 - 13 marzo 2026)
+
+### Flask-Migrate para Gestión de Base de Datos
+
+**📦 Nueva Dependencia:**
+- ✅ `Flask-Migrate>=4.0` agregado a `requirements.txt`
+- ✅ `migrate.init_app(app, db)` registrado en `app/__init__.py`
+
+**🔧 Comandos Disponibles:**
+```bash
+flask db init          # Inicializar (solo primera vez)
+flask db migrate -m "Mensaje"  # Crear migración
+flask db upgrade       # Aplicar migraciones
+flask db current       # Ver estado actual
+flask db downgrade -1  # Revertir última migración
+```
+
+**📝 Nueva Regla de Oro (#8):**
+- 🔐 **Variables de Entorno Seguras** - Nunca crear `.env.example`
+- ✅ `.env` siempre en `.gitignore`
+- ✅ Documentar variables en README directamente
+- ✅ No crear plantillas de `.env`
+
+**🗑️ Scripts Manuales:**
+- Los scripts `add_costos_column.py` y `add_portfolio_tables.py` fueron reemplazados por Flask-Migrate
+- Se mantiene `run_migrations.py` para compatibilidad
 
 ---
 
@@ -508,54 +546,65 @@ python run.py
 # Ejecutar con waitress (producción)
 python -c "from waitress import serve; from app import create_app; serve(create_app(), host='0.0.0.0', port=5000)"
 
+# Instalar dependencias
+pip install -r requirements.txt
+
 # Redimensionar imágenes existentes
 python scripts/resize_images.py
-
-# Migración: Agregar columna costos a products
-python scripts/add_costos_column.py
-
-# Migración: Crear tablas del portfolio
-python scripts/add_portfolio_tables.py
-
-# Ver rutas registradas
-python -c "from app import create_app; app = create_app(); [print(r) for r in app.url_map.iter_rules()]"
 
 # Tests
 python -m pytest tests/
 ```
 
-### Migraciones de Base de Datos
+### Flask-Migrate (Base de Datos)
 
-**Para producción (Hetzner/Debian):**
+```bash
+# Inicializar migraciones (solo primera vez)
+flask db init
+
+# Crear nueva migración después de cambiar modelos
+flask db migrate -m "Descripción del cambio"
+
+# Aplicar migraciones
+flask db upgrade
+
+# Ver estado de migraciones
+flask db current
+
+# Revertir última migración
+flask db downgrade -1
+```
+
+### Migraciones en Producción (Hetzner/Debian)
 
 ```bash
 # 1. Conectarse al servidor
 ssh user@hetzner
 
-# 2. Navegar al directorio del proyecto
+# 2. Navegar al proyecto
 cd /var/www/almapunt
 
 # 3. Activar entorno virtual
 source .venv/bin/activate
 
-# 4. Ejecutar migración de costos
-python scripts/add_costos_column.py
+# 4. Aplicar migraciones
+flask db upgrade
 
-# 5. Ejecutar migración de portfolio
-python scripts/add_portfolio_tables.py
-
-# 6. Reiniciar la aplicación
+# 5. Reiniciar aplicación
 sudo systemctl restart almapunt
 ```
 
-**Verificar migraciones:**
+### Verificar Base de Datos (SQLite)
 
 ```bash
-# Ver columnas de products
-sqlite3 app.db ".schema products"
-
 # Ver tablas
 sqlite3 app.db ".tables"
+
+# Ver esquema de tabla
+sqlite3 app.db ".schema products"
+
+# Ver columna específica
+sqlite3 app.db "PRAGMA table_info(products);"
 ```
 
 ---
@@ -1051,7 +1100,27 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ## 📝 Historial de Cambios
 
-### Versión 1.3.3 (13 de marzo de 2026) - **ACTUAL** ✨
+### Versión 1.3.4 (13 de marzo de 2026) - **ACTUAL** ✨
+
+**Flask-Migrate para Base de Datos:**
+
+- ✅ **Flask-Migrate agregado** - `requirements.txt` actualizado
+- ✅ **Migrate registrado** - `migrate.init_app(app, db)` en `app/__init__.py`
+- ✅ **Comandos disponibles** - `flask db migrate`, `flask db upgrade`
+- ✅ **Documentación actualizada** - Comandos de migración en README
+
+**Nueva Regla de Oro (#8):**
+- ✅ **Variables de Entorno Seguras** - Nunca crear `.env.example`
+- ✅ `.env` siempre en `.gitignore`
+- ✅ Documentar variables directamente en README
+
+**Scripts:**
+- 🗑️ Scripts manuales reemplazados por Flask-Migrate
+- ✅ `run_migrations.py` se mantiene para compatibilidad
+
+---
+
+### Versión 1.3.3 (13 de marzo de 2026)
 
 **🔒 Seguridad: Templates Admin en Blueprint:**
 
@@ -1283,4 +1352,4 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.3.3 - Templates Admin Seguros*
+*Documento actualizado el 13 de marzo de 2026 - v1.3.4 - Flask-Migrate y Regla #8*

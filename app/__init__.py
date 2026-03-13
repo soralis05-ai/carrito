@@ -1,9 +1,11 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +16,7 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Debes iniciar sesión para acceder a esta página'
     login_manager.login_message_category = 'warning'
+    migrate.init_app(app, db)
 
     # User loader para Flask-Login
     @login_manager.user_loader
