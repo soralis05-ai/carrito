@@ -10,16 +10,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        /* Estilos específicos para el panel de administración */
+        /* Tema Portfolio - Gradiente morado/azul para Admin */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+        }
+
         body {
-            background: #f4f6f9;
+            background: #f8f9fa;
             min-height: 100vh;
         }
 
-        /* Navbar oscuro para admin */
-        .navbar-admin {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        /* Navbar con gradiente signature */
+        .navbar-portfolio {
+            background: var(--primary-gradient) !important;
+            box-shadow: 0 2px 15px rgba(102, 126, 234, 0.3);
         }
 
         .navbar-brand {
@@ -29,25 +36,25 @@
         /* Cards del dashboard */
         .card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
 
-        /* Botones */
+        /* Botones con gradiente */
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             border: none;
         }
 
         .btn-primary:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         /* Tablas */
@@ -61,12 +68,31 @@
             background: #f8f9fa;
         }
 
-        /* Footer admin */
+        /* Footer con gradiente */
         .admin-footer {
-            background: #2c3e50;
-            color: rgba(255,255,255,0.7);
-            padding: 20px 0;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 30px 0;
             margin-top: 40px;
+        }
+
+        .admin-footer a {
+            color: rgba(255,255,255,0.9);
+            text-decoration: none;
+        }
+
+        .admin-footer a:hover {
+            opacity: 1;
+        }
+
+        /* Títulos y enlaces */
+        .text-primary {
+            color: var(--primary-color) !important;
+        }
+
+        /* Alertas */
+        .alert {
+            border-radius: 8px;
         }
     </style>
     {% block extra_css %}{% endblock %}
