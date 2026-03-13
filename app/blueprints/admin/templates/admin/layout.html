@@ -61,14 +61,8 @@
             background: #f8f9fa;
         }
 
-        /* Sidebar (si se usa en el futuro) */
-        .admin-sidebar {
-            background: #2c3e50;
-            min-height: calc(100vh - 56px);
-        }
-
         /* Footer admin */
-        footer.admin-footer {
+        .admin-footer {
             background: #2c3e50;
             color: rgba(255,255,255,0.7);
             padding: 20px 0;
@@ -78,7 +72,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    {% include 'admin_navbar.html' %}
+    {% include 'admin/_navbar.html' %}
 
     <main class="container-fluid py-4">
         {% with messages = get_flashed_messages(with_categories=true) %}

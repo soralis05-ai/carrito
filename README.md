@@ -4,7 +4,7 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.3.2
+**Versión:** 1.3.3
 **Última actualización:** 13 de marzo de 2026
 **Framework:** Flask 3.1+
 **Python:** 3.14
@@ -91,6 +91,32 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 
 ---
 
+## 🆕 Novedades (v1.3.3 - 13 marzo 2026)
+
+### 🔒 Seguridad: Templates Admin en Blueprint
+
+**Cambio de Ubicación por Seguridad:**
+- ❌ **Antes:** `app/templates/admin_base.html`, `app/templates/admin_navbar.html` (globales)
+- ✅ **Ahora:** `app/blueprints/admin/templates/admin/layout.html`, `app/blueprints/admin/templates/admin/_navbar.html`
+
+**Ventajas:**
+- 🛡️ **Aislamiento:** Templates de admin aislados en el blueprint
+- 🔐 **Seguridad:** No accesibles desde otros blueprints accidentalmente
+- 📁 **Organización:** Estructura más clara y mantenible
+- 🎯 **Convención:** Sigue mejores prácticas de Flask
+
+**Archivos Movidos:**
+| Archivo Original | Nueva Ubicación |
+|-----------------|-----------------|
+| `app/templates/admin_base.html` | `app/blueprints/admin/templates/admin/layout.html` |
+| `app/templates/admin_navbar.html` | `app/blueprints/admin/templates/admin/_navbar.html` |
+
+**Templates Actualizados (12):**
+- ✅ 7 templates de admin (`admin/*.html`)
+- ✅ 5 templates de portfolio admin (`portfolio/admin/*.html`)
+
+---
+
 ## 🆕 Novedades (v1.3.2 - 13 marzo 2026)
 
 ### Navbar Independiente para Admin
@@ -153,6 +179,20 @@ c:\soraya\carrito\
 │   ├── config.py                   # Configuraciones por entorno
 │   ├── blueprints/
 │   │   ├── admin/                  # Panel de administración (CRUD productos y categorías)
+│   │   │   ├── __init__.py
+│   │   │   ├── routes.py
+│   │   │   ├── forms.py
+│   │   │   └── templates/
+│   │   │       └── admin/
+│   │   │           ├── layout.html         # Layout exclusivo admin ✨ SEGURO
+│   │   │           ├── _navbar.html        # Navbar exclusivo admin ✨ SEGURO
+│   │   │           ├── dashboard.html
+│   │   │           ├── upload_product.html
+│   │   │           ├── edit_product.html
+│   │   │           ├── list_products.html
+│   │   │           ├── list_categories.html
+│   │   │           ├── create_category.html
+│   │   │           └── edit_category.html
 │   │   ├── auth/                   # Autenticación de usuarios
 │   │   ├── cart/                   # Carrito de compras
 │   │   ├── orders/                 # Gestión de pedidos
@@ -170,15 +210,13 @@ c:\soraya\carrito\
 │   │       └── utils.js            # Utilidades JavaScript
 │   ├── templates/
 │   │   ├── base.html               # Template base (con tema portfolio)
-│   │   ├── admin_base.html         # Template base para admin ✨ NUEVO
 │   │   ├── navbar.html             # Barra de navegación (pública)
-│   │   ├── admin_navbar.html       # Barra de navegación admin ✨ NUEVO
 │   │   ├── footer.html             # Pie de página
 │   │   └── errors/                 # Páginas de error
 │   └── utils/
 │       ├── image_processor.py      # Procesamiento de imágenes
 │       ├── decorators.py           # Decoradores personalizados
-│       └── helpers.py              # Funciones de ayuda
+│       └── helpers.py              # Funciones de ayuda (eliminado en v1.3.2)
 ├── scripts/
 │   ├── add_costos_column.py        # Migración: agrega columna costos
 │   ├── add_portfolio_tables.py     # Migración: tablas portfolio ✨ NUEVO
@@ -973,7 +1011,30 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ## 📝 Historial de Cambios
 
-### Versión 1.3.2 (13 de marzo de 2026) - **ACTUAL** ✨
+### Versión 1.3.3 (13 de marzo de 2026) - **ACTUAL** ✨
+
+**🔒 Seguridad: Templates Admin en Blueprint:**
+
+- ✅ **Templates movidos a blueprint admin** - De `app/templates/` a `app/blueprints/admin/templates/admin/`
+- ✅ **Renombrados por convención** - `layout.html` y `_navbar.html`
+- ✅ **12 templates actualizados** - Todos usan `admin/layout.html`
+- ✅ **Archivos globales eliminados** - `admin_base.html`, `admin_navbar.html` eliminados
+
+**Archivos Movidos:**
+| Original | Nueva Ubicación |
+|----------|----------------|
+| `app/templates/admin_base.html` | `app/blueprints/admin/templates/admin/layout.html` |
+| `app/templates/admin_navbar.html` | `app/blueprints/admin/templates/admin/_navbar.html` |
+
+**Ventajas de Seguridad:**
+- 🛡️ Aislamiento total del admin
+- 🔐 No accesible desde otros blueprints
+- 📁 Mejor organización del código
+- 🎯 Sigue mejores prácticas de Flask
+
+---
+
+### Versión 1.3.2 (13 de marzo de 2026)
 
 **Navbar Independiente para Admin:**
 
@@ -1182,4 +1243,4 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.3.2 - Filosofía de Trabajo*
+*Documento actualizado el 13 de marzo de 2026 - v1.3.3 - Templates Admin Seguros*
