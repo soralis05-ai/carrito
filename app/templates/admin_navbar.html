@@ -1,0 +1,64 @@
+<!-- Navbar exclusivo para Panel de Administración -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('admin.dashboard') }}">
+            <i class="bi bi-gear-fill"></i> Admin Panel
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-box-seam"></i> Productos
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('admin.upload_product') }}"><i class="bi bi-cloud-upload"></i> Subir Producto</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin.list_products') }}"><i class="bi bi-list"></i> Ver Productos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('admin.list_categories') }}"><i class="bi bi-collection"></i> Categorías</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="portfolioDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-images"></i> Portfolio
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('portfolio.admin_dashboard') }}"><i class="bi bi-gear"></i> Gestionar</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('portfolio.admin_info') }}"><i class="bi bi-person"></i> Información</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('portfolio.admin_items') }}"><i class="bi bi-images"></i> Items</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('portfolio.show') }}" target="_blank"><i class="bi bi-eye"></i> Ver Público</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('products.list') }}" target="_blank">
+                        <i class="bi bi-shop"></i> Ver Tienda
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% if current_user.is_admin %}
+                        <li><a class="dropdown-item" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-gear"></i> Panel Admin</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {% endif %}
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

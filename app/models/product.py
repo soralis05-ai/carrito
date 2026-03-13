@@ -36,6 +36,9 @@ class Product(db.Model):
     image_main = db.Column(db.String(255), nullable=True)  # Imagen principal
     images = db.Column(db.JSON, nullable=True)  # Lista de imágenes adicionales
     
+    # Costos de producción (almacena JSON con estructura de costos)
+    costos = db.Column(db.JSON, nullable=True)  # Costos de amigurumis
+
     # Categoría
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=True, index=True)
     

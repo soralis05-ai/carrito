@@ -4,14 +4,78 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.1.0  
-**Última actualización:** 11 de marzo de 2026  
-**Framework:** Flask 3.1+  
-**Python:** 3.14  
-**Frontend:** Bootstrap 5.3.3 + Bootstrap Icons  
-**Repositorio:** https://github.com/soralis05-ai/carrito.git  
-**Dominio:** almapunt.es  
+**Versión:** 1.3.2
+**Última actualización:** 13 de marzo de 2026
+**Framework:** Flask 3.1+
+**Python:** 3.14
+**Frontend:** Bootstrap 5.3.3 + Bootstrap Icons
+**Repositorio:** https://github.com/soralis05-ai/carrito.git
+**Dominio:** almapunt.es
 **Email:** soralis05@gmail.com
+
+---
+
+## 🎯 Filosofía de Trabajo - Reglas de Oro
+
+> **Nuestra filosofía de desarrollo se basa en 7 reglas fundamentales que guían cada decisión técnica:**
+
+### 1. 🏛️ Separación de Responsabilidades
+**Mantener la separación entre administración y lado público.**
+
+- ✅ Templates independientes: `base.html` (público) vs `admin_base.html` (administración)
+- ✅ Navbars separadas: `navbar.html` (pública) vs `admin_navbar.html` (admin)
+- ✅ Blueprints bien delimitados: cada módulo tiene su responsabilidad clara
+- ✅ Contextos diferentes: el admin nunca comparte layout con el público
+
+### 2. 🎨 Diseño Consistente
+**Mantener el diseño en todas las plantillas, tanto públicas como de administración.**
+
+- ✅ Mismo framework CSS (Bootstrap 5.3.3) en todo el proyecto
+- ✅ Mismos íconos (Bootstrap Icons) en toda la aplicación
+- ✅ Estilos coherentes pero diferenciados por contexto
+- ✅ Experiencia de usuario uniforme en cada sección
+
+### 3. 🚫 No Duplicar Código
+**No duplicar código en ningún archivo `.py` ni en plantillas.**
+
+- ✅ Constantes centralizadas (ej: `ALLOWED_EXTENSIONS` en `image_processor.py`)
+- ✅ Funciones utilitarias reutilizables
+- ✅ Templates base que extienden funcionalidad
+- ✅ Imports compartidos en lugar de código repetido
+
+### 4. 🧹 Eliminar Código en Desuso
+**Eliminar código en desuso tanto en archivos `.py` como en plantillas.**
+
+- ✅ Archivos vacíos o incompletos se eliminan (ej: `services.py` vacíos)
+- ✅ Funciones no usadas se remueven (ej: `helpers.py` con watermark)
+- ✅ Templates sin uso se eliminan del proyecto
+- ✅ Imports innecesarios se limpian
+
+### 5. 🧼 Producción Limpia
+**Producción se debe mantener limpia, sin basura de desarrollo ni archivos `*.md`.**
+
+- ✅ Tests solo en desarrollo, no en producción
+- ✅ Scripts de migración/documentación separados
+- ✅ Archivos temporales se eliminan después de usar
+- ✅ Solo código necesario en producción
+
+### 6. 📚 Documentación Actualizada
+**Solo se documentará en el archivo `README.md` de forma actualizada, ordenada y sin duplicados.**
+
+- ✅ Único README.md como fuente de verdad
+- ✅ Historial de cambios cronológico y sin repetir
+- ✅ Novedades de versión en la parte superior
+- ✅ Estructura clara y navegable
+- ✅ No hay otros archivos `.md` de documentación
+
+### 7. 🏗️ Blueprints Bien Estructurados
+**Mantener los blueprints bien estructurados.**
+
+- ✅ Cada blueprint en su directorio: `admin/`, `auth/`, `cart/`, `products/`, `portfolio/`, `orders/`
+- ✅ Estructura consistente: `__init__.py`, `routes.py`, `forms.py`, `templates/`
+- ✅ Templates en subdirectorios por blueprint
+- ✅ Models separados en `app/models/`
+- ✅ Utils compartidos en `app/utils/`
 
 ---
 
@@ -24,6 +88,50 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 - **Panel de administración** - Gestión de productos con calculadora de costos
 - **Procesamiento de imágenes** - Subida multi-formato con redimensionamiento automático
 - **Calculadora de Amigurumis** - Cálculo automático de precios basado en costos
+
+---
+
+## 🆕 Novedades (v1.3.2 - 13 marzo 2026)
+
+### Navbar Independiente para Admin
+
+**✨ Separación de Contextos:**
+- **Navbar Público:** Mantiene el diseño con gradiente morado/azul signature
+- **Navbar Admin:** Diseño oscuro profesional (`#2c3e50` → `#34495e`)
+- **Templates independientes:** `admin_base.html` y `admin_navbar.html`
+
+**📝 Nuevos Templates:**
+- `app/templates/admin_base.html` - Base layout exclusivo para admin
+- `app/templates/admin_navbar.html` - Navbar específico para panel de administración
+
+**🎨 Diferencias Visuales:**
+| Característica | Navbar Público | Navbar Admin |
+|----------------|----------------|--------------|
+| Color | Gradiente morado/azul | Oscuro profesional |
+| Icono | `bi-shop` Almapunt | `bi-gear-fill` Admin Panel |
+| Enlaces | Tienda, Portfolio, Carrito | Dashboard, Productos, Portfolio, Categorías |
+| Fondo | Gradiente signature | `#2c3e50` → `#34495e` |
+
+---
+
+## 🆕 Novedades (v1.3.1 - 13 marzo 2026)
+
+### Mejoras en Administración de Productos
+
+**✨ Nuevo Layout de Formularios:**
+- **Columna Izquierda (4 cols):** Configuración y Costos Amigurumis
+- **Columna Derecha (8 cols):** Información Básica, Precio/Stock, Imágenes
+- **Botones de acción:** Alineados a la derecha, debajo de las imágenes
+
+**🐛 Bug Fixes en Edición:**
+- Precarga correcta de costos desde base de datos
+- Visualización de imágenes existentes adicionales
+- Validación de precio > 0 antes de guardar
+- Imagen principal opcional al editar
+
+**📝 Nuevos Formularios:**
+- `ProductEditForm` - Versión de edición con imagen opcional
+- Validaciones mejoradas para evitar precio 0
 
 ---
 
@@ -44,11 +152,11 @@ c:\soraya\carrito\
 │   ├── __init__.py                 # Factory de la aplicación
 │   ├── config.py                   # Configuraciones por entorno
 │   ├── blueprints/
-│   │   ├── admin/                  # Panel de administración
+│   │   ├── admin/                  # Panel de administración (CRUD productos y categorías)
 │   │   ├── auth/                   # Autenticación de usuarios
 │   │   ├── cart/                   # Carrito de compras
 │   │   ├── orders/                 # Gestión de pedidos
-│   │   ├── portfolio/              # Portfolio personal (NUEVO)
+│   │   ├── portfolio/              # Portfolio personal
 │   │   └── products/               # Catálogo de productos
 │   ├── models/                     # Modelos de base de datos
 │   ├── static/
@@ -62,16 +170,30 @@ c:\soraya\carrito\
 │   │       └── utils.js            # Utilidades JavaScript
 │   ├── templates/
 │   │   ├── base.html               # Template base (con tema portfolio)
-│   │   ├── navbar.html             # Barra de navegación
+│   │   ├── admin_base.html         # Template base para admin ✨ NUEVO
+│   │   ├── navbar.html             # Barra de navegación (pública)
+│   │   ├── admin_navbar.html       # Barra de navegación admin ✨ NUEVO
 │   │   ├── footer.html             # Pie de página
 │   │   └── errors/                 # Páginas de error
 │   └── utils/
-│       ├── image_processor.py      # Procesamiento de imágenes (NUEVO)
+│       ├── image_processor.py      # Procesamiento de imágenes
 │       ├── decorators.py           # Decoradores personalizados
 │       └── helpers.py              # Funciones de ayuda
 ├── scripts/
-│   └── resize_images.py            # Script para redimensionar imágenes
+│   ├── add_costos_column.py        # Migración: agrega columna costos
+│   ├── add_portfolio_tables.py     # Migración: tablas portfolio ✨ NUEVO
+│   ├── clear_sample_products.py    # Eliminar productos de ejemplo
+│   ├── create_admin.py             # Crear usuario administrador
+│   ├── create_admin_quick.py       # Crear admin (no interactivo)
+│   ├── init_db.py                  # Inicializar base de datos
+│   ├── manage_users.py             # Gestionar usuarios
+│   ├── reset_password.py           # Resetear contraseña
+│   └── resize_images.py            # Redimensionar imágenes batch
 ├── tests/                          # Tests unitarios
+│   ├── __init__.py
+│   ├── test_auth.py                # Tests de autenticación
+│   ├── test_cart.py                # Tests del carrito
+│   └── test_products.py            # Tests de productos
 ├── run.py                          # Punto de entrada
 ├── requirements.txt                # Dependencias
 ├── .env                            # Variables de entorno
@@ -149,6 +271,8 @@ waitress              # (opcional, para producción)
 | `/admin/portfolio/info` | Editar información personal |
 | `/admin/portfolio/items` | Gestionar items del portfolio |
 | `/admin/portfolio/upload` | Subir fotos al portfolio |
+| `/admin/portfolio/items/edit/<id>` | Editar item existente ✨ NUEVO |
+| `/admin/portfolio/items/delete/<id>` | Eliminar item del portfolio |
 
 ---
 
@@ -235,8 +359,18 @@ if validate_image(filename):
 - [x] Orden de visualización configurable
 - [x] Eliminación de items
 - [x] Integración en navbar y admin dashboard
+- [x] **Base de datos para portfolio** (v1.3.0) ✨
 
-#### 7. Documentación
+#### 7. Edición de Productos (v1.3.1) ✨
+- [x] Precarga de datos de costos en edición
+- [x] Precarga de checkboxes (ojos, mano de obra, utilidad)
+- [x] Visualización de imágenes existentes
+- [x] Validación de precio > 0
+- [x] Imagen principal opcional en edición
+- [x] Layout invertido (Configuración izquierda, Información derecha)
+- [x] Botones de acción a la derecha
+
+#### 8. Documentación
 - [x] Estructura de archivos organizada
 - [x] Comentarios en código
 - [x] Templates separados por blueprint
@@ -247,19 +381,13 @@ if validate_image(filename):
 
 ### Prioridad Alta 🔴
 
-#### 1. Base de Datos para Portfolio
-- [ ] Migrar de sesión a base de datos (SQLite/PostgreSQL)
-- [ ] Crear modelos: `PortfolioItem`, `PortfolioInfo`
-- [ ] CRUD completo con SQLAlchemy
-- [ ] Persistencia de datos entre reinicios
-
-#### 2. Carrito de Compras Funcional
+#### 1. Carrito de Compras Funcional
 - [ ] Implementar sesión de carrito
 - [ ] Añadir/eliminar productos del carrito
 - [ ] Calcular total dinámicamente
 - [ ] Guardar carrito en base de datos (usuarios registrados)
 
-#### 3. Sistema de Usuarios
+#### 2. Sistema de Usuarios
 - [ ] Completar registro de usuarios (Flask-Login)
 - [ ] Login/logout funcional
 - [ ] Roles (admin vs cliente)
@@ -274,16 +402,23 @@ if validate_image(filename):
 - [ ] Historial de pedidos por usuario
 
 #### 5. Mejoras en Portfolio
+- [x] Migrar de sesión a base de datos (SQLite) ✨ COMPLETADO (v1.3.0)
+- [x] Modelos: `PortfolioItem`, `PortfolioInfo`
+- [x] CRUD completo con SQLAlchemy
+- [x] Persistencia de datos entre reinicios
+- [x] Edición de items ✨ COMPLETADO (v1.3.1)
 - [ ] Lightbox para ver imágenes en grande
 - [ ] Filtros por categoría
 - [ ] Paginación de items
 - [ ] Drag & drop para reordenar
 
 #### 6. Panel de Administración
+- [x] Editor de productos existente (editar/eliminar) ✨ COMPLETADO (v1.3.1)
+- [x] Layout optimizado (Configuración izquierda, Información derecha) ✨ COMPLETADO (v1.3.1)
+- [x] Validación de precio > 0 ✨ COMPLETADO (v1.3.1)
 - [ ] Dashboard con estadísticas (ventas, productos, visitas)
 - [ ] Gráficos con Chart.js
 - [ ] Exportar datos a CSV/Excel
-- [ ] Editor de productos existente (editar/eliminar)
 
 ### Prioridad Baja 🟢
 
@@ -317,11 +452,12 @@ if validate_image(filename):
 
 | Hito | Fecha Estimada | Estado |
 |------|----------------|--------|
-| Portfolio con BD | 1 marzo | ⏳ Pendiente |
-| Carrito funcional | 3 marzo | ⏳ Pendiente |
-| Usuarios y auth | 5 marzo | ⏳ Pendiente |
-| Checkout completo | 10 marzo | ⏳ Pendiente |
-| Producción (deploy) | 15 marzo | ⏳ Pendiente |
+| Portfolio con BD | 13 marzo | ✅ Completado |
+| Mejoras Admin (v1.3.1) | 13 marzo | ✅ Completado |
+| Carrito funcional | 15 marzo | ⏳ Pendiente |
+| Usuarios y auth | 17 marzo | ⏳ Pendiente |
+| Checkout completo | 20 marzo | ⏳ Pendiente |
+| Producción (deploy) | 25 marzo | ⏳ Pendiente |
 
 ---
 
@@ -365,6 +501,8 @@ python -m pytest tests/
 | `CartItem` | `cart_items` | Items del carrito (usuarios o sesiones) |
 | `Order` | `orders` | Pedidos con estados y totales |
 | `OrderItem` | `order_items` | Items individuales de cada pedido |
+| `PortfolioInfo` | `portfolio_info` | Información del portfolio (nombre, bio, contacto) ✨ NUEVO |
+| `PortfolioItem` | `portfolio_items` | Items/gallery del portfolio (imágenes destacadas) ✨ NUEVO |
 
 ### Inicializar Base de Datos
 
@@ -536,6 +674,139 @@ function calcularCostos() {
 
 ---
 
+## 📚 Gestión del Portfolio
+
+### Descripción
+
+El módulo Portfolio permite mostrar una galería de productos destacados con información personal del artista. Totalmente gestionado desde el panel de administración.
+
+### Migración de Base de Datos
+
+```cmd
+# Crear tablas del portfolio
+python scripts/add_portfolio_tables.py
+```
+
+**Tablas creadas:**
+- `portfolio_info` - Información general (nombre, bio, contacto)
+- `portfolio_items` - Items individuales (título, descripción, imagen, orden)
+
+### Modelos
+
+#### PortfolioInfo
+
+```python
+from app.models import PortfolioInfo
+
+# Obtener información (o crear por defecto)
+info = PortfolioInfo.get_or_create()
+print(info.name)    # 'Almapunt'
+print(info.bio)     # Biografía del artista
+```
+
+**Campos:**
+- `name` - Nombre del artista o negocio
+- `title` - Título profesional
+- `bio` - Biografía (hasta 1000 caracteres)
+- `email` - Email de contacto
+- `phone` - Teléfono
+
+#### PortfolioItem
+
+```python
+from app.models import PortfolioItem
+from app import db
+
+# Obtener todos los items activos
+items = PortfolioItem.get_all_active()
+
+# Crear nuevo item
+item = PortfolioItem(
+    title='Colección Primavera',
+    description='Amigurumis florales',
+    image='abc123.webp',
+    order=1
+)
+db.session.add(item)
+db.session.commit()
+```
+
+**Campos:**
+- `title` - Título del item
+- `description` - Descripción (hasta 500 caracteres)
+- `image` - Nombre del archivo WEBP
+- `order` - Orden de visualización (menor = primero)
+- `is_active` - Estado (activo/inactivo)
+
+### Rutas Públicas
+
+| Ruta | Descripción |
+|------|-------------|
+| `/portfolio/` | Página pública con galería completa |
+
+**Características:**
+- Hero section con nombre y título
+- Biografía del artista
+- Grid responsive de items
+- Información de contacto
+- Botón "Ver Tienda"
+
+### Rutas de Administración
+
+| Ruta | Método | Descripción |
+|------|--------|-------------|
+| `/portfolio/admin` | GET | Dashboard del portfolio |
+| `/portfolio/admin/info` | GET, POST | Editar información personal |
+| `/portfolio/admin/items` | GET | Listar todos los items |
+| `/portfolio/admin/items/upload` | GET, POST | Subir nuevo item |
+| `/portfolio/admin/items/edit/<id>` | GET, POST | Editar item existente |
+| `/portfolio/admin/items/delete/<id>` | GET | Eliminar item |
+
+### Flujo de Trabajo
+
+1. **Configurar información personal:**
+   - Ir a `/portfolio/admin/info`
+   - Completar nombre, título, biografía y contacto
+   - Guardar cambios
+
+2. **Subir items al portfolio:**
+   - Ir a `/portfolio/admin/items/upload`
+   - Subir imagen (JPG, PNG, WEBP, AVIF)
+   - Completar título y descripción
+   - Definir orden de visualización
+   - Vista previa en tiempo real
+
+3. **Gestionar items existentes:**
+   - Ir a `/portfolio/admin/items`
+   - Editar: modificar datos o cambiar imagen
+   - Eliminar: confirmar eliminación
+
+### Procesamiento de Imágenes
+
+- **Formatos soportados:** JPG, PNG, WEBP, AVIF, GIF
+- **Conversión:** Automática a WEBP
+- **Tamaño máximo:** 1200x1200px
+- **Calidad:** 90%
+- **Ubicación:** `app/static/img/portfolio/`
+
+### Ejemplo: Ver Portfolio Público
+
+```
+URL: http://localhost:5000/portfolio/
+
+Muestra:
+├── Hero con gradiente morado/azul
+├── Nombre: Almapunt
+├── Título: Artesanía y Productos Únicos
+├── Biografía
+└── Grid de items (3 columnas)
+    ├── Imagen
+    ├── Título
+    └── Descripción
+```
+
+---
+
 ## 🔐 Autenticación
 
 ### Características
@@ -702,6 +973,180 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ## 📝 Historial de Cambios
 
+### Versión 1.3.2 (13 de marzo de 2026) - **ACTUAL** ✨
+
+**Navbar Independiente para Admin:**
+
+- ✅ **Separación de contextos** - Admin y público ahora tienen navbars diferentes
+- ✅ **Nuevo template `admin_base.html`** - Layout exclusivo para panel de administración
+- ✅ **Nuevo template `admin_navbar.html`** - Navbar oscuro profesional para admin
+- ✅ **Todos los templates admin actualizados** - 12 templates migrados a `admin_base.html`
+
+**Templates Actualizados:**
+- ✅ `admin/dashboard.html`, `admin/list_products.html`, `admin/upload_product.html`
+- ✅ `admin/edit_product.html`, `admin/list_categories.html`
+- ✅ `admin/create_category.html`, `admin/edit_category.html`
+- ✅ `portfolio/admin/dashboard.html`, `portfolio/admin/info.html`
+- ✅ `portfolio/admin/items.html`, `portfolio/admin/upload.html`, `portfolio/admin/edit.html`
+
+**Diferencias Visuales:**
+| Característica | Navbar Público | Navbar Admin |
+|----------------|----------------|--------------|
+| Color | Gradiente morado/azul | Oscuro (`#2c3e50` → `#34495e`) |
+| Icono | `bi-shop` Almapunt | `bi-gear-fill` Admin Panel |
+| Estilo | Vibrante, comercial | Profesional, sobrio |
+
+---
+
+### Versión 1.3.1 (13 de marzo de 2026)
+
+**Mejoras en la Interfaz de Administración:**
+
+- ✅ **Rediseño del layout de productos** - Columnas invertidas
+  - Izquierda (col-lg-4): Configuración y Costos
+  - Derecha (col-lg-8): Información básica, Precio/Stock, Imágenes
+  - Botones de acción movidos a la derecha (debajo de imágenes)
+
+- ✅ **Bug fixes en edición de productos**
+  - Precarga correcta de datos de costos (JSON)
+  - Precarga de checkboxes (ojos, mano de obra, utilidad)
+  - Visualización de imágenes existentes adicionales
+  - Validación de precio > 0 antes de guardar
+  - Imagen principal opcional en edición
+
+- ✅ **Nuevo formulario `ProductEditForm`**
+  - Hereda de `ProductUploadForm`
+  - Imagen principal opcional (sin `FileRequired`)
+  - Precio permite 0 inicialmente (se calcula)
+
+**Archivos Modificados:**
+- ✅ `app/blueprints/admin/forms.py` - Nuevo `ProductEditForm`
+- ✅ `app/blueprints/admin/routes.py` - Precarga de costos, validación
+- ✅ `app/blueprints/admin/templates/admin/upload_product.html` - Layout invertido
+- ✅ `app/blueprints/admin/templates/admin/edit_product.html` - Layout + imágenes existentes
+
+**Mejoras de UX:**
+- ✅ Flujo de trabajo más lógico (configuración → información → imágenes)
+- ✅ Botones de acción accesibles al final del formulario
+- ✅ Vista previa de imágenes existentes en edición
+- ✅ Cálculo automático de precios al cargar (JavaScript)
+
+---
+
+### Versión 1.3.0 (13 de marzo de 2026)
+
+**Portfolio con Base de Datos:**
+- ✅ Migración de sesión a base de datos SQLite
+- ✅ Modelos: `PortfolioInfo` y `PortfolioItem`
+- ✅ CRUD completo con SQLAlchemy
+- ✅ Persistencia de datos entre reinicios
+- ✅ Información del portfolio almacenada en BD (nombre, bio, contacto)
+- ✅ Items del portfolio con orden y descripción
+
+**Nuevos Modelos:**
+- ✅ `PortfolioInfo` - Información personal del portfolio
+  - Campos: name, title, bio, email, phone
+  - Método `get_or_create()` para registro único
+  - Método `to_dict()` para serialización
+- ✅ `PortfolioItem` - Items individuales del portfolio
+  - Campos: title, description, image, order, is_active
+  - Método `get_all_active()` para obtener items activos
+  - Orden configurable por número
+
+**Nuevas Rutas:**
+- ✅ `/portfolio/` - Página pública del portfolio
+- ✅ `/portfolio/admin` - Dashboard de administración
+- ✅ `/portfolio/admin/info` - Editar información personal
+- ✅ `/portfolio/admin/items` - Listar items
+- ✅ `/portfolio/admin/items/upload` - Subir nuevo item
+- ✅ `/portfolio/admin/items/edit/<id>` - Editar item existente
+- ✅ `/portfolio/admin/items/delete/<id>` - Eliminar item
+
+**Nuevos Scripts:**
+- ✅ `add_portfolio_tables.py` - Migración para crear tablas del portfolio
+
+**Templates Actualizados:**
+- ✅ `portfolio/public.html` - Página pública con grid de items
+- ✅ `portfolio/admin/dashboard.html` - Panel principal
+- ✅ `portfolio/admin/info.html` - Formulario de información
+- ✅ `portfolio/admin/items.html` - Lista con editar/eliminar
+- ✅ `portfolio/admin/upload.html` - Subida de imágenes
+- ✅ `portfolio/admin/edit.html` - Edición de items (NUEVO)
+
+**Mejoras de UX:**
+- ✅ Vista previa de imágenes en tiempo real (subida y edición)
+- ✅ Mensajes flash para feedback de operaciones
+- ✅ Confirmación antes de eliminar
+- ✅ Precarga de datos en edición
+- ✅ Botones de editar y eliminar en lista de items
+
+**Base de Datos:**
+- ✅ Nueva tabla `portfolio_info` (información general)
+- ✅ Nueva tabla `portfolio_items` (items individuales)
+- ✅ Script de migración `add_portfolio_tables.py`
+- ✅ Registro por defecto creado automáticamente
+
+---
+
+### Versión 1.2.0 (11 de marzo de 2026)
+
+**Gestión de Productos (CRUD Completo):**
+- ✅ Crear productos con formulario completo (nombre, descripción, precio, stock, SKU)
+- ✅ Listar productos en tabla con vista previa de imágenes
+- ✅ Editar productos existentes con precarga de datos
+- ✅ Eliminar productos con confirmación
+- ✅ Generación automática de slug y SKU
+- ✅ Cálculo automático de precio basado en costos (calculadora de amigurumis)
+
+**Calculadora de Costos (Amigurumis):**
+- ✅ Campos de costos en formulario de subida y edición
+- ✅ Cálculo en tiempo real con JavaScript
+- ✅ Lana: (costo_rollo / peso_rollo) × peso_usado
+- ✅ Relleno: (costo_bolsa / peso_bolsa) × peso_usado
+- ✅ Ojos de seguridad (opcional)
+- ✅ Mano de obra (opcional): costo_hora × horas
+- ✅ Utilidad porcentual (opcional)
+- ✅ Precio de venta = Costo total + Utilidad
+- ✅ Campo de precio readonly (solo cálculo)
+- ✅ Resumen visual de costos en tarjeta
+
+**Gestión de Categorías (CRUD):**
+- ✅ Listar categorías ordenadas por ID
+- ✅ Crear categorías con nombre, slug, descripción
+- ✅ Editar categorías existentes
+- ✅ Eliminar categorías (solo si no tienen productos)
+- ✅ Validación de slugs únicos
+- ✅ Generación automática de slug desde nombre
+
+**Base de Datos:**
+- ✅ Nueva columna `costos` (JSON) en tabla products
+- ✅ Script `add_costos_column.py` para migración
+- ✅ Persistencia de estructura de costos por producto
+
+**Templates Actualizados:**
+- ✅ `admin/upload_product.html` - Formulario completo con cálculo automático
+- ✅ `admin/edit_product.html` - Edición con precarga de datos y costos
+- ✅ `admin/list_products.html` - Tabla con acciones editar/eliminar/ver
+- ✅ `admin/list_categories.html` - Gestión de categorías
+- ✅ `admin/create_category.html` - Crear categoría
+- ✅ `admin/edit_category.html` - Editar categoría
+- ✅ `admin/dashboard.html` - Contadores y accesos rápidos
+
+**Scripts Nuevos:**
+- ✅ `add_costos_column.py` - Migración de base de datos
+- ✅ `clear_sample_products.py` - Limpiar productos de ejemplo
+- ✅ `create_admin_quick.py` - Crear admin por línea de comandos
+- ✅ `reset_password.py` - Resetear contraseña por email
+
+**Mejoras de UX:**
+- ✅ Vista previa de imágenes en tiempo real
+- ✅ Toggle de campos opcionales (ojos, mano de obra, utilidad)
+- ✅ Mensajes flash para feedback de operaciones
+- ✅ Confirmación antes de eliminar
+- ✅ Precarga de datos en edición
+
+---
+
 ### Versión 1.1.0 (11 de marzo de 2026)
 
 **Calculadora de Costos:**
@@ -737,4 +1182,4 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ---
 
-*Documento actualizado el 11 de marzo de 2026*
+*Documento actualizado el 13 de marzo de 2026 - v1.3.2 - Filosofía de Trabajo*

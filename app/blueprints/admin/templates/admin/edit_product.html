@@ -1,6 +1,6 @@
 {% extends 'admin_base.html' %}
 
-{% block title %}Subir Producto - Admin{% endblock %}
+{% block title %}Editar Producto - Admin{% endblock %}
 
 {% block content %}
 <div class="container py-4">
@@ -9,7 +9,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Subir Producto</li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.list_products') }}" class="text-decoration-none">Productos</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar {{ product.name }}</li>
                 </ol>
             </nav>
         </div>
@@ -62,11 +63,9 @@
 
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-secondary text-white">
-                        <h5 class="mb-0"><i class="bi bi-calculator"></i> Costos (Opcional)</h5>
+                        <h5 class="mb-0"><i class="bi bi-calculator"></i> Costos (Amigurumis)</h5>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted small mb-3">Completa solo si es un amigurumi y quieres calcular el precio.</p>
-
                         <h6 class="text-primary">Materiales</h6>
                         <div class="mb-2">
                             <label class="form-label small">Costo Rollo Lana (€)</label>
@@ -176,7 +175,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre del Producto *</label>
-                            {{ form.name(class="form-control", required=True, placeholder="Ej: Conejito de Peluche") }}
+                            {{ form.name(class="form-control", required=True) }}
                             {% for error in form.name.errors %}
                                 <div class="text-danger small">{{ error }}</div>
                             {% endfor %}
@@ -184,7 +183,7 @@
 
                         <div class="mb-3">
                             <label for="description" class="form-label">Descripción *</label>
-                            {{ form.description(class="form-control", rows=4, required=True, placeholder="Descripción del producto...") }}
+                            {{ form.description(class="form-control", rows=4, required=True) }}
                             {% for error in form.description.errors %}
                                 <div class="text-danger small">{{ error }}</div>
                             {% endfor %}
@@ -221,8 +220,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="sku" class="form-label">SKU (Referencia)</label>
-                            {{ form.sku(class="form-control", placeholder="Deja vacío para generar automáticamente") }}
-                            <small class="text-muted">Se generará automáticamente si lo dejas vacío</small>
+                            {{ form.sku(class="form-control") }}
+                            <small class="text-muted">Deja vacío para generar automáticamente</small>
                         </div>
                     </div>
                 </div>
@@ -234,45 +233,56 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="image" class="form-label">Imagen Principal *</label>
+                            {% if product.get_main_image() %}
+                                <div class="mb-2">
+                                    <img src="{{ url_for('static', filename='img/productos/' + product.get_main_image()) }}"
+                                         alt="Imagen actual"
+                                         style="max-width: 200px; border-radius: 8px;">
+                                    <p class="text-muted small mt-1">Imagen actual. Sube una nueva para reemplazar.</p>
+                                </div>
+                            {% endif %}
                             {{ form.image(class="form-control") }}
                             {% for error in form.image.errors %}
                                 <div class="text-danger small">{{ error }}</div>
                             {% endfor %}
-                            <div id="preview1" class="mt-2 border rounded p-2 text-center" style="min-height: 100px;">
-                                <span class="text-muted small">Vista previa</span>
-                            </div>
                         </div>
-                        
+
+                        <!-- Imágenes existentes adicionales -->
+                        {% if product.images and product.images|length > 0 %}
+                        <div class="mb-3">
+                            <label class="form-label">Imágenes Adicionales Existentes</label>
+                            <div class="row">
+                                {% for img in product.images %}
+                                <div class="col-md-4 col-6 mb-2">
+                                    <img src="{{ url_for('static', filename='img/productos/' + img) }}"
+                                         alt="Imagen {{ loop.index + 1 }}"
+                                         class="img-thumbnail" style="width: 100%; height: 150px; object-fit: cover;">
+                                    <p class="text-muted small text-center mt-1">Imagen {{ loop.index + 1 }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <p class="text-muted small mt-2">Sube nuevas imágenes en los campos de abajo para reemplazarlas.</p>
+                        </div>
+                        {% endif %}
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="image2" class="form-label">Imagen 2 (Opcional)</label>
+                                <label for="image2" class="form-label">Imagen 2</label>
                                 {{ form.image2(class="form-control") }}
-                                <div id="preview2" class="mt-2 border rounded p-2 text-center" style="min-height: 80px;">
-                                    <span class="text-muted small">Vista previa</span>
-                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="image3" class="form-label">Imagen 3 (Opcional)</label>
+                                <label for="image3" class="form-label">Imagen 3</label>
                                 {{ form.image3(class="form-control") }}
-                                <div id="preview3" class="mt-2 border rounded p-2 text-center" style="min-height: 80px;">
-                                    <span class="text-muted small">Vista previa</span>
-                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="image4" class="form-label">Imagen 4 (Opcional)</label>
+                                <label for="image4" class="form-label">Imagen 4</label>
                                 {{ form.image4(class="form-control") }}
-                                <div id="preview4" class="mt-2 border rounded p-2 text-center" style="min-height: 80px;">
-                                    <span class="text-muted small">Vista previa</span>
-                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="image5" class="form-label">Imagen 5 (Opcional)</label>
+                                <label for="image5" class="form-label">Imagen 5</label>
                                 {{ form.image5(class="form-control") }}
-                                <div id="preview5" class="mt-2 border rounded p-2 text-center" style="min-height: 80px;">
-                                    <span class="text-muted small">Vista previa</span>
-                                </div>
                             </div>
                         </div>
                         <small class="text-muted">Formatos soportados: JPG, PNG, WEBP, AVIF</small>
@@ -294,33 +304,6 @@
 </div>
 
 <script>
-// Vista previa de imágenes
-function setupImagePreview(inputId, previewId) {
-    const input = document.getElementById(inputId);
-    if (!input) return;
-    
-    input.addEventListener('change', function(e) {
-        const preview = document.getElementById(previewId);
-        const file = e.target.files[0];
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Vista previa" style="max-height: 150px; max-width: 100%; border-radius: 4px;">';
-            };
-            reader.readAsDataURL(file);
-        } else {
-            preview.innerHTML = '<span class="text-muted small">Vista previa</span>';
-        }
-    });
-}
-
-setupImagePreview('image', 'preview1');
-setupImagePreview('image2', 'preview2');
-setupImagePreview('image3', 'preview3');
-setupImagePreview('image4', 'preview4');
-setupImagePreview('image5', 'preview5');
-
 // ============================================
 // CÁLCULO AUTOMÁTICO DE PRECIOS
 // ============================================
@@ -420,6 +403,42 @@ function calcularCostos() {
 
 // Escuchar cambios en todos los campos de costos
 document.addEventListener('DOMContentLoaded', function() {
+    // Función para inicializar checkboxes y mostrar/ocultar campos
+    function initCheckboxToggle(checkboxId, fieldsId) {
+        const checkbox = document.getElementById(checkboxId);
+        if (!checkbox) return;
+
+        // Mostrar/ocultar campos según estado inicial
+        const fields = document.getElementById(fieldsId);
+        if (fields) {
+            if (checkbox.checked) {
+                fields.classList.remove('d-none');
+                fields.querySelectorAll('input').forEach(input => input.disabled = false);
+            } else {
+                fields.classList.add('d-none');
+                fields.querySelectorAll('input').forEach(input => input.disabled = true);
+            }
+        }
+
+        // Event listener para cambios
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                fields.classList.remove('d-none');
+                fields.querySelectorAll('input').forEach(input => input.disabled = false);
+            } else {
+                fields.classList.add('d-none');
+                fields.querySelectorAll('input').forEach(input => input.disabled = true);
+            }
+            calcularCostos();
+        });
+    }
+
+    // Inicializar checkboxes
+    initCheckboxToggle('ojos_usar', 'ojos-fields');
+    initCheckboxToggle('mano_obra_usar', 'mano-obra-fields');
+    initCheckboxToggle('utilidad_usar', 'utilidad-fields');
+
+    // Lista de campos a escuchar para cálculo
     const camposCosto = [
         '.costo-lana-rollo', '.peso-lana-rollo', '.peso-lana-usado',
         '.costo-relleno-bolsa', '.peso-relleno-bolsa', '.peso-relleno-usado',
@@ -427,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '#mano_obra_costo_hora', '#mano_obra_horas',
         '#utilidad_porcentaje'
     ];
-    
+
     camposCosto.forEach(function(selector) {
         const el = document.querySelector(selector);
         if (el) {
@@ -435,57 +454,8 @@ document.addEventListener('DOMContentLoaded', function() {
             el.addEventListener('change', calcularCostos);
         }
     });
-    
-    // También escuchar cambios en checkboxes
-    const checkboxes = ['.ojos-usar', '.mano-obra-usar', '.utilidad-usar'];
-    checkboxes.forEach(function(selector) {
-        const el = document.querySelector(selector);
-        if (el) {
-            el.addEventListener('change', calcularCostos);
-        }
-    });
-    
-    // Mostrar/ocultar campos según checkboxes
-    function toggleFields(checkbox, fieldsId) {
-        const fields = document.getElementById(fieldsId);
-        if (!fields) return;
-        
-        if (checkbox.checked) {
-            fields.classList.remove('d-none');
-            fields.querySelectorAll('input').forEach(input => input.disabled = false);
-        } else {
-            fields.classList.add('d-none');
-            fields.querySelectorAll('input').forEach(input => input.disabled = true);
-        }
-        calcularCostos();
-    }
 
-    const ojosCheckbox = document.getElementById('ojos_usar');
-    const manoObraCheckbox = document.getElementById('mano_obra_usar');
-    const utilidadCheckbox = document.getElementById('utilidad_usar');
-
-    if (ojosCheckbox) {
-        ojosCheckbox.addEventListener('change', function() {
-            toggleFields(this, 'ojos-fields');
-        });
-        toggleFields(ojosCheckbox, 'ojos-fields');
-    }
-
-    if (manoObraCheckbox) {
-        manoObraCheckbox.addEventListener('change', function() {
-            toggleFields(this, 'mano-obra-fields');
-        });
-        toggleFields(manoObraCheckbox, 'mano-obra-fields');
-    }
-
-    if (utilidadCheckbox) {
-        utilidadCheckbox.addEventListener('change', function() {
-            toggleFields(this, 'utilidad-fields');
-        });
-        toggleFields(utilidadCheckbox, 'utilidad-fields');
-    }
-    
-    // Calculo inicial
+    // Cálculo inicial al cargar la página
     calcularCostos();
 });
 </script>

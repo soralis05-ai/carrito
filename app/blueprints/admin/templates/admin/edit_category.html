@@ -1,0 +1,95 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Editar Categoría - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.list_categories') }}" class="text-decoration-none">Categorías</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar {{ category.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil"></i> Editar Categoría</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre de la Categoría *</label>
+                            <input type="text" name="name" id="name" class="form-control" required 
+                                   value="{{ category.name }}">
+                            <small class="text-muted">El nombre es requerido</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug (URL amigable)</label>
+                            <input type="text" name="slug" id="slug" class="form-control" 
+                                   value="{{ category.slug }}"
+                                   pattern="[a-z0-9-]+" 
+                                   title="Solo letras minúsculas, números y guiones">
+                            <small class="text-muted">La URL amigable de la categoría</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción</label>
+                            <textarea name="description" id="description" class="form-control" rows="4" 
+                                      placeholder="Descripción opcional de la categoría...">{{ category.description or '' }}</textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="is_active" id="is_active" class="form-check-input" 
+                                   {% if category.is_active %}checked{% endif %}>
+                            <label class="form-check-label" for="is_active">
+                                Categoría activa
+                            </label>
+                            <small class="text-muted d-block">Visible en el formulario de productos</small>
+                        </div>
+
+                        {% set product_count = category.products.count() %}
+                        {% if product_count > 0 %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <strong>Nota:</strong> Esta categoría tiene <strong>{{ product_count }}</strong> producto(s) asociado(s).
+                            No podrás eliminarla hasta que los reasignes o elimines.
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Guardar Cambios
+                            </button>
+                            <a href="{{ url_for('admin.list_categories') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-info-circle"></i> Información</h6>
+                    <ul class="small mb-0">
+                        <li><strong>ID:</strong> {{ category.id }}</li>
+                        <li><strong>Creada:</strong> {{ category.created_at.strftime('%d/%m/%Y') if category.created_at else 'N/A' }}</li>
+                        <li><strong>Productos:</strong> {{ product_count }}</li>
+                        <li class="mt-2">No puedes eliminar categorías con productos asociados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

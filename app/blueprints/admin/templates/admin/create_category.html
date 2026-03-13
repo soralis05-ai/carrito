@@ -1,0 +1,104 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Nueva Categoría - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.list_categories') }}" class="text-decoration-none">Categorías</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Nueva Categoría</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Crear Nueva Categoría</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre de la Categoría *</label>
+                            <input type="text" name="name" id="name" class="form-control" required 
+                                   placeholder="Ej: Peluches, Accesorios, Hogar...">
+                            <small class="text-muted">El nombre es requerido</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Slug (URL amigable)</label>
+                            <input type="text" name="slug" id="slug" class="form-control" 
+                                   placeholder="ej: peluches"
+                                   pattern="[a-z0-9-]+" 
+                                   title="Solo letras minúsculas, números y guiones">
+                            <small class="text-muted">Se genera automáticamente si lo dejas vacío. Ej: "peluches-amigurumi"</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción</label>
+                            <textarea name="description" id="description" class="form-control" rows="4" 
+                                      placeholder="Descripción opcional de la categoría..."></textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" name="is_active" id="is_active" class="form-check-input" checked>
+                            <label class="form-check-label" for="is_active">
+                                Categoría activa
+                            </label>
+                            <small class="text-muted d-block">Visible en el formulario de productos</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Crear Categoría
+                            </button>
+                            <a href="{{ url_for('admin.list_categories') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-info-circle"></i> Consejos</h6>
+                    <ul class="small mb-0">
+                        <li>El <strong>nombre</strong> es lo que ven los usuarios</li>
+                        <li>El <strong>slug</strong> es la URL amigable (ej: <code>peluches</code>)</li>
+                        <li>La <strong>descripción</strong> es opcional</li>
+                        <li>Una categoría <strong>inactiva</strong> no aparece en el formulario de productos</li>
+                        <li>No puedes eliminar categorías con productos asociados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Generar slug automático mientras escribes
+document.getElementById('name').addEventListener('input', function() {
+    const slugInput = document.getElementById('slug');
+    
+    // Solo generar si está vacío
+    if (slugInput.value === '') {
+        const slug = this.value
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/_/g, '-')
+            .replace(/[^\w-]+/g, '');
+        
+        slugInput.value = slug;
+    }
+});
+</script>
+{% endblock %}

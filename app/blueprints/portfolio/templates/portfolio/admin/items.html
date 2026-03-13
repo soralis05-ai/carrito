@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
 
 {% block title %}Items del Portfolio{% endblock %}
 
@@ -37,9 +37,13 @@
                     {% endif %}
                     <span class="badge bg-secondary">Orden: {{ item.order }}</span>
                 </div>
-                <div class="card-footer bg-white border-0">
-                    <a href="{{ url_for('portfolio.admin_delete', item_id=item.id) }}" 
-                       class="btn btn-outline-danger btn-sm w-100"
+                <div class="card-footer bg-white border-0 d-flex gap-2">
+                    <a href="{{ url_for('portfolio.admin_edit', item_id=item.id) }}"
+                       class="btn btn-outline-primary btn-sm flex-grow-1">
+                        <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a href="{{ url_for('portfolio.admin_delete', item_id=item.id) }}"
+                       class="btn btn-outline-danger btn-sm flex-grow-1"
                        onclick="return confirm('¿Eliminar este item?')">
                         <i class="bi bi-trash"></i> Eliminar
                     </a>

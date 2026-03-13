@@ -23,6 +23,10 @@ SUPPORTED_FORMATS = {
     'gif': 'PNG'  # GIF animado se convierte a PNG estático
 }
 
+# Extensiones permitidas para formularios (exportado para forms.py)
+ALLOWED_EXTENSIONS = list(SUPPORTED_FORMATS.keys())
+EXTENSIONS_STRING = ', '.join(ext.upper() for ext in ALLOWED_EXTENSIONS)
+
 # Configuración de redimensionamiento
 IMAGE_CONFIG = {
     'productos': {
@@ -49,7 +53,7 @@ def validate_image(filename):
 
 def get_allowed_extensions():
     """Obtener lista de extensiones permitidas para el formulario."""
-    return list(SUPPORTED_FORMATS.keys())
+    return ALLOWED_EXTENSIONS
 
 
 def process_image(
