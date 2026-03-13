@@ -577,6 +577,8 @@ flask db downgrade -1
 
 ### Migraciones en Producción (Hetzner/Debian)
 
+**⚠️ IMPORTANTE: Primero instalar Flask-Migrate**
+
 ```bash
 # 1. Conectarse al servidor
 ssh user@hetzner
@@ -587,11 +589,30 @@ cd /var/www/almapunt
 # 3. Activar entorno virtual
 source .venv/bin/activate
 
-# 4. Aplicar migraciones
+# 4. Instalar Flask-Migrate (solo primera vez)
+pip install Flask-Migrate
+
+# 5. Actualizar dependencias del proyecto
+pip install -r requirements.txt
+
+# 6. Aplicar migraciones
 flask db upgrade
 
-# 5. Reiniciar aplicación
+# 7. Reiniciar aplicación
 sudo systemctl restart almapunt
+```
+
+**Resolver conflictos de Git en producción:**
+
+```bash
+# Si hay conflicto con requirements.txt:
+git stash              # Guardar cambios locales temporalmente
+git pull origin main   # Actualizar desde GitHub
+git stash pop          # Restaurar cambios locales (si los hay)
+
+# O descartar cambios locales:
+git checkout -- requirements.txt
+git pull origin main
 ```
 
 ### Verificar Base de Datos (SQLite)
@@ -1109,6 +1130,19 @@ Todos los derechos reservados © 2024-2026 Almapunt
 - ✅ **Comandos disponibles** - `flask db migrate`, `flask db upgrade`
 - ✅ **Documentación actualizada** - Comandos de migración en README
 
+**⚠️ IMPORTANTE - Producción (Hetzner):**
+
+Después de hacer pull en producción, ejecutar:
+
+```bash
+cd /var/www/almapunt
+source .venv/bin/activate
+pip install Flask-Migrate
+pip install -r requirements.txt
+flask db upgrade
+sudo systemctl restart almapunt
+```
+
 **Nueva Regla de Oro (#8):**
 - ✅ **Variables de Entorno Seguras** - Nunca crear `.env.example`
 - ✅ `.env` siempre en `.gitignore`
@@ -1352,4 +1386,4 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.3.4 - Flask-Migrate y Regla #8*
+*Documento actualizado el 13 de marzo de 2026 - v1.3.4 - Flask-Migrate, Regla #8 y Producción*
