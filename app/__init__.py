@@ -18,9 +18,9 @@ def create_app():
     # User loader para Flask-Login
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User
+        from app.models.user import User
         return User.query.get(int(user_id))
-    
+
     # Registrar blueprints
     from app.blueprints.auth import auth_bp
     from app.blueprints.products import products_bp
@@ -41,7 +41,9 @@ def create_app():
     def index():
         return render_template('coming_soon.html')
 
+    # Importar modelos después de registrar blueprints
     with app.app_context():
+        from app.models import User, Product, Category, PortfolioInfo, PortfolioItem
         db.create_all()
 
     return app
