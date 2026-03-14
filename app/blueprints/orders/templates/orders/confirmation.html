@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Pedido Confirmado - {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Confirmación exitosa -->
+            <div class="text-center mb-5">
+                <div class="display-1 text-success mb-3">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h1 class="mb-3">¡Pedido Confirmado!</h1>
+                <p class="lead text-muted">
+                    Gracias por tu compra. Tu pedido ha sido procesado exitosamente.
+                </p>
+            </div>
+
+            <!-- Información del pedido -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-receipt"></i> Información del Pedido</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">Número de Pedido</h6>
+                            <p class="fs-4 fw-bold text-primary">{{ order.order_number }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">Fecha</h6>
+                            <p class="fs-5">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-2">Dirección de Envío</h6>
+                            <p>
+                                {{ order.shipping_address }}<br>
+                                {{ order.shipping_zip }}, {{ order.shipping_city }}<br>
+                                {{ order.shipping_country }}<br>
+                                <i class="bi bi-telephone"></i> {{ order.shipping_phone }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-2">Estado del Pedido</h6>
+                            <span class="badge bg-success fs-6">
+                                <i class="bi bi-check"></i> Confirmado
+                            </span>
+                            <p class="mt-2 text-muted small">
+                                Recibirás un email con los detalles de tu pedido.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items del pedido -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-box-seam"></i> Productos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items %}
+                                <tr>
+                                    <td>{{ item.product_name }}</td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-end">€{{ "%.2f"|format(item.unit_price|float) }}</td>
+                                    <td class="text-end">€{{ "%.2f"|format(item.total|float) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td class="text-end">€{{ "%.2f"|format(order.subtotal|float) }}</td>
+                                </tr>
+                                {% if order.shipping_cost > 0 %}
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Envío:</strong></td>
+                                    <td class="text-end">€{{ "%.2f"|format(order.shipping_cost|float) }}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Envío:</strong></td>
+                                    <td class="text-end text-success">GRATIS</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>IVA:</strong></td>
+                                    <td class="text-end">€{{ "%.2f"|format(order.tax|float) }}</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <td colspan="3" class="text-end"><strong>TOTAL:</strong></td>
+                                    <td class="text-end">
+                                        <strong class="text-primary fs-5">€{{ "%.2f"|format(order.total|float) }}</strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="{{ url_for('orders.download_offer', order_id=order.id) }}" 
+                       class="btn btn-primary w-100">
+                        <i class="bi bi-file-earmark-pdf"></i> Descargar Oferta PDF
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('products.list') }}" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-shop"></i> Seguir Comprando
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="{{ url_for('cart.view_cart') }}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-cart"></i> Ver Carrito
+                    </a>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="alert alert-info mt-4">
+                <h6 class="alert-heading"><i class="bi bi-info-circle"></i> Información Importante</h6>
+                <ul class="mb-0">
+                    <li>Tu oferta en PDF es válida por 7 días desde la fecha de emisión.</li>
+                    <li>Te enviaremos un email con los detalles de tu pedido.</li>
+                    <li>Si tienes alguna pregunta, contáctanos en soralis05@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

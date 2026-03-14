@@ -7,3 +7,4 @@ Pillow>=10.0
 pillow-avif-plugin>=1.5
 python-dotenv>=1.0
 waitress
+reportlab>=4.0
