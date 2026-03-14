@@ -140,6 +140,8 @@
                         <div class="card border-success bg-light mt-3">
                             <div class="card-body">
                                 <h6 class="text-success mb-2"><i class="bi bi-calculator"></i> Estructura de Precios</h6>
+                                
+                                <h6 class="text-primary mt-3">1. COSTOS DE PRODUCCIÓN</h6>
                                 <div class="row text-center small">
                                     <div class="col-4 mb-1">
                                         <span class="text-muted">Materiales:</span><br>
@@ -154,6 +156,7 @@
                                         <strong id="utilidad-total">0.00€</strong>
                                     </div>
                                 </div>
+                                
                                 <div class="row text-center small mt-2">
                                     <div class="col-6 mb-1">
                                         <span class="text-muted">Costo Total:</span><br>
@@ -164,17 +167,45 @@
                                         <strong id="precio-base">0.00€</strong>
                                     </div>
                                 </div>
-                                <div class="row text-center small mt-2">
-                                    <div class="col-12 mb-1">
-                                        <span class="text-muted">IVA (21% sobre Precio Base):</span><br>
-                                        <strong id="iva-total">0.00€</strong>
+                                
+                                <h6 class="text-primary mt-3">2. IMPUESTOS A TRIBUTAR</h6>
+                                <div class="row text-center small">
+                                    <div class="col-6 mb-1">
+                                        <span class="text-muted">IVA Soportado (21%):</span><br>
+                                        <strong id="iva-soportado" class="text-success">0.00€</strong>
+                                        <div class="text-muted" style="font-size: 0.65rem;">(IVA que pagaste en materiales)</div>
+                                    </div>
+                                    <div class="col-6 mb-1">
+                                        <span class="text-muted">IVA Repercutido (21%):</span><br>
+                                        <strong id="iva-repercutido" class="text-danger">0.00€</strong>
+                                        <div class="text-muted" style="font-size: 0.65rem;">(IVA que cobras al cliente)</div>
                                     </div>
                                 </div>
+                                
+                                <div class="row text-center small mt-2">
+                                    <div class="col-12 mb-1">
+                                        <span class="text-muted">IVA a Ingresar Trimestral:</span><br>
+                                        <strong id="iva-ingresar" class="text-warning">0.00€</strong>
+                                        <div class="text-muted" style="font-size: 0.65rem;">(Por unidad vendida)</div>
+                                    </div>
+                                </div>
+                                
                                 <hr class="my-2">
+                                
+                                <h6 class="text-primary mt-3">3. PRECIO DE VENTA</h6>
                                 <div class="text-center">
                                     <small class="text-muted">Precio de Venta (IVA incluido):</small>
                                     <h4 class="mb-0 text-success"><strong id="precio-venta-final">0.00€</strong></h4>
                                     <small class="text-danger">* Precio final con IVA incluido</small>
+                                </div>
+                                
+                                <div class="alert alert-info mt-3 mb-0 small">
+                                    <strong><i class="bi bi-info-circle"></i> Tributación Estimada:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        <li><strong>IVA trimestral:</strong> €<span id="iva-trimestral">0.00</span> (por 10 unidades)</li>
+                                        <li><strong>IRPF estimado (15%):</strong> €<span id="irpf-estimado">0.00</span> (por unidad)</li>
+                                        <li><strong>Cuota autónomos:</strong> ~€80-€230/mes (tarifa plana)</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>

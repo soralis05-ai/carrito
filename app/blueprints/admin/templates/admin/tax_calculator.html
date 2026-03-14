@@ -1,0 +1,378 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Calculadora de Impuestos - Autónomos{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
+                    <li class="breadcrumb-item active">Calculadora de Impuestos</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Formulario de entrada -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calculator"></i> Datos del Producto</h5>
+                </div>
+                <div class="card-body">
+                    <form id="taxCalculatorForm">
+                        <h6 class="text-primary mb-3">1. COSTOS DE PRODUCCIÓN</h6>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="productName" placeholder="Ej: Amigurumi Conejito">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Costo Materiales (con IVA)*</label>
+                                <input type="number" class="form-control" id="materialCost" step="0.01" min="0" value="0">
+                                <small class="text-muted">IVA incluido en compra</small>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">% IVA Materiales</label>
+                                <select class="form-select" id="materialIvaPercent">
+                                    <option value="21">21% (General)</option>
+                                    <option value="10">10% (Reducido)</option>
+                                    <option value="4">4% (Superreducido)</option>
+                                    <option value="0">0% (Sin IVA)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Mano de Obra (tu tiempo)</label>
+                            <input type="number" class="form-control" id="laborCost" step="0.01" min="0" value="0">
+                            <small class="text-muted">€ por hora × horas dedicadas</small>
+                        </div>
+
+                        <h6 class="text-primary mt-4 mb-3">2. UTILIDAD DESEADA</h6>
+                        
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">% Utilidad</label>
+                                <input type="number" class="form-control" id="profitPercent" step="1" min="0" max="500" value="20">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Utilidad (€)</label>
+                                <input type="text" class="form-control" id="profitAmount" readonly value="0.00">
+                            </div>
+                        </div>
+
+                        <h6 class="text-primary mt-4 mb-3">3. DATOS FISCALES</h6>
+                        
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label">% IRPF</label>
+                                <select class="form-select" id="irpfPercent">
+                                    <option value="7">7% (Nuevo autónomo)</option>
+                                    <option value="15" selected>15% (General)</option>
+                                    <option value="19">19% (Ingresos altos)</option>
+                                    <option value="23">23% (Ingresos muy altos)</option>
+                                </select>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Cuota Autónomos/mes</label>
+                                <input type="number" class="form-control" id="autonomoFee" step="1" min="0" value="80">
+                                <small class="text-muted">Tarifa plana: ~€80</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ventas Mensuales Estimadas (unidades)</label>
+                            <input type="number" class="form-control" id="monthlyUnits" step="1" min="1" value="10">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4 bg-light">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4"><i class="bi bi-pie-chart"></i> Resultados de Tributación</h5>
+
+                    <h6 class="text-primary">1. COSTOS DE PRODUCCIÓN</h6>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td>Materiales (base sin IVA):</td>
+                                <td class="text-end"><strong id="res-material-base">0.00€</strong></td>
+                            </tr>
+                            <tr>
+                                <td>IVA Materiales (soportado):</td>
+                                <td class="text-end"><strong id="res-material-iva" class="text-success">0.00€</strong></td>
+                            </tr>
+                            <tr class="table-secondary">
+                                <td>Mano de Obra:</td>
+                                <td class="text-end"><strong id="res-labor">0.00€</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Utilidad:</td>
+                                <td class="text-end"><strong id="res-profit">0.00€</strong></td>
+                            </tr>
+                            <tr class="table-primary">
+                                <td><strong>Costo Total + Utilidad:</strong></td>
+                                <td class="text-end"><strong id="res-base-price">0.00€</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h6 class="text-primary">2. IMPUESTOS A TRIBUTAR</h6>
+                    <div class="table-responsive mb-3">
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td>IVA Repercutido (21% venta):</td>
+                                <td class="text-end"><strong id="res-iva-repercutido" class="text-danger">0.00€</strong></td>
+                            </tr>
+                            <tr>
+                                <td>(-) IVA Soportado (materiales):</td>
+                                <td class="text-end"><strong id="res-iva-soportado" class="text-success">0.00€</strong></td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>(=) IVA a Ingresar (por unidad):</strong></td>
+                                <td class="text-end"><strong id="res-iva-ingresar">0.00€</strong></td>
+                            </tr>
+                            <tr class="table-warning">
+                                <td><strong>IVA Trimestral (10 unidades):</strong></td>
+                                <td class="text-end"><strong id="res-iva-trimestral">0.00€</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <h6 class="text-primary">3. PRECIO DE VENTA</h6>
+                    <div class="text-center mb-3">
+                        <div class="display-6 text-success">
+                            <strong id="res-sale-price">0.00€</strong>
+                        </div>
+                        <small class="text-muted">Precio de venta al público (IVA incluido)</small>
+                    </div>
+
+                    <h6 class="text-primary">4. TRIBUTACIÓN TOTAL</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th class="text-end">Por Unidad</th>
+                                    <th class="text-end">Mensual (×<span id="res-units">10</span>)</th>
+                                    <th class="text-end">Anual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>IVA a ingresar</td>
+                                    <td class="text-end" id="tbl-iva-unit">0.00€</td>
+                                    <td class="text-end" id="tbl-iva-month">0.00€</td>
+                                    <td class="text-end" id="tbl-iva-year">0.00€</td>
+                                </tr>
+                                <tr>
+                                    <td>IRPF (15%)</td>
+                                    <td class="text-end" id="tbl-irpf-unit">0.00€</td>
+                                    <td class="text-end" id="tbl-irpf-month">0.00€</td>
+                                    <td class="text-end" id="tbl-irpf-year">0.00€</td>
+                                </tr>
+                                <tr>
+                                    <td>Cuota Autónomos</td>
+                                    <td class="text-end">-</td>
+                                    <td class="text-end" id="tbl-autonomo-month">0.00€</td>
+                                    <td class="text-end" id="tbl-autonomo-year">0.00€</td>
+                                </tr>
+                                <tr class="table-primary">
+                                    <td><strong>TOTAL A TRIBUTAR</strong></td>
+                                    <td class="text-end"><strong id="tbl-total-unit">0.00€</strong></td>
+                                    <td class="text-end"><strong id="tbl-total-month">0.00€</strong></td>
+                                    <td class="text-end"><strong id="tbl-total-year">0.00€</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <h6 class="alert-heading"><i class="bi bi-info-circle"></i> Resumen para Autónomos</h6>
+                        <ul class="mb-0 small">
+                            <li><strong>Beneficio Neto por Unidad:</strong> <span id="res-net-profit" class="text-success">0.00€</span></li>
+                            <li><strong>Beneficio Neto Mensual:</strong> <span id="res-net-profit-month" class="text-success">0.00€</span></li>
+                            <li><strong>Carga Fiscal Total:</strong> <span id="res-tax-load" class="text-danger">0.00%</span> del precio de venta</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-book"></i> Información Fiscal para Autónomos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>📅 Calendario Fiscal</h6>
+                            <ul class="small">
+                                <li><strong>IVA (Modelo 303):</strong> Trimestral (Ene, Abr, Jul, Oct)</li>
+                                <li><strong>IVA (Modelo 390):</strong> Anual (Enero)</li>
+                                <li><strong>IRPF (Modelo 130):</strong> Trimestral (Ene, Abr, Jul, Oct)</li>
+                                <li><strong>Declaración Renta:</strong> Anual (Mayo-Junio)</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>💡 Consejos Fiscales</h6>
+                            <ul class="small">
+                                <li>Guarda TODAS las facturas de materiales (puedes deducir el IVA)</li>
+                                <li>La cuota de autónomos es deducible en IRPF</li>
+                                <li>Si vendes online, guarda registro de todas las ventas</li>
+                                <li>Considera un gestor (~€50-€100/mes) para evitar multas</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================
+// CALCULADORA DE IMPUESTOS PARA AUTÓNOMOS
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener todos los inputs
+    const inputs = {
+        materialCost: document.getElementById('materialCost'),
+        materialIvaPercent: document.getElementById('materialIvaPercent'),
+        laborCost: document.getElementById('laborCost'),
+        profitPercent: document.getElementById('profitPercent'),
+        profitAmount: document.getElementById('profitAmount'),
+        irpfPercent: document.getElementById('irpfPercent'),
+        autonomoFee: document.getElementById('autonomoFee'),
+        monthlyUnits: document.getElementById('monthlyUnits')
+    };
+
+    // Agregar listeners a todos los inputs
+    Object.values(inputs).forEach(input => {
+        if (input) {
+            input.addEventListener('input', calculate);
+            input.addEventListener('change', calculate);
+        }
+    });
+
+    // Calcular inicialmente
+    calculate();
+});
+
+function calculate() {
+    // Obtener valores
+    const materialCost = parseFloat(document.getElementById('materialCost').value) || 0;
+    const materialIvaPercent = parseFloat(document.getElementById('materialIvaPercent').value) || 21;
+    const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+    const profitPercent = parseFloat(document.getElementById('profitPercent').value) || 0;
+    const irpfPercent = parseFloat(document.getElementById('irpfPercent').value) || 15;
+    const autonomoFee = parseFloat(document.getElementById('autonomoFee').value) || 80;
+    const monthlyUnits = parseInt(document.getElementById('monthlyUnits').value) || 10;
+
+    // Calcular base sin IVA de materiales
+    const materialBase = materialCost / (1 + materialIvaPercent / 100);
+    const materialIva = materialCost - materialBase;
+
+    // Calcular utilidad
+    const costTotal = materialBase + laborCost;
+    const profit = costTotal * (profitPercent / 100);
+
+    // Actualizar campo de utilidad
+    document.getElementById('profitAmount').value = profit.toFixed(2);
+
+    // Precio base (costo + utilidad)
+    const basePrice = costTotal + profit;
+
+    // IVA repercutido (21% sobre precio base)
+    const ivaRepercutido = basePrice * 0.21;
+
+    // Precio de venta final
+    const salePrice = basePrice + ivaRepercutido;
+
+    // IVA a ingresar (repercutido - soportado)
+    const ivaIngresar = ivaRepercutido - materialIva;
+
+    // IRPF (sobre beneficio)
+    const irpf = profit * (irpfPercent / 100);
+
+    // Beneficio neto
+    const netProfit = profit - irpf;
+
+    // ========================================
+    // MOSTRAR RESULTADOS
+    // ========================================
+
+    // Costos de producción
+    document.getElementById('res-material-base').textContent = formatEuro(materialBase);
+    document.getElementById('res-material-iva').textContent = formatEuro(materialIva);
+    document.getElementById('res-labor').textContent = formatEuro(laborCost);
+    document.getElementById('res-profit').textContent = formatEuro(profit);
+    document.getElementById('res-base-price').textContent = formatEuro(basePrice);
+
+    // Impuestos
+    document.getElementById('res-iva-repercutido').textContent = formatEuro(ivaRepercutido);
+    document.getElementById('res-iva-soportado').textContent = formatEuro(materialIva);
+    document.getElementById('res-iva-ingresar').textContent = formatEuro(ivaIngresar);
+    document.getElementById('res-iva-trimestral').textContent = formatEuro(ivaIngresar * monthlyUnits * 3);
+
+    // Precio de venta
+    document.getElementById('res-sale-price').textContent = formatEuro(salePrice);
+
+    // Tabla de tributación
+    document.getElementById('res-units').textContent = monthlyUnits;
+    
+    // IVA
+    document.getElementById('tbl-iva-unit').textContent = formatEuro(ivaIngresar);
+    document.getElementById('tbl-iva-month').textContent = formatEuro(ivaIngresar * monthlyUnits);
+    document.getElementById('tbl-iva-year').textContent = formatEuro(ivaIngresar * monthlyUnits * 12);
+    
+    // IRPF
+    document.getElementById('tbl-irpf-unit').textContent = formatEuro(irpf);
+    document.getElementById('tbl-irpf-month').textContent = formatEuro(irpf * monthlyUnits);
+    document.getElementById('tbl-irpf-year').textContent = formatEuro(irpf * monthlyUnits * 12);
+    
+    // Autónomos
+    document.getElementById('tbl-autonomo-month').textContent = formatEuro(autonomoFee);
+    document.getElementById('tbl-autonomo-year').textContent = formatEuro(autonomoFee * 12);
+    
+    // Totales
+    const totalUnit = ivaIngresar + irpf;
+    const totalMonth = (ivaIngresar * monthlyUnits) + (irpf * monthlyUnits) + autonomoFee;
+    const totalYear = totalMonth * 12;
+    
+    document.getElementById('tbl-total-unit').textContent = formatEuro(totalUnit);
+    document.getElementById('tbl-total-month').textContent = formatEuro(totalMonth);
+    document.getElementById('tbl-total-year').textContent = formatEuro(totalYear);
+
+    // Resumen
+    document.getElementById('res-net-profit').textContent = formatEuro(netProfit);
+    document.getElementById('res-net-profit-month').textContent = formatEuro(netProfit * monthlyUnits);
+    
+    // Carga fiscal (% del precio de venta)
+    const taxLoad = ((totalUnit / salePrice) * 100).toFixed(2);
+    document.getElementById('res-tax-load').textContent = taxLoad + '%';
+}
+
+function formatEuro(amount) {
+    return amount.toLocaleString('es-ES', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }) + '€';
+}
+</script>
+{% endblock %}

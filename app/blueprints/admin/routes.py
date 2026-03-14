@@ -19,10 +19,18 @@ def dashboard():
     # Contar productos, categorías
     product_count = Product.query.count()
     category_count = Category.query.count()
-    
-    return render_template('admin/dashboard.html', 
+
+    return render_template('admin/dashboard.html',
                          product_count=product_count,
                          category_count=category_count)
+
+
+@admin_bp.route('/tax-calculator')
+@login_required
+@admin_required
+def tax_calculator():
+    """Calculadora de impuestos para autónomos."""
+    return render_template('admin/tax_calculator.html')
 
 
 def _process_uploaded_images(form, existing_images=None):
