@@ -114,10 +114,8 @@ def generate_order_pdf(order):
         elements.append(Paragraph(f"<b>Envío:</b> GRATIS", totals_style))
     elements.append(Spacer(1, 0.2*inch))
     elements.append(Paragraph(f"<b>TOTAL:</b> €{float(order.total):.2f}", total_bold))
-    elements.append(Spacer(1, 0.1*inch))
-    elements.append(Paragraph("<i>* Precios con IVA incluido</i>", footer_style))
     elements.append(Spacer(1, 0.5*inch))
-    
+
     # Nota al pie
     footer_style = ParagraphStyle(
         'Footer',
@@ -126,6 +124,8 @@ def generate_order_pdf(order):
         textColor=colors.grey,
         alignment=TA_CENTER
     )
+    elements.append(Paragraph("<i>* Precios con IVA incluido</i>", footer_style))
+    elements.append(Spacer(1, 0.1*inch))
     elements.append(Paragraph("Esta oferta es válida por 7 días desde la fecha de emisión.", footer_style))
     elements.append(Paragraph("Gracias por su compra - Almapunt", footer_style))
     
