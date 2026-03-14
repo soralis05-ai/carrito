@@ -4,7 +4,7 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.3.4
+**Versión:** 1.4.0
 **Última actualización:** 13 de marzo de 2026
 **Framework:** Flask 3.1+
 **Python:** 3.14
@@ -97,6 +97,37 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 - **Panel de administración** - Gestión de productos con calculadora de costos
 - **Procesamiento de imágenes** - Subida multi-formato con redimensionamiento automático
 - **Calculadora de Amigurumis** - Cálculo automático de precios basado en costos
+
+---
+
+## 🆕 Novedades (v1.4.0 - 13 marzo 2026)
+
+### 🛒 Checkout y Carrito de Compras
+
+**✨ Carrito de Compras Funcional:**
+- ✅ Añadir/eliminar productos del carrito
+- ✅ Actualizar cantidades (+ / -)
+- ✅ Contador de items en navbar
+- ✅ Session-based (usuarios e invitados)
+- ✅ AJAX para añadir sin recargar
+- ✅ Toast notifications
+
+**📝 Checkout Básico:**
+- ✅ Formulario de datos de envío
+- ✅ Cálculo automático de IVA (21%)
+- ✅ Envío gratis en todos los pedidos
+- ✅ Validación de campos requeridos
+- ✅ Guardado de pedido en base de datos
+
+**📄 Oferta en PDF Descargable:**
+- ✅ Generación automática con ReportLab
+- ✅ Diseño profesional con colores de marca
+- ✅ Incluye: datos de envío, productos, totales
+- ✅ Validez de 7 días
+- ✅ Descarga desde confirmación de pedido
+
+**🔧 Nuevas Dependencias:**
+- `reportlab>=4.0` - Generación de PDFs
 
 ---
 
@@ -1121,7 +1152,37 @@ Todos los derechos reservados © 2024-2026 Almapunt
 
 ## 📝 Historial de Cambios
 
-### Versión 1.3.4 (13 de marzo de 2026) - **ACTUAL** ✨
+### Versión 1.4.0 (13 de marzo de 2026) - **ACTUAL** ✨
+
+**🛒 Carrito de Compras:**
+- ✅ Implementación completa del carrito
+- ✅ Session-based para usuarios e invitados
+- ✅ AJAX para añadir sin recargar
+- ✅ Contador de items en navbar
+- ✅ Toast notifications
+
+**📝 Checkout Básico:**
+- ✅ Formulario de envío completo
+- ✅ Cálculo de IVA (21%)
+- ✅ Envío gratis
+- ✅ Validación de campos
+- ✅ Guardado en BD (Order, OrderItem)
+
+**📄 PDF de Oferta:**
+- ✅ Generación con ReportLab
+- ✅ Diseño profesional (colores de marca)
+- ✅ Datos de envío, productos, totales
+- ✅ Descarga desde confirmación
+- ✅ Validez 7 días
+
+**Archivos Nuevos:**
+- `app/blueprints/orders/routes.py` - Rutas de checkout
+- `orders/checkout.html` - Formulario de checkout
+- `orders/confirmation.html` - Confirmación de pedido
+
+---
+
+### Versión 1.3.4 (13 de marzo de 2026)
 
 **Flask-Migrate para Base de Datos:**
 
@@ -1386,4 +1447,4 @@ sudo systemctl restart almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.3.4 - Flask-Migrate, Regla #8 y Producción*
+*Documento actualizado el 13 de marzo de 2026 - v1.4.0 - Checkout y Carrito Funcional*
