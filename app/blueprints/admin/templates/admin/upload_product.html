@@ -160,7 +160,13 @@
                                         <strong id="costo-total">0.00€</strong>
                                     </div>
                                     <div class="col-6 mb-1">
-                                        <span class="text-muted">IVA (21%):</span><br>
+                                        <span class="text-muted">Precio Base:</span><br>
+                                        <strong id="precio-base">0.00€</strong>
+                                    </div>
+                                </div>
+                                <div class="row text-center small mt-2">
+                                    <div class="col-12 mb-1">
+                                        <span class="text-muted">IVA (21% sobre Precio Base):</span><br>
                                         <strong id="iva-total">0.00€</strong>
                                     </div>
                                 </div>
@@ -404,10 +410,10 @@ function calcularCostos() {
     
     // ===== MATERIALES (Lana + Relleno + Ojos) =====
     const costoMateriales = costoLana + costoRelleno + costoOjos;
-    
+
     // ===== COSTO TOTAL (Materiales + Mano de Obra) =====
     const costoTotal = costoMateriales + costoManoObra;
-    
+
     // ===== UTILIDAD =====
     let utilidad = 0;
     if (isChecked('.utilidad-usar')) {
@@ -415,12 +421,15 @@ function calcularCostos() {
         utilidad = costoTotal * (utilidadPorcentaje / 100);
     }
 
-    // ===== IMPUESTO IVA (21%) =====
-    const iva = costoTotal * 0.21;
+    // ===== PRECIO BASE (Costo Total + Utilidad) =====
+    const precioBase = costoTotal + utilidad;
 
-    // ===== PRECIO DE VENTA (Costo Total + Utilidad + IVA) =====
+    // ===== IMPUESTO IVA (21% sobre Precio Base) =====
+    const iva = precioBase * 0.21;
+
+    // ===== PRECIO DE VENTA (Precio Base + IVA) =====
     // El precio ya incluye IVA, el cliente ve el precio final
-    const precioVenta = costoTotal + utilidad + iva;
+    const precioVenta = precioBase + iva;
 
     // ===== ACTUALIZAR UI =====
     setTextContent('materiales-total', costoMateriales);
@@ -428,6 +437,7 @@ function calcularCostos() {
     setTextContent('utilidad-total', utilidad);
     setTextContent('iva-total', iva);
     setTextContent('costo-total', costoTotal);
+    setTextContent('precio-base', precioBase);
     setPrecioVenta(precioVenta);
     setTextContent('precio-venta-final', precioVenta);
 }
