@@ -134,15 +134,21 @@
 <script>
 // Actualizar cantidad de un item
 function updateQuantity(itemId, newQuantity) {
+    const quantityInput = document.getElementById('quantity-' + itemId);
+    const oldQuantity = parseInt(quantityInput.value);
+    
     if (newQuantity < 1) {
         if (confirm('¿Eliminar este producto del carrito?')) {
             removeItem(itemId);
         } else {
             // Restaurar cantidad anterior
-            document.getElementById('quantity-' + itemId).value = {{ item.quantity }};
+            quantityInput.value = oldQuantity;
         }
         return;
     }
+    
+    // Calcular diferencia
+    const quantityDiff = newQuantity - oldQuantity;
 
     fetch('{{ url_for("cart.add_to_cart") }}', {
         method: 'POST',
@@ -151,7 +157,7 @@ function updateQuantity(itemId, newQuantity) {
         },
         body: JSON.stringify({
             product_id: itemId,
-            quantity: newQuantity - {{ item.quantity }}
+            quantity: quantityDiff
         })
     })
     .then(response => response.json())
