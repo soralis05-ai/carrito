@@ -139,7 +139,7 @@
                         <!-- Resumen de Costos -->
                         <div class="card border-success bg-light mt-3">
                             <div class="card-body">
-                                <h6 class="text-success mb-2"><i class="bi bi-calculator"></i> Resumen de Costos</h6>
+                                <h6 class="text-success mb-2"><i class="bi bi-calculator"></i> Estructura de Precios</h6>
                                 <div class="row text-center small">
                                     <div class="col-4 mb-1">
                                         <span class="text-muted">Materiales:</span><br>
@@ -154,12 +154,21 @@
                                         <strong id="utilidad-total">0.00€</strong>
                                     </div>
                                 </div>
+                                <div class="row text-center small mt-2">
+                                    <div class="col-6 mb-1">
+                                        <span class="text-muted">Costo Total:</span><br>
+                                        <strong id="costo-total">0.00€</strong>
+                                    </div>
+                                    <div class="col-6 mb-1">
+                                        <span class="text-muted">IVA (21%):</span><br>
+                                        <strong id="iva-total">0.00€</strong>
+                                    </div>
+                                </div>
                                 <hr class="my-2">
                                 <div class="text-center">
-                                    <small>Costo Total:</small>
-                                    <h5 class="mb-0 text-primary"><strong id="costo-total">0.00€</strong></h5>
-                                    <small class="text-muted">Precio de Venta (con utilidad):</small>
+                                    <small class="text-muted">Precio de Venta (IVA incluido):</small>
                                     <h4 class="mb-0 text-success"><strong id="precio-venta-final">0.00€</strong></h4>
+                                    <small class="text-danger">* Precio final con IVA incluido</small>
                                 </div>
                             </div>
                         </div>
@@ -405,14 +414,19 @@ function calcularCostos() {
         const utilidadPorcentaje = getValById('utilidad_porcentaje');
         utilidad = costoTotal * (utilidadPorcentaje / 100);
     }
-    
-    // ===== PRECIO DE VENTA (Costo Total + Utilidad) =====
-    const precioVenta = costoTotal + utilidad;
-    
+
+    // ===== IMPUESTO IVA (21%) =====
+    const iva = costoTotal * 0.21;
+
+    // ===== PRECIO DE VENTA (Costo Total + Utilidad + IVA) =====
+    // El precio ya incluye IVA, el cliente ve el precio final
+    const precioVenta = costoTotal + utilidad + iva;
+
     // ===== ACTUALIZAR UI =====
     setTextContent('materiales-total', costoMateriales);
     setTextContent('mano-obra-total', costoManoObra);
     setTextContent('utilidad-total', utilidad);
+    setTextContent('iva-total', iva);
     setTextContent('costo-total', costoTotal);
     setPrecioVenta(precioVenta);
     setTextContent('precio-venta-final', precioVenta);

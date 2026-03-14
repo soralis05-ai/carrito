@@ -87,7 +87,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                    <td colspan="3" class="text-end"><strong>Total Productos:</strong></td>
                                     <td class="text-end">€{{ "%.2f"|format(order.subtotal|float) }}</td>
                                 </tr>
                                 {% if order.shipping_cost > 0 %}
@@ -101,10 +101,6 @@
                                     <td class="text-end text-success">GRATIS</td>
                                 </tr>
                                 {% endif %}
-                                <tr>
-                                    <td colspan="3" class="text-end"><strong>IVA:</strong></td>
-                                    <td class="text-end">€{{ "%.2f"|format(order.tax|float) }}</td>
-                                </tr>
                                 <tr class="table-primary">
                                     <td colspan="3" class="text-end"><strong>TOTAL:</strong></td>
                                     <td class="text-end">

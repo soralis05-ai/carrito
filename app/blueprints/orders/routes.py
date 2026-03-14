@@ -107,14 +107,15 @@ def generate_order_pdf(order):
         alignment=TA_LEFT
     )
     
-    elements.append(Paragraph(f"<b>Subtotal:</b> €{float(order.subtotal):.2f}", totals_style))
+    elements.append(Paragraph(f"<b>Total Productos:</b> €{float(order.subtotal):.2f}", totals_style))
     if order.shipping_cost > 0:
         elements.append(Paragraph(f"<b>Envío:</b> €{float(order.shipping_cost):.2f}", totals_style))
     else:
         elements.append(Paragraph(f"<b>Envío:</b> GRATIS", totals_style))
-    elements.append(Paragraph(f"<b>Impuestos:</b> €{float(order.tax):.2f}", totals_style))
     elements.append(Spacer(1, 0.2*inch))
     elements.append(Paragraph(f"<b>TOTAL:</b> €{float(order.total):.2f}", total_bold))
+    elements.append(Spacer(1, 0.1*inch))
+    elements.append(Paragraph("<i>* Precios con IVA incluido</i>", footer_style))
     elements.append(Spacer(1, 0.5*inch))
     
     # Nota al pie
@@ -154,11 +155,10 @@ def checkout():
         flash('Tu carrito está vacío', 'warning')
         return redirect(url_for('cart.view_cart'))
     
-    # Calcular totales
+    # Calcular totales (IVA ya incluido en el precio de los productos)
     subtotal = sum(item.subtotal for item in cart_items)
     shipping_cost = 0  # Envío gratis
-    tax = subtotal * 0.21  # 21% IVA
-    total = subtotal + shipping_cost + tax
+    total = subtotal  # El total es igual al subtotal (IVA ya incluido en precios)
     
     if request.method == 'POST':
         # Obtener datos del formulario
@@ -204,7 +204,7 @@ def checkout():
         order.shipping_phone = shipping_data['phone']
         order.subtotal = subtotal
         order.shipping_cost = shipping_cost
-        order.tax = tax
+        order.tax = 0  # IVA ya incluido en el precio de los productos
         order.total = total
         order.payment_method = 'pending'
         order.payment_status = 'pending'
@@ -240,7 +240,6 @@ def checkout():
                          cart_items=cart_items,
                          subtotal=subtotal,
                          shipping_cost=shipping_cost,
-                         tax=tax,
                          total=total)
 
 

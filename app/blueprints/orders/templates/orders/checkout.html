@@ -99,18 +99,13 @@
                         <hr>
 
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Subtotal</span>
+                            <span class="text-muted">Total Productos</span>
                             <strong>€{{ "%.2f"|format(subtotal|float) }}</strong>
                         </div>
 
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Envío</span>
                             <span class="text-success">GRATIS</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">IVA (21%)</span>
-                            <strong>€{{ "%.2f"|format(tax|float) }}</strong>
                         </div>
 
                         <hr>
@@ -130,7 +125,7 @@
                         </div>
 
                         <div class="alert alert-info mt-3 mb-0 small">
-                            <i class="bi bi-info-circle"></i> Envío gratis en todos los pedidos
+                            <i class="bi bi-info-circle"></i> Precios con IVA incluido
                         </div>
                     </div>
                 </div>
