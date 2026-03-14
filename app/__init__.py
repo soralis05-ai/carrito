@@ -24,6 +24,20 @@ def create_app():
         from app.models.user import User
         return User.query.get(int(user_id))
 
+    # Context processor para carrito
+    @app.context_processor
+    def inject_cart_count():
+        """Inyectar contador del carrito en todos los templates."""
+        from flask_login import current_user
+        from app.blueprints.cart.services import CartService
+        import uuid
+        
+        user_id = current_user.id if current_user.is_authenticated else None
+        session_id = session.get('session_id') or str(uuid.uuid4())
+        
+        cart_count = CartService.count_items(user_id=user_id, session_id=session_id)
+        return {'cart_count': cart_count}
+
     # Registrar blueprints
     from app.blueprints.auth import auth_bp
     from app.blueprints.products import products_bp

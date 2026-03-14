@@ -24,15 +24,94 @@
 <div class="py-4">
     <div class="product-grid">
         {% for product in products %}
-        <a href="{{ url_for('products.detail', id=product.id) }}" class="product-card">
-            <div class="image-container">
-                <img src="{{ url_for('static', filename='img/productos/' + product.image) }}" alt="{{ product.name }}">
-                <span class="watermark">{{ config.DOMAIN }}</span>
-            </div>
-            <h3>{{ product.name }}</h3>
-            <p class="price">{{ product.price }}</p>
-        </a>
+        <div class="product-card">
+            <a href="{{ url_for('products.detail', id=product.id) }}" class="text-decoration-none">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='img/productos/' + product.image) }}" alt="{{ product.name }}">
+                    <span class="watermark">{{ config.DOMAIN }}</span>
+                </div>
+                <h3>{{ product.name }}</h3>
+                <p class="price">{{ product.price }}</p>
+            </a>
+            <button class="btn btn-primary btn-sm w-100 mt-2" onclick="addToCart({{ product.id }})">
+                <i class="bi bi-cart-plus"></i> Añadir al Carrito
+            </button>
+        </div>
         {% endfor %}
     </div>
 </div>
+
+<script>
+// Añadir producto al carrito
+function addToCart(productId) {
+    fetch('{{ url_for("cart.add_to_cart") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar contador del carrito
+            updateCartCount(data.cart_count);
+            // Mostrar mensaje de éxito
+            showToast('Producto añadido al carrito');
+        } else {
+            alert('Error al añadir el producto');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al añadir el producto');
+    });
+}
+
+// Actualizar contador del carrito en navbar
+function updateCartCount(count) {
+    const badge = document.querySelector('.nav-link[href*="cart"] .badge');
+    if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-block' : 'none';
+    } else if (count > 0) {
+        // Crear badge si no existe
+        const link = document.querySelector('.nav-link[href*="cart"]');
+        if (link) {
+            const newBadge = document.createElement('span');
+            newBadge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+            newBadge.style.fontSize = '0.7rem';
+            newBadge.textContent = count;
+            link.style.position = 'relative';
+            newBadge.style.position = 'absolute';
+            newBadge.style.top = '0';
+            newBadge.style.left = '100%';
+            newBadge.style.transform = 'translate(-50%, -50%)';
+            link.appendChild(newBadge);
+        }
+    }
+}
+
+// Mostrar toast de notificación
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'position-fixed bottom-0 end-0 p-3';
+    toast.style.zIndex = '11';
+    toast.innerHTML = `
+        <div class="toast show align-items-center text-white bg-primary" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle"></i> ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+</script>
 {% endblock %}

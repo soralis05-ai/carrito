@@ -19,8 +19,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('cart.view_cart') }}">
+                    <a class="nav-link" href="{{ url_for('cart.view_cart') }}" class="position-relative">
                         <i class="bi bi-cart"></i> Carrito
+                        {% if cart_count and cart_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                              style="font-size: 0.7rem;">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
                     </a>
                 </li>
                 <li class="nav-item">
