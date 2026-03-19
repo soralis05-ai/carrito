@@ -9,26 +9,38 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
-                    <li class="breadcrumb-item active">Calculadora de Impuestos</li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.tax_records') }}" class="text-decoration-none">Registros</a></li>
+                    <li class="breadcrumb-item active">Calculadora</li>
                 </ol>
             </nav>
         </div>
+        <div class="col-auto">
+            <a href="{{ url_for('admin.tax_records') }}" class="btn btn-outline-primary">
+                <i class="bi bi-list"></i> Ver Registros
+            </a>
+        </div>
     </div>
 
-    <div class="row">
-        <!-- Formulario de entrada -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-calculator"></i> Datos del Producto</h5>
-                </div>
-                <div class="card-body">
-                    <form id="taxCalculatorForm">
+    <form method="POST" id="taxCalculatorForm">
+        <div class="row">
+            <!-- Formulario de entrada -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-calculator"></i> Datos del Producto</h5>
+                    </div>
+                    <div class="card-body">
                         <h6 class="text-primary mb-3">1. COSTOS DE PRODUCCIÓN</h6>
                         
                         <div class="mb-3">
                             <label class="form-label">Nombre del Producto</label>
-                            <input type="text" class="form-control" id="productName" placeholder="Ej: Amigurumi Conejito">
+                            <input type="text" class="form-control" name="product_name" id="productName" placeholder="Ej: Amigurumi Conejito" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoría</label>
+                            <input type="text" class="form-control" name="category" id="productCategory" placeholder="Ej: Amigurumis, Accesorios, Hogar">
+                            <small class="text-muted">Para organizar tus registros</small>
                         </div>
 
                         <div class="row">
@@ -208,7 +220,21 @@
                 </div>
             </div>
         </div>
-    </div>
+
+        <!-- Botones de acción -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Limpiar
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-save"></i> Guardar Registro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
 
     <!-- Información adicional -->
     <div class="row">

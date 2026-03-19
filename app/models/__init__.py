@@ -4,5 +4,6 @@ from app.models.cart_item import CartItem
 from app.models.order import Order, OrderItem
 from app.models.portfolio_info import PortfolioInfo
 from app.models.portfolio_item import PortfolioItem
+from app.models.product_tax_record import ProductTaxRecord
 
-__all__ = ['User', 'Product', 'Category', 'CartItem', 'Order', 'OrderItem', 'PortfolioInfo', 'PortfolioItem']
+__all__ = ['User', 'Product', 'Category', 'CartItem', 'Order', 'OrderItem', 'PortfolioInfo', 'PortfolioItem', 'ProductTaxRecord']

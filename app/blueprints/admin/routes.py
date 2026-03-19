@@ -25,12 +25,158 @@ def dashboard():
                          category_count=category_count)
 
 
-@admin_bp.route('/tax-calculator')
+@admin_bp.route('/tax-calculator', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def tax_calculator():
     """Calculadora de impuestos para autónomos."""
+    from app.models import ProductTaxRecord
+    
+    if request.method == 'POST':
+        # Guardar registro
+        product_name = request.form.get('product_name', '')
+        category = request.form.get('category', '')
+        material_cost = float(request.form.get('material_cost', 0) or 0)
+        material_iva_percent = int(request.form.get('material_iva_percent', 21) or 21)
+        labor_cost = float(request.form.get('labor_cost', 0) or 0)
+        profit_percent = int(request.form.get('profit_percent', 20) or 20)
+        irpf_percent = int(request.form.get('irpf_percent', 15) or 15)
+        autonomo_fee = float(request.form.get('autonomo_fee', 80) or 80)
+        monthly_units = int(request.form.get('monthly_units', 10) or 10)
+        
+        # Calcular valores
+        material_base = material_cost / (1 + material_iva_percent / 100)
+        material_iva = material_cost - material_base
+        cost_total = material_base + labor_cost
+        profit_amount = cost_total * (profit_percent / 100)
+        base_price = cost_total + profit_amount
+        iva_repercutido = base_price * 0.21
+        iva_ingresar = iva_repercutido - material_iva
+        irpf_amount = profit_amount * (irpf_percent / 100)
+        sale_price = base_price + iva_repercutido
+        net_profit = profit_amount - irpf_amount
+        
+        # Crear registro
+        record = ProductTaxRecord(
+            product_name=product_name,
+            category=category,
+            material_cost=material_cost,
+            material_iva_percent=material_iva_percent,
+            labor_cost=labor_cost,
+            profit_percent=profit_percent,
+            profit_amount=profit_amount,
+            material_base=material_base,
+            material_iva=material_iva,
+            cost_total=cost_total,
+            base_price=base_price,
+            iva_repercutido=iva_repercutido,
+            iva_soportado=material_iva,
+            iva_ingresar=iva_ingresar,
+            irpf_percent=irpf_percent,
+            irpf_amount=irpf_amount,
+            sale_price=sale_price,
+            net_profit=net_profit,
+            autonomo_fee=autonomo_fee,
+            monthly_units=monthly_units
+        )
+        
+        db.session.add(record)
+        db.session.commit()
+        
+        flash(f'Registro guardado exitosamente: {product_name}', 'success')
+        return redirect(url_for('admin.tax_records'))
+    
     return render_template('admin/tax_calculator.html')
+
+
+@admin_bp.route('/tax-records')
+@login_required
+@admin_required
+def tax_records():
+    """Listar registros de costos e impuestos."""
+    from app.models import ProductTaxRecord
+    
+    # Obtener categoría desde query params
+    category_filter = request.args.get('category', '')
+    
+    if category_filter:
+        records = ProductTaxRecord.query.filter_by(
+            category=category_filter, is_active=True
+        ).order_by(ProductTaxRecord.created_at.desc()).all()
+    else:
+        records = ProductTaxRecord.query.filter_by(
+            is_active=True
+        ).order_by(ProductTaxRecord.created_at.desc()).all()
+    
+    # Obtener categorías únicas
+    categories = db.session.query(
+        ProductTaxRecord.category
+    ).filter(
+        ProductTaxRecord.is_active == True,
+        ProductTaxRecord.category != None,
+        ProductTaxRecord.category != ''
+    ).distinct().all()
+    categories = [c[0] for c in categories]
+    
+    return render_template('admin/tax_records.html', 
+                         records=records, 
+                         categories=categories,
+                         current_category=category_filter)
+
+
+@admin_bp.route('/tax-records/edit/<int:record_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_tax_record(record_id):
+    """Editar registro de costos e impuestos."""
+    from app.models import ProductTaxRecord
+    
+    record = ProductTaxRecord.query.get_or_404(record_id)
+    
+    if request.method == 'POST':
+        # Actualizar datos
+        record.product_name = request.form.get('product_name', '')
+        record.category = request.form.get('category', '')
+        record.material_cost = float(request.form.get('material_cost', 0) or 0)
+        record.material_iva_percent = int(request.form.get('material_iva_percent', 21) or 21)
+        record.labor_cost = float(request.form.get('labor_cost', 0) or 0)
+        record.profit_percent = int(request.form.get('profit_percent', 20) or 20)
+        record.irpf_percent = int(request.form.get('irpf_percent', 15) or 15)
+        record.autonomo_fee = float(request.form.get('autonomo_fee', 80) or 80)
+        record.monthly_units = int(request.form.get('monthly_units', 10) or 10)
+        
+        # Recalcular valores
+        record.material_base = record.material_cost / (1 + record.material_iva_percent / 100)
+        record.material_iva = record.material_cost - record.material_base
+        record.cost_total = record.material_base + record.labor_cost
+        record.profit_amount = record.cost_total * (record.profit_percent / 100)
+        record.base_price = record.cost_total + record.profit_amount
+        record.iva_repercutido = record.base_price * 0.21
+        record.iva_ingresar = record.iva_repercutido - record.material_iva
+        record.irpf_amount = record.profit_amount * (record.irpf_percent / 100)
+        record.sale_price = record.base_price + record.iva_repercutido
+        record.net_profit = record.profit_amount - record.irpf_amount
+        
+        db.session.commit()
+        flash('Registro actualizado exitosamente', 'success')
+        return redirect(url_for('admin.tax_records'))
+    
+    return render_template('admin/edit_tax_record.html', record=record)
+
+
+@admin_bp.route('/tax-records/delete/<int:record_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_tax_record(record_id):
+    """Eliminar registro de costos (soft delete)."""
+    from app.models import ProductTaxRecord
+    
+    record = ProductTaxRecord.query.get_or_404(record_id)
+    record.is_active = False
+    db.session.commit()
+    
+    flash('Registro eliminado exitosamente', 'info')
+    return redirect(url_for('admin.tax_records'))
 
 
 def _process_uploaded_images(form, existing_images=None):
