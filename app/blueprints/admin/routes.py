@@ -462,6 +462,13 @@ def edit_product(product_id):
 
         flash(f'Producto "{product.name}" actualizado exitosamente!', 'success')
         return redirect(url_for('admin.list_products'))
+    else:
+        # Debug: mostrar errores de validación
+        if form.errors:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f'Error en {field}: {error}', 'danger')
+                    current_app.logger.error(f'Validation error in edit_product: {field} - {error}')
 
     return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
 

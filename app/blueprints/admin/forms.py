@@ -143,13 +143,26 @@ class ProductUploadForm(FlaskForm):
 
 
 class ProductEditForm(ProductUploadForm):
-    """Formulario para editar productos (imagen principal opcional)."""
-    # Sobrescribir para hacer la imagen principal opcional en edición
+    """Formulario para editar productos (todos los campos opcionales)."""
+    # Sobrescribir para hacer todos los campos opcionales en edición
     image = FileField('Imagen Principal', validators=[
         FileAllowed(ALLOWED_EXTENSIONS, f'Solo: {EXTENSIONS_STRING}')
     ])
-    # El precio puede ser 0 inicialmente porque se calcula automáticamente
+    # El precio puede ser 0 o None
     price = FloatField('Precio de Venta (€)', validators=[
         Optional(),
         NumberRange(min=0, message='El precio debe ser mayor o igual a 0')
+    ])
+    # Nombre y descripción opcionales en edición
+    name = StringField('Nombre del Producto', validators=[
+        Optional(),
+        Length(max=200, message='Máximo 200 caracteres')
+    ])
+    description = TextAreaField('Descripción', validators=[
+        Optional(),
+        Length(max=1000, message='Máximo 1000 caracteres')
+    ])
+    stock = IntegerField('Stock Disponible', validators=[
+        Optional(),
+        NumberRange(min=0, message='El stock no puede ser negativo')
     ])
