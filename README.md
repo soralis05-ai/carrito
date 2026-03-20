@@ -4,7 +4,7 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.4.0
+**Versión:** 1.5.0
 **Última actualización:** 13 de marzo de 2026
 **Framework:** Flask 3.1+
 **Python:** 3.14
@@ -97,12 +97,158 @@ Almapunt es una plataforma de comercio electrónico diseñada para productos art
 - **Panel de administración** - Gestión de productos con calculadora de costos
 - **Procesamiento de imágenes** - Subida multi-formato con redimensionamiento automático
 - **Calculadora de Amigurumis** - Cálculo automático de precios basado en costos
+- **Calculadora de Impuestos** - Tributación para autónomos con registro histórico
+
+---
+
+## 🧮 Cálculo de Precios e Impuestos
+
+### **Fórmula de Precio de Venta**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  PRECIO VENTA = Costo Total + Utilidad + IVA            │
+└─────────────────────────────────────────────────────────┘
+```
+
+### **Desglose Paso a Paso**
+
+**1. Costo de Materiales (sin IVA)**
+```
+Material Base = Material Costo ÷ (1 + %IVA ÷ 100)
+IVA Soportado = Material Costo - Material Base
+```
+
+**2. Costo Total de Producción**
+```
+Costo Total = Material Base + Mano de Obra
+```
+
+**3. Utilidad Deseada**
+```
+Utilidad = Costo Total × (%Utilidad ÷ 100)
+```
+
+**4. Precio Base (antes de impuestos)**
+```
+Precio Base = Costo Total + Utilidad
+```
+
+**5. IVA Repercutido (21%)**
+```
+IVA Repercutido = Precio Base × 0.21
+```
+
+**6. Precio de Venta Final**
+```
+Precio Venta = Precio Base + IVA Repercutido
+```
+
+### **Cálculo del Beneficio Neto**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  BENEFICIO NETO = Utilidad - IRPF                       │
+└─────────────────────────────────────────────────────────┘
+```
+
+**IRPF (Impuesto sobre la Renta)**
+```
+IRPF = Utilidad × (%IRPF ÷ 100)
+
+%IRPF según situación:
+- 7%  → Nuevo autónomo (tarifa reducida)
+- 15% → General (mayoría de casos)
+- 19% → Ingresos altos
+- 23% → Ingresos muy altos
+```
+
+### **Ejemplo Práctico: Amigurumi Conejito**
+
+| Concepto | Cálculo | Resultado |
+|----------|---------|-----------|
+| **Materiales (con IVA 21%)** | €5.00 | €5.00 |
+| **Materiales (sin IVA)** | €5.00 ÷ 1.21 | €4.13 |
+| **IVA Soportado** | €5.00 - €4.13 | €0.87 |
+| **Mano de Obra** | - | €20.00 |
+| **Costo Total** | €4.13 + €20.00 | €24.13 |
+| **Utilidad (20%)** | €24.13 × 0.20 | €4.83 |
+| **Precio Base** | €24.13 + €4.83 | €28.96 |
+| **IVA Repercutido (21%)** | €28.96 × 0.21 | €6.08 |
+| **Precio Venta** | €28.96 + €6.08 | **€35.04** |
+| **IRPF (15%)** | €4.83 × 0.15 | €0.72 |
+| **Beneficio Neto** | €4.83 - €0.72 | **€4.11** |
+
+### **IVA a Ingresar a Hacienda**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  IVA A INGRESAR = IVA Repercutido - IVA Soportado       │
+└─────────────────────────────────────────────────────────┘
+
+Ejemplo:
+IVA Repercutido (cobrado):  €6.08
+(-) IVA Soportado (pagado): €0.87
+─────────────────────────────────────
+IVA a Ingresar (trimestral): €5.21 por unidad
+```
+
+### **Proyección Mensual**
+
+| Concepto | Cálculo | Resultado |
+|----------|---------|-----------|
+| Ventas mensuales | 10 unidades | - |
+| Beneficio Neto | €4.11 × 10 | €41.10 |
+| IVA a Ingresar | €5.21 × 10 | €52.10 |
+| Cuota Autónomos | - | €80.00* |
+| **Resultado Neto** | €41.10 - €80.00 | **-€38.90** |
+
+\* Tarifa plana primeros 12 meses
+
+**Punto de Equilibrio:**
+```
+Cuota Autónomos ÷ Beneficio Neto por Unidad
+€80 ÷ €4.11 = 19.46 → 20 unidades/mes
+```
+
+---
+
+## 🆕 Novedades (v1.5.0 - 13 marzo 2026)
+
+### 📊 Registro de Costos e Impuestos por Categoría
+
+**✨ Sistema de Registro de Tributación:**
+- ✅ Guardado en base de datos de todos los cálculos
+- ✅ Organización por categorías (Amigurumis, Accesorios, Hogar, etc.)
+- ✅ Historial de costos editable (los precios cambian con el tiempo)
+- ✅ CRUD completo (crear, leer, actualizar, eliminar)
+- ✅ Filtros por categoría
+- ✅ Soft delete para mantener historial
+
+**📝 Calculadora de Impuestos Mejorada:**
+- ✅ Cálculo automático de IVA soportado y repercutido
+- ✅ Cálculo de IRPF según porcentaje (7%, 15%, 19%, 23%)
+- ✅ Beneficio Neto real (Utilidad - IRPF)
+- ✅ Proyecciones mensuales, trimestrales y anuales
+- ✅ Punto de equilibrio para cuota de autónomos
+- ✅ Botón para guardar registro directamente desde calculadora
+
+**🔧 Nuevas Rutas de Administración:**
+| Ruta | Descripción |
+|------|-------------|
+| `/admin/tax-calculator` | Calculadora con guardado a BD |
+| `/admin/tax-records` | Listado de registros con filtros |
+| `/admin/tax-records/edit/<id>` | Edición de registro existente |
+
+**📄 Modelo de Base de Datos:**
+- ✅ Tabla `product_tax_records` con 24 columnas
+- ✅ Todos los cálculos se guardan automáticamente
+- ✅ Timestamps de creación y actualización
+- ✅ Estado activo/inactivo para soft delete
 
 ---
 
 ## 🆕 Novedades (v1.4.0 - 13 marzo 2026)
-
-### 🛒 Checkout y Carrito de Compras
 
 **✨ Carrito de Compras Funcional:**
 - ✅ Añadir/eliminar productos del carrito
@@ -1298,7 +1444,37 @@ sudo systemctl restart almapunt
 
 ---
 
-### Versión 1.3.0 (13 de marzo de 2026)
+### Versión 1.5.0 (13 de marzo de 2026) - **ACTUAL** ✨
+
+**📊 Registro de Costos e Impuestos:**
+- ✅ Modelo `ProductTaxRecord` creado (24 columnas)
+- ✅ CRUD completo para registros de costos
+- ✅ Filtros por categoría
+- ✅ Edición de registros (costos cambian con el tiempo)
+- ✅ Soft delete para mantener historial
+- ✅ Migración de base de datos incluida
+
+**🧮 Calculadora de Impuestos Mejorada:**
+- ✅ Cálculo de Beneficio Neto (Utilidad - IRPF)
+- ✅ IVA Soportado vs IVA Repercutido
+- ✅ Proyecciones mensuales, trimestrales, anuales
+- ✅ Punto de equilibrio para cuota de autónomos
+- ✅ Guardado directo desde calculadora
+
+**📁 Archivos Nuevos:**
+- ✅ `app/models/product_tax_record.py`
+- ✅ `app/blueprints/admin/templates/admin/tax_records.html`
+- ✅ `app/blueprints/admin/templates/admin/edit_tax_record.html`
+- ✅ `scripts/add_tax_records_table.py`
+
+**🔧 Rutas Nuevas:**
+- ✅ `/admin/tax-records` - Listar registros
+- ✅ `/admin/tax-records/edit/<id>` - Editar registro
+- ✅ `/admin/tax-records/delete/<id>` - Eliminar registro
+
+---
+
+### Versión 1.4.0 (13 de marzo de 2026)
 
 **Portfolio con Base de Datos:**
 - ✅ Migración de sesión a base de datos SQLite
@@ -1447,4 +1623,4 @@ sudo systemctl restart almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.4.0 - Checkout y Carrito Funcional*
+*Documento actualizado el 13 de marzo de 2026 - v1.5.0 - Calculadora Impuestos y Registro de Costos*
