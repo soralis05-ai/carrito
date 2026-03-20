@@ -272,11 +272,15 @@ def upload_product():
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
 
-        # Buscar o crear categoría por nombre
+        # Buscar o crear categoría por nombre (case-insensitive)
         category = None
         category_name = request.form.get('category_id', '').strip()
         if category_name:
-            category = Category.query.filter_by(name=category_name).first()
+            # Buscar categoría existente (case-insensitive)
+            category = Category.query.filter(
+                db.func.lower(Category.name) == category_name.lower()
+            ).first()
+            
             if not category:
                 # Crear nueva categoría si no existe
                 category = Category(
@@ -422,11 +426,15 @@ def edit_product(product_id):
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
 
-        # Buscar o crear categoría por nombre
+        # Buscar o crear categoría por nombre (case-insensitive)
         category = None
         category_name = request.form.get('category_id', '').strip()
         if category_name:
-            category = Category.query.filter_by(name=category_name).first()
+            # Buscar categoría existente (case-insensitive)
+            category = Category.query.filter(
+                db.func.lower(Category.name) == category_name.lower()
+            ).first()
+            
             if not category:
                 # Crear nueva categoría si no existe
                 category = Category(
