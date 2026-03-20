@@ -235,16 +235,23 @@ def upload_product():
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
 
-    # Variables para imágenes ya subidas
+    # Obtener imágenes ya guardadas en sesión
     uploaded_images = session.get('temp_images', [])
 
+    # Procesar imágenes nuevas SIEMPRE (antes de validar)
+    new_images = _process_uploaded_images(form, existing_images=uploaded_images)
+    
+    # Actualizar sesión con todas las imágenes
+    if new_images:
+        session['temp_images'] = new_images
+        uploaded_images = new_images
+
     if form.validate_on_submit():
-        # Procesar imágenes nuevas + las ya subidas
-        new_images = _process_uploaded_images(form, existing_images=uploaded_images)
-        all_images = new_images  # _process_uploaded_images ya incluye existing_images
+        # Todas las imágenes ya están en uploaded_images
+        all_images = uploaded_images
 
         if not all_images:
-            flash('Error: No se pudieron procesar las imágenes', 'danger')
+            flash('Error: Debes subir al menos una imagen', 'danger')
             return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images)
 
         # Generar SKU automático si no se proporciona
@@ -281,12 +288,8 @@ def upload_product():
         flash(f'Producto "{form.name.data}" guardado exitosamente con {len(all_images)} imagen(es)!', 'success')
         return redirect(url_for('admin.list_products'))
 
-    # Si hay errores de validación, mantener las imágenes en sesión
+    # Si hay errores de validación, las imágenes YA están guardadas en sesión
     if form.errors:
-        # Guardar imágenes en sesión para que no se pierdan
-        if uploaded_images:
-            session['temp_images'] = uploaded_images
-        
         for field, errors in form.errors.items():
             for error in errors:
                 if field == 'stock':
