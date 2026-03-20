@@ -247,6 +247,10 @@ def upload_product():
     # Obtener imágenes ya guardadas en sesión
     uploaded_images = session.get('temp_images', [])
 
+    # DEBUG: Obtener tipo de material
+    tipo_material = request.form.get('tipoLana', '').strip()
+    current_app.logger.info(f'🧶 UPLOAD - Tipo material: "{tipo_material}"')
+
     # Procesar imágenes nuevas SIEMPRE (antes de validar)
     new_images = _process_uploaded_images(form, existing_images=uploaded_images)
 
@@ -304,7 +308,23 @@ def upload_product():
             is_active=form.is_active.data,
             image_main=all_images[0],
             images=all_images if len(all_images) > 1 else None,
-            costos=None  # Se guarda desde el formulario
+            costos={
+                'tipo_material': tipo_material,  # Guardar tipo seleccionado
+                'lana_costo_rollo': form.lana_costo_rollo.data or 0,
+                'lana_peso_rollo': form.lana_peso_rollo.data or 0,
+                'lana_peso_usado': form.lana_peso_usado.data or 0,
+                'relleno_costo_bolsa': form.relleno_costo_bolsa.data or 0,
+                'relleno_peso_bolsa': form.relleno_peso_bolsa.data or 0,
+                'relleno_peso_usado': form.relleno_peso_usado.data or 0,
+                'ojos_usar': form.ojos_usar.data or False,
+                'ojos_costo_unitario': form.ojos_costo_unitario.data or 0,
+                'ojos_cantidad': form.ojos_cantidad.data or 0,
+                'mano_obra_usar': form.mano_obra_usar.data or False,
+                'mano_obra_costo_hora': form.mano_obra_costo_hora.data or 0,
+                'mano_obra_horas': form.mano_obra_horas.data or 0,
+                'utilidad_usar': form.utilidad_usar.data or False,
+                'utilidad_porcentaje': form.utilidad_porcentaje.data or 0
+            }
         )
 
         db.session.add(product)
@@ -386,8 +406,18 @@ def edit_product(product_id):
     current_app.logger.info(f'DEBUG: Editando producto ID {product_id}')
     current_app.logger.info(f'Datos recibidos: {request.form.to_dict()}')
     
+    # DEBUG específico para campo "tipo"
+    tipo_material = request.form.get('tipoLana', '').strip()
+    current_app.logger.info(f'🧶 TIPO MATERIAL RECIBIDO: "{tipo_material}"')
+    
     if form.validate_on_submit():
         current_app.logger.info('✅ Formulario válido')
+        
+        # DEBUG: Verificar qué datos del formulario se están guardando
+        current_app.logger.info(f'Form data - lana_costo_rollo: {form.lana_costo_rollo.data}')
+        current_app.logger.info(f'Form data - lana_peso_rollo: {form.lana_peso_rollo.data}')
+        current_app.logger.info(f'Form data - lana_peso_usado: {form.lana_peso_usado.data}')
+        current_app.logger.info(f'Campo tipoLana (datalist): "{tipo_material}"')
         
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
@@ -419,6 +449,7 @@ def edit_product(product_id):
 
         # Guardar costos en JSON
         costos_data = {
+            'tipo_material': tipo_material,  # Guardar tipo seleccionado del datalist
             'lana_costo_rollo': form.lana_costo_rollo.data or 0,
             'lana_peso_rollo': form.lana_peso_rollo.data or 0,
             'lana_peso_usado': form.lana_peso_usado.data or 0,

@@ -90,9 +90,9 @@
 
                         <h6 class="text-primary">Materiales</h6>
                         <div class="mb-2">
-                            <label class="form-label small">Tipo de Lana</label>
+                            <label class="form-label small">Tipo</label>
                             <input class="form-control form-control-sm" list="tipoLanaList" id="tipoLana" 
-                                   placeholder="Selecciona o escribe tipo de lana..."
+                                   placeholder="Selecciona o escribe tipo de material..."
                                    onchange="actualizarCostoLana()">
                             <datalist id="tipoLanaList">
                                 <option value="Acrílico estándar" data-costo="3.50" data-peso="50">
@@ -106,11 +106,11 @@
                             <small class="text-muted">Selecciona un tipo o escribe uno nuevo</small>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label small">Costo Rollo Lana (€)</label>
+                            <label class="form-label small">Costo (€)</label>
                             {{ form.lana_costo_rollo(class="form-control form-control-sm costo-lana-rollo", step="0.01") }}
                         </div>
                         <div class="mb-2">
-                            <label class="form-label small">Peso Rollo (g)</label>
+                            <label class="form-label small">Peso (g)</label>
                             {{ form.lana_peso_rollo(class="form-control form-control-sm peso-lana-rollo") }}
                         </div>
                         <div class="mb-3">
