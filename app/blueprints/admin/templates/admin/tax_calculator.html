@@ -213,9 +213,17 @@
                         <h6 class="alert-heading"><i class="bi bi-info-circle"></i> Resumen para Autónomos</h6>
                         <ul class="mb-0 small">
                             <li><strong>Beneficio Neto por Unidad:</strong> <span id="res-net-profit" class="text-success">0.00€</span></li>
-                            <li><strong>Beneficio Neto Mensual:</strong> <span id="res-net-profit-month" class="text-success">0.00€</span></li>
+                            <li><strong>Beneficio Neto Mensual (antes de autónomos):</strong> <span id="res-net-profit-month" class="text-success">0.00€</span></li>
+                            <li><strong>Resultado Neto (después de autónomos):</strong> <span id="res-net-result" class="text-danger">0.00€</span></li>
                             <li><strong>Carga Fiscal Total:</strong> <span id="res-tax-load" class="text-danger">0.00%</span> del precio de venta</li>
                         </ul>
+                    </div>
+
+                    <div class="alert mt-3" id="profit-alert">
+                        <h6 class="alert-heading"><i class="bi bi-piggy-bank"></i> Análisis de Rentabilidad</h6>
+                        <p class="mb-0 small" id="profit-analysis">
+                            Ingresa los datos para ver el análisis de rentabilidad.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -338,6 +346,9 @@ function calculate() {
 
     // Beneficio neto
     const netProfit = profit - irpf;
+    
+    // Resultado mensual (después de cuota de autónomos)
+    const netProfitMonth = (netProfit * monthlyUnits) - autonomoFee;
 
     // ========================================
     // MOSTRAR RESULTADOS
@@ -388,10 +399,43 @@ function calculate() {
     // Resumen
     document.getElementById('res-net-profit').textContent = formatEuro(netProfit);
     document.getElementById('res-net-profit-month').textContent = formatEuro(netProfit * monthlyUnits);
+    document.getElementById('res-net-result').textContent = formatEuro(netProfitMonth);
     
     // Carga fiscal (% del precio de venta)
     const taxLoad = ((totalUnit / salePrice) * 100).toFixed(2);
     document.getElementById('res-tax-load').textContent = taxLoad + '%';
+    
+    // Análisis de rentabilidad
+    updateProfitAnalysis(netProfit, netProfitMonth, monthlyUnits, autonomoFee);
+}
+
+function updateProfitAnalysis(netProfit, netProfitMonth, monthlyUnits, autonomoFee) {
+    const alertBox = document.getElementById('profit-alert');
+    const analysisText = document.getElementById('profit-analysis');
+    
+    // Calcular punto de equilibrio
+    const breakEvenUnits = Math.ceil(autonomoFee / netProfit);
+    
+    if (netProfitMonth > 0) {
+        alertBox.className = 'alert alert-success mt-3';
+        analysisText.innerHTML = `
+            <strong>¡Rentable!</strong> Con ${monthlyUnits} unidades/mes tienes un beneficio de ${formatEuro(netProfitMonth)}.<br>
+            <strong>Punto de equilibrio:</strong> Necesitas vender mínimo ${breakEvenUnits} unidades/mes para cubrir la cuota de autónomos.
+        `;
+    } else if (netProfitMonth < 0) {
+        alertBox.className = 'alert alert-warning mt-3';
+        analysisText.innerHTML = `
+            <strong>Atención:</strong> Con ${monthlyUnits} unidades/mes tienes una pérdida de ${formatEuro(Math.abs(netProfitMonth))}.<br>
+            <strong>Punto de equilibrio:</strong> Necesitas vender mínimo ${breakEvenUnits} unidades/mes para cubrir la cuota de autónomos.<br>
+            <strong>Recomendación:</strong> Aumenta el precio de venta, reduce costos, o incrementa las ventas estimadas.
+        `;
+    } else {
+        alertBox.className = 'alert alert-info mt-3';
+        analysisText.innerHTML = `
+            <strong>Punto de equilibrio:</strong> Con ${monthlyUnits} unidades/mes cubres exactamente la cuota de autónomos.<br>
+            Necesitas vender más de ${breakEvenUnits} unidades para tener beneficio.
+        `;
+    }
 }
 
 function formatEuro(amount) {

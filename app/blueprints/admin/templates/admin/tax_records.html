@@ -59,7 +59,7 @@
                             <th>Categoría</th>
                             <th class="text-end">Costo Total</th>
                             <th class="text-end">Precio Venta</th>
-                            <th class="text-end">IVA a Ingresar</th>
+                            <th class="text-end">Utilidad</th>
                             <th class="text-end">Beneficio Neto</th>
                             <th class="text-center">Fecha</th>
                             <th class="text-center">Acciones</th>
@@ -83,7 +83,7 @@
                                 <strong class="text-primary">€{{ "%.2f"|format(record.sale_price|float) }}</strong>
                             </td>
                             <td class="text-end">
-                                <span class="text-warning">€{{ "%.2f"|format(record.iva_ingresar|float) }}</span>
+                                <span class="text-info">€{{ "%.2f"|format(record.profit_amount|float) }}</span>
                             </td>
                             <td class="text-end">
                                 <span class="text-success">€{{ "%.2f"|format(record.net_profit|float) }}</span>
