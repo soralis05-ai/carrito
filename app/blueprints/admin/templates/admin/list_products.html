@@ -92,18 +92,41 @@
                                 {% endif %}
                             </td>
                             <td class="text-end">
-                                <a href="{{ url_for('products.detail', id=product.id) }}" 
-                                   class="btn btn-sm btn-outline-info" target="_blank" 
+                                <!-- Botón Publicar/Despublicar -->
+                                {% if product.is_active %}
+                                <form action="{{ url_for('admin.toggle_product_status', product_id=product.id) }}"
+                                      method="POST"
+                                      class="d-inline"
+                                      title="Despublicar (ocultar de la tienda)">
+                                    <button type="submit" class="btn btn-sm btn-outline-warning"
+                                            onclick="return confirm('¿Ocultar este producto de la tienda?');">
+                                        <i class="bi bi-eye-slash"></i>
+                                    </button>
+                                </form>
+                                {% else %}
+                                <form action="{{ url_for('admin.toggle_product_status', product_id=product.id) }}"
+                                      method="POST"
+                                      class="d-inline"
+                                      title="Publicar (mostrar en la tienda)">
+                                    <button type="submit" class="btn btn-sm btn-outline-success"
+                                            onclick="return confirm('¿Publicar este producto en la tienda?');">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                                
+                                <a href="{{ url_for('products.detail', id=product.id) }}"
+                                   class="btn btn-sm btn-outline-info" target="_blank"
                                    title="Ver en tienda">
                                     <i class="bi bi-eye"></i>
                                 </a>
-                                <a href="{{ url_for('admin.edit_product', product_id=product.id) }}" 
-                                   class="btn btn-sm btn-outline-primary" 
+                                <a href="{{ url_for('admin.edit_product', product_id=product.id) }}"
+                                   class="btn btn-sm btn-outline-primary"
                                    title="Editar">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <form action="{{ url_for('admin.delete_product', product_id=product.id) }}" 
-                                      method="POST" 
+                                <form action="{{ url_for('admin.delete_product', product_id=product.id) }}"
+                                      method="POST"
                                       class="d-inline"
                                       onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">

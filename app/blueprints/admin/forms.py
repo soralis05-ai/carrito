@@ -74,33 +74,33 @@ class ProductUploadForm(FlaskForm):
         Length(max=200, message='Máximo 200 caracteres')
     ])
     description = TextAreaField('Descripción', validators=[
-        DataRequired(message='La descripción es requerida'),
+        Optional(),  # Opcional para creación rápida
         Length(max=1000, message='Máximo 1000 caracteres')
     ])
-    
-    # Precio y stock
+
+    # Precio y stock (opcionales para creación rápida)
     price = FloatField('Precio de Venta (€)', validators=[
-        DataRequired(message='El precio es requerido'),
-        NumberRange(min=0.01, message='El precio debe ser mayor a 0')
+        Optional(),  # Opcional para creación rápida
+        NumberRange(min=0, message='El precio debe ser mayor o igual a 0')
     ])
     stock = IntegerField('Stock Disponible', validators=[
-        DataRequired(message='El stock es requerido'),
+        Optional(),  # Opcional para creación rápida
         NumberRange(min=0, message='El stock no puede ser negativo')
     ])
     sku = StringField('SKU (Referencia)', validators=[
         Optional(),
         Length(max=50, message='Máximo 50 caracteres')
     ])
-    
+
     # Categoría
     category_id = SelectField('Categoría', coerce=int, validators=[
         Optional()
     ])
-    
+
     # Estado
     is_featured = BooleanField('Producto destacado')
     is_active = BooleanField('Producto activo', default=True)
-    
+
     # Imágenes
     image = FileField('Imagen Principal *', validators=[
         FileRequired(message='Debe seleccionar al menos una imagen principal'),
@@ -123,19 +123,19 @@ class ProductUploadForm(FlaskForm):
     lana_costo_rollo = FloatField('Costo del Rollo de Lana (€)', validators=[Optional()])
     lana_peso_rollo = FloatField('Peso del Rollo (gramos)', validators=[Optional()])
     lana_peso_usado = FloatField('Peso Usado (gramos)', validators=[Optional()])
-    
+
     relleno_costo_bolsa = FloatField('Costo de la Bolsa de Relleno (€)', validators=[Optional()])
     relleno_peso_bolsa = FloatField('Peso de la Bolsa (gramos)', validators=[Optional()])
     relleno_peso_usado = FloatField('Peso Usado (gramos)', validators=[Optional()])
-    
+
     ojos_usar = BooleanField('¿Lleva ojos de seguridad?')
     ojos_costo_unitario = FloatField('Costo por par de ojos (€)', validators=[Optional()])
     ojos_cantidad = FloatField('Cantidad de pares', validators=[Optional()])
-    
+
     mano_obra_usar = BooleanField('¿Considerar mano de obra?')
     mano_obra_costo_hora = FloatField('Costo por Hora (€)', validators=[Optional()])
     mano_obra_horas = FloatField('Horas Dedicadas', validators=[Optional()])
-    
+
     utilidad_usar = BooleanField('¿Agregar utilidad adicional?')
     utilidad_porcentaje = FloatField('Porcentaje de Utilidad (%)', validators=[Optional(), NumberRange(min=0, max=500)])
 

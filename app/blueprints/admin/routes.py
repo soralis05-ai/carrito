@@ -458,7 +458,7 @@ def edit_product(product_id):
 def delete_product(product_id):
     """Eliminar producto."""
     product = Product.query.get_or_404(product_id)
-    
+
     try:
         db.session.delete(product)
         db.session.commit()
@@ -466,6 +466,24 @@ def delete_product(product_id):
     except Exception as e:
         db.session.rollback()
         flash(f'Error al eliminar: {str(e)}', 'danger')
+
+    return redirect(url_for('admin.list_products'))
+
+
+@admin_bp.route('/products/toggle-status/<int:product_id>', methods=['POST'])
+@login_required
+@admin_required
+def toggle_product_status(product_id):
+    """Alternar estado activo/inactivo del producto."""
+    product = Product.query.get_or_404(product_id)
+    
+    product.is_active = not product.is_active
+    db.session.commit()
+    
+    if product.is_active:
+        flash(f'Producto "{product.name}" publicado exitosamente!', 'success')
+    else:
+        flash(f'Producto "{product.name}" ocultado de la tienda!', 'info')
     
     return redirect(url_for('admin.list_products'))
 
