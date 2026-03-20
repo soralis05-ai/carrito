@@ -389,39 +389,6 @@ def edit_product(product_id):
             form.utilidad_porcentaje.data = float(costos.get('utilidad_porcentaje') or 0)
 
     if form.validate_on_submit():
-        # Validar que el precio no sea 0 o inválido
-        if not form.price.data or float(form.price.data) <= 0:
-            flash('Error: El precio de venta no puede ser 0. Complete los campos de costos para calcular el precio.', 'danger')
-            return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
-
-        # Validar que al menos algunos costos estén completos si es amigurumi
-        costos_data = {
-            'lana_costo_rollo': form.lana_costo_rollo.data or 0,
-            'lana_peso_rollo': form.lana_peso_rollo.data or 0,
-            'lana_peso_usado': form.lana_peso_usado.data or 0,
-            'relleno_costo_bolsa': form.relleno_costo_bolsa.data or 0,
-            'relleno_peso_bolsa': form.relleno_peso_bolsa.data or 0,
-            'relleno_peso_usado': form.relleno_peso_usado.data or 0,
-            'ojos_usar': form.ojos_usar.data or False,
-            'ojos_costo_unitario': form.ojos_costo_unitario.data or 0,
-            'ojos_cantidad': form.ojos_cantidad.data or 0,
-            'mano_obra_usar': form.mano_obra_usar.data or False,
-            'mano_obra_costo_hora': form.mano_obra_costo_hora.data or 0,
-            'mano_obra_horas': form.mano_obra_horas.data or 0,
-            'utilidad_usar': form.utilidad_usar.data or False,
-            'utilidad_porcentaje': form.utilidad_porcentaje.data or 0
-        }
-
-        # Verificar si hay costos de materiales (lana o relleno)
-        tiene_materiales = (
-            costos_data['lana_costo_rollo'] > 0 or
-            costos_data['relleno_costo_bolsa'] > 0
-        )
-
-        if not tiene_materiales and float(form.price.data) <= 0:
-            flash('Error: Debe ingresar al menos los costos de materiales (lana/relleno) o establecer un precio manualmente.', 'danger')
-            return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
-
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
@@ -434,7 +401,7 @@ def edit_product(product_id):
             category = Category.query.filter(
                 db.func.lower(Category.name) == category_name.lower()
             ).first()
-            
+
             if not category:
                 # Crear nueva categoría si no existe
                 category = Category(
@@ -467,13 +434,13 @@ def edit_product(product_id):
         product.name = form.name.data
         product.slug = slug
         product.description = form.description.data
-        product.price = form.price.data
-        product.stock = form.stock.data
+        product.price = form.price.data if form.price.data else product.price  # Mantener precio existente si es None
+        product.stock = form.stock.data if form.stock.data is not None else product.stock  # Mantener stock existente si es None
         product.sku = form.sku.data or product.sku
         product.category_id = category.id if category else None
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
-        product.costos = costos_data
+        product.costos = costos_data  # Siempre guardar costos (aunque sean 0)
 
         # Verificar si se subieron nuevas imágenes
         images_uploaded = any([
