@@ -26,9 +26,11 @@
         {% endif %}
     {% endwith %}
 
-    <div class="alert alert-warning mb-4">
-        <i class="bi bi-exclamation-triangle"></i> <strong>Importante:</strong> Completa TODOS los campos requeridos antes de subir imágenes. Si hay un error de validación, las imágenes se perderán y tendrás que volver a subirlas.
+    {% if uploaded_images and uploaded_images|length > 0 %}
+    <div class="alert alert-success mb-4">
+        <i class="bi bi-check-circle"></i> <strong>Imágenes cargadas:</strong> Tienes {{ uploaded_images|length }} imagen(es) cargada(s). Completa los campos restantes para guardar el producto.
     </div>
+    {% endif %}
 
     <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
         {{ form.hidden_tag() }}
@@ -298,6 +300,30 @@
                         <h5 class="mb-0"><i class="bi bi-images"></i> Imágenes del Producto</h5>
                     </div>
                     <div class="card-body">
+                        {% if uploaded_images and uploaded_images|length > 0 %}
+                        <div class="mb-4">
+                            <label class="form-label">Imágenes Cargadas ({{ uploaded_images|length }})</label>
+                            <div class="row g-2">
+                                {% for img_name in uploaded_images %}
+                                <div class="col-4 col-md-3 col-lg-2">
+                                    <div class="card">
+                                        <img src="{{ url_for('static', filename='img/productos/' + img_name) }}"
+                                             class="card-img-top" alt="Imagen {{ loop.index }}"
+                                             style="height: 100px; object-fit: cover;">
+                                        <div class="card-body p-1 text-center">
+                                            <small class="text-muted">{{ loop.index }}{% if loop.first %} (Principal){% endif %}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="alert alert-info mt-2 mb-0 small">
+                                <i class="bi bi-info-circle"></i> Estas imágenes se mantendrán aunque haya errores en otros campos.
+                            </div>
+                        </div>
+                        <hr>
+                        {% endif %}
+                        
                         <div class="mb-3">
                             <label for="image" class="form-label">Imagen Principal *</label>
                             {{ form.image(class="form-control") }}

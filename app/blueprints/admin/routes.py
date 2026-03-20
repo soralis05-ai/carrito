@@ -235,13 +235,17 @@ def upload_product():
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
 
-    if form.validate_on_submit():
-        # Procesar imágenes
-        image_filenames = _process_uploaded_images(form)
+    # Variables para imágenes ya subidas
+    uploaded_images = session.get('temp_images', [])
 
-        if not image_filenames:
+    if form.validate_on_submit():
+        # Procesar imágenes nuevas + las ya subidas
+        new_images = _process_uploaded_images(form)
+        all_images = uploaded_images + new_images
+
+        if not all_images:
             flash('Error: No se pudieron procesar las imágenes', 'danger')
-            return render_template('admin/upload_product.html', form=form, categories=categories)
+            return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images)
 
         # Generar SKU automático si no se proporciona
         sku = form.sku.data
@@ -263,33 +267,39 @@ def upload_product():
             category_id=form.category_id.data if form.category_id.data > 0 else None,
             is_featured=form.is_featured.data,
             is_active=form.is_active.data,
-            image_main=image_filenames[0],
-            images=image_filenames if len(image_filenames) > 1 else None
+            image_main=all_images[0],
+            images=all_images if len(all_images) > 1 else None,
+            costos=None  # Se guarda desde el formulario
         )
 
         db.session.add(product)
         db.session.commit()
 
-        flash(f'Producto "{form.name.data}" guardado exitosamente con {len(image_filenames)} imagen(es)!', 'success')
+        # Limpiar imágenes temporales
+        session.pop('temp_images', None)
+
+        flash(f'Producto "{form.name.data}" guardado exitosamente con {len(all_images)} imagen(es)!', 'success')
         return redirect(url_for('admin.list_products'))
 
-    # Si hay errores de validación, mostrar mensaje específico
+    # Si hay errores de validación, mantener las imágenes en sesión
     if form.errors:
+        # Guardar imágenes en sesión para que no se pierdan
+        if uploaded_images:
+            session['temp_images'] = uploaded_images
+        
         for field, errors in form.errors.items():
             for error in errors:
                 if field == 'stock':
-                    flash(f'Error: El campo Stock es requerido. Por favor ingresa una cantidad.', 'danger')
+                    flash(f'Error: El campo Stock es requerido. Por favor ingresa una cantidad.', 'warning')
                 elif field == 'name':
-                    flash(f'Error: El nombre del producto es requerido.', 'danger')
+                    flash(f'Error: El nombre del producto es requerido.', 'warning')
                 elif field == 'price':
-                    flash(f'Error: El precio es requerido.', 'danger')
-                elif field == 'image':
-                    flash(f'Error: Debes subir al menos la imagen principal.', 'danger')
-                else:
-                    flash(f'Error en {field}: {error}', 'danger')
-                break  # Solo mostrar primer error de cada campo
+                    flash(f'Error: El precio es requerido.', 'warning')
+                elif field == 'description':
+                    flash(f'Error: La descripción es requerida.', 'warning')
+                break
 
-    return render_template('admin/upload_product.html', form=form, categories=categories)
+    return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images)
 
 
 @admin_bp.route('/products')
