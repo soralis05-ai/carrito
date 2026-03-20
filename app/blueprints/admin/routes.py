@@ -496,7 +496,7 @@ def edit_product(product_id):
         flash(f'Producto "{product.name}" actualizado exitosamente!', 'success')
         return redirect(url_for('admin.list_products'))
 
-    return render_template('admin/edit_product.html', form=form, product=product)
+    return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
 
 
 @admin_bp.route('/products/delete/<int:product_id>', methods=['POST'])
