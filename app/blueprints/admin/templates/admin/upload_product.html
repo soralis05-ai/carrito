@@ -69,6 +69,22 @@
 
                         <h6 class="text-primary">Materiales</h6>
                         <div class="mb-2">
+                            <label class="form-label small">Tipo de Lana</label>
+                            <input class="form-control form-control-sm" list="tipoLanaList" id="tipoLana" 
+                                   placeholder="Selecciona o escribe tipo de lana..."
+                                   onchange="actualizarCostoLana()">
+                            <datalist id="tipoLanaList">
+                                <option value="Acrílico estándar" data-costo="3.50" data-peso="50">
+                                <option value="Acrílico premium" data-costo="5.00" data-peso="50">
+                                <option value="Algodón" data-costo="6.50" data-peso="50">
+                                <option value="Lana merino" data-costo="12.00" data-peso="50">
+                                <option value="Lana alpaca" data-costo="15.00" data-peso="50">
+                                <option value="Bambú" data-costo="8.00" data-peso="50">
+                                <option value="Mezcla algodón/acrílico" data-costo="4.50" data-peso="50">
+                            </datalist>
+                            <small class="text-muted">Selecciona un tipo o escribe uno nuevo</small>
+                        </div>
+                        <div class="mb-2">
                             <label class="form-label small">Costo Rollo Lana (€)</label>
                             {{ form.lana_costo_rollo(class="form-control form-control-sm costo-lana-rollo", step="0.01") }}
                         </div>
@@ -543,5 +559,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Calculo inicial
     calcularCostos();
 });
+
+// Actualizar costo de lana según tipo seleccionado
+function actualizarCostoLana() {
+    const tipoLanaInput = document.getElementById('tipoLana');
+    const costoLanaInput = document.querySelector('.costo-lana-rollo');
+    const pesoLanaInput = document.querySelector('.peso-lana-rollo');
+    
+    const selectedOption = Array.from(document.querySelectorAll('#tipoLanaList option'))
+        .find(opt => opt.value === tipoLanaInput.value);
+    
+    if (selectedOption) {
+        const costo = selectedOption.getAttribute('data-costo');
+        const peso = selectedOption.getAttribute('data-peso');
+        
+        if (costo) costoLanaInput.value = costo;
+        if (peso) pesoLanaInput.value = peso;
+        
+        // Recalcular costos
+        calcularCostos();
+    }
+}
 </script>
 {% endblock %}
