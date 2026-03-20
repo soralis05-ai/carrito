@@ -84,7 +84,7 @@
                         <h6 class="text-primary">Materiales</h6>
                         <div class="mb-2">
                             <label class="form-label small">Tipo</label>
-                            <input class="form-control form-control-sm" list="tipoLanaList" id="tipoLana" 
+                            <input class="form-control form-control-sm" list="tipoLanaList" id="tipoLana" name="tipoLana"
                                    placeholder="Selecciona o escribe tipo de material..."
                                    onchange="actualizarCostoLana()">
                             <datalist id="tipoLanaList">
@@ -100,11 +100,11 @@
                         </div>
                         <div class="mb-2">
                             <label class="form-label small">Costo (€)</label>
-                            {{ form.lana_costo_rollo(class="form-control form-control-sm costo-lana-rollo", step="0.01") }}
+                            {{ form.lana_costo_rollo(class="form-control form-control-sm costo-lana-rollo", step="0.01", name="lana_costo_rollo") }}
                         </div>
                         <div class="mb-2">
                             <label class="form-label small">Peso (g)</label>
-                            {{ form.lana_peso_rollo(class="form-control form-control-sm peso-lana-rollo") }}
+                            {{ form.lana_peso_rollo(class="form-control form-control-sm peso-lana-rollo", name="lana_peso_rollo") }}
                         </div>
                         <div class="mb-3">
                             <label class="form-label small">Peso Usado (g)</label>
