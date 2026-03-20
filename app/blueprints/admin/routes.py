@@ -319,7 +319,7 @@ def upload_product():
 @admin_required
 def list_products():
     """Listar productos para administración."""
-    products = Product.query.order_by(Product.created_at.desc()).all()
+    products = Product.query.order_by(Product.id.asc()).all()
     return render_template('admin/list_products.html', products=products)
 
 
