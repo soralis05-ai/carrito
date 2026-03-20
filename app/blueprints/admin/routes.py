@@ -230,28 +230,28 @@ def _process_uploaded_images(form, existing_images=None):
 def upload_product():
     """Subir nuevo producto con imagenes."""
     form = ProductUploadForm()
-    
+
     # Cargar categorías para el select
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
-    
+
     if form.validate_on_submit():
         # Procesar imágenes
         image_filenames = _process_uploaded_images(form)
-        
+
         if not image_filenames:
             flash('Error: No se pudieron procesar las imágenes', 'danger')
-            return render_template('admin/upload_product.html', form=form)
-        
+            return render_template('admin/upload_product.html', form=form, categories=categories)
+
         # Generar SKU automático si no se proporciona
         sku = form.sku.data
         if not sku:
             sku = f"PRD-{uuid.uuid4().hex[:8].upper()}"
-        
+
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
-        
+
         # Crear producto
         product = Product(
             name=form.name.data,
@@ -266,14 +266,30 @@ def upload_product():
             image_main=image_filenames[0],
             images=image_filenames if len(image_filenames) > 1 else None
         )
-        
+
         db.session.add(product)
         db.session.commit()
-        
+
         flash(f'Producto "{form.name.data}" guardado exitosamente con {len(image_filenames)} imagen(es)!', 'success')
         return redirect(url_for('admin.list_products'))
-    
-    return render_template('admin/upload_product.html', form=form)
+
+    # Si hay errores de validación, mostrar mensaje específico
+    if form.errors:
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == 'stock':
+                    flash(f'Error: El campo Stock es requerido. Por favor ingresa una cantidad.', 'danger')
+                elif field == 'name':
+                    flash(f'Error: El nombre del producto es requerido.', 'danger')
+                elif field == 'price':
+                    flash(f'Error: El precio es requerido.', 'danger')
+                elif field == 'image':
+                    flash(f'Error: Debes subir al menos la imagen principal.', 'danger')
+                else:
+                    flash(f'Error en {field}: {error}', 'danger')
+                break  # Solo mostrar primer error de cada campo
+
+    return render_template('admin/upload_product.html', form=form, categories=categories)
 
 
 @admin_bp.route('/products')
