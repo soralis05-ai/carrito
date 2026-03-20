@@ -99,7 +99,7 @@ class ProductUploadForm(FlaskForm):
 
     # Estado
     is_featured = BooleanField('Producto destacado')
-    is_active = BooleanField('Producto activo', default=True)
+    is_active = BooleanField('Producto activo', default=False)  # Desmarcado por defecto
 
     # Imágenes
     image = FileField('Imagen Principal *', validators=[
