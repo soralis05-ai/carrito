@@ -166,3 +166,5 @@ class ProductEditForm(ProductUploadForm):
         Optional(),
         NumberRange(min=0, message='El stock no puede ser negativo')
     ])
+    # Categoría como texto (no SelectField) para que funcione con datalist
+    category_id = StringField('Categoría', validators=[Optional()])

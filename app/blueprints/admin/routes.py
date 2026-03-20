@@ -348,22 +348,15 @@ def list_products():
 def edit_product(product_id):
     """Editar producto existente."""
     product = Product.query.get_or_404(product_id)
-    form = ProductEditForm()
+    form = ProductEditForm(obj=product)  # Cargar datos del producto automáticamente
 
-    # Cargar categorías
+    # Cargar categorías para el datalist
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
-    form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
 
     if request.method == 'GET':
-        # Precargar datos básicos del producto en el formulario
-        form.name.data = product.name
-        form.description.data = product.description
-        form.price.data = float(product.price) if product.price else 0
-        form.stock.data = product.stock or 0
-        form.sku.data = product.sku or ''
-        form.category_id.data = product.category_id or 0
-        form.is_featured.data = product.is_featured or False
-        form.is_active.data = product.is_active  # Usar valor real del producto, no True por defecto
+        # Precargar categoría como nombre (no ID)
+        if product.category:
+            form.category_id.data = product.category.name
 
         # Precargar costos si existen
         if product.costos:
@@ -450,6 +443,7 @@ def edit_product(product_id):
         product.price = form.price.data if form.price.data else product.price
         product.stock = form.stock.data if form.stock.data is not None else product.stock
         product.sku = form.sku.data or product.sku
+        # category_id ahora es el nombre, buscar o crear categoría
         product.category_id = category.id if category else None
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
