@@ -1,6 +1,6 @@
 import os
 import uuid
-from flask import render_template, redirect, url_for, flash, current_app, request
+from flask import render_template, redirect, url_for, flash, current_app, request, session
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 from . import admin_bp
