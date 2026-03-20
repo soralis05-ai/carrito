@@ -388,7 +388,14 @@ def edit_product(product_id):
             form.utilidad_usar.data = bool(costos.get('utilidad_usar'))
             form.utilidad_porcentaje.data = float(costos.get('utilidad_porcentaje') or 0)
 
+    # DEBUG: Mostrar datos recibidos
+    current_app.logger.info('=' * 60)
+    current_app.logger.info(f'DEBUG: Editando producto ID {product_id}')
+    current_app.logger.info(f'Datos recibidos: {request.form.to_dict()}')
+    
     if form.validate_on_submit():
+        current_app.logger.info('✅ Formulario válido')
+        
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
@@ -396,11 +403,15 @@ def edit_product(product_id):
         # Buscar o crear categoría por nombre (case-insensitive)
         category = None
         category_name = request.form.get('category_id', '').strip()
+        current_app.logger.info(f'Categoría recibida: "{category_name}"')
+        
         if category_name:
             # Buscar categoría existente (case-insensitive)
             category = Category.query.filter(
                 db.func.lower(Category.name) == category_name.lower()
             ).first()
+            
+            current_app.logger.info(f'Categoría encontrada: {category.name if category else "None"}')
 
             if not category:
                 # Crear nueva categoría si no existe
@@ -411,6 +422,7 @@ def edit_product(product_id):
                 )
                 db.session.add(category)
                 db.session.flush()  # Obtener ID
+                current_app.logger.info(f'✅ Categoría creada: {category.name} (ID: {category.id})')
 
         # Guardar costos en JSON
         costos_data = {
@@ -429,18 +441,21 @@ def edit_product(product_id):
             'utilidad_usar': form.utilidad_usar.data or False,
             'utilidad_porcentaje': form.utilidad_porcentaje.data or 0
         }
+        current_app.logger.info(f'Costos a guardar: {costos_data}')
 
         # Actualizar datos básicos
         product.name = form.name.data
         product.slug = slug
         product.description = form.description.data
-        product.price = form.price.data if form.price.data else product.price  # Mantener precio existente si es None
-        product.stock = form.stock.data if form.stock.data is not None else product.stock  # Mantener stock existente si es None
+        product.price = form.price.data if form.price.data else product.price
+        product.stock = form.stock.data if form.stock.data is not None else product.stock
         product.sku = form.sku.data or product.sku
         product.category_id = category.id if category else None
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
-        product.costos = costos_data  # Siempre guardar costos (aunque sean 0)
+        product.costos = costos_data
+        
+        current_app.logger.info(f'Producto actualizado: name={product.name}, price={product.price}, category_id={product.category_id}')
 
         # Verificar si se subieron nuevas imágenes
         images_uploaded = any([
@@ -449,6 +464,7 @@ def edit_product(product_id):
         ])
 
         if images_uploaded:
+            current_app.logger.info('📷 Imágenes nuevas subidas')
             # Procesar nuevas imágenes
             existing_images = product.get_all_images()
             image_filenames = _process_uploaded_images(form, existing_images)
@@ -459,16 +475,23 @@ def edit_product(product_id):
         # Si no se subieron imágenes, mantener las existentes (no hacer nada)
 
         db.session.commit()
+        current_app.logger.info('✅ Producto guardado exitosamente en BD')
+        current_app.logger.info('=' * 60)
 
         flash(f'Producto "{product.name}" actualizado exitosamente!', 'success')
         return redirect(url_for('admin.list_products'))
     else:
         # Debug: mostrar errores de validación
+        current_app.logger.error('❌ Formulario NO válido')
+        current_app.logger.error(f'Errores: {form.errors}')
+        
         if form.errors:
             for field, errors in form.errors.items():
                 for error in errors:
                     flash(f'Error en {field}: {error}', 'danger')
-                    current_app.logger.error(f'Validation error in edit_product: {field} - {error}')
+                    current_app.logger.error(f'  - {field}: {error}')
+        
+        current_app.logger.info('=' * 60)
 
     return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
 
