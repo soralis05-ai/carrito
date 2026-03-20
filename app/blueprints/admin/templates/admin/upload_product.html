@@ -367,7 +367,7 @@
                                 </div>
                             </div>
                         </div>
-                        <small class="text-muted">Formatos soportados: JPG, PNG, WEBP, AVIF</small>
+                        <small class="text-muted">Formatos soportados: JPG, PNG, WEBP, AVIF. Tamaño máximo: 5 MB por imagen</small>
                     </div>
                 </div>
 
@@ -390,12 +390,22 @@
 function setupImagePreview(inputId, previewId) {
     const input = document.getElementById(inputId);
     if (!input) return;
-    
+
     input.addEventListener('change', function(e) {
         const preview = document.getElementById(previewId);
         const file = e.target.files[0];
 
         if (file) {
+            // Validar tamaño (5 MB máximo)
+            const maxSize = 5 * 1024 * 1024; // 5 MB en bytes
+            if (file.size > maxSize) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                alert(`Imagen demasiado grande: ${sizeMB} MB. Tamaño máximo: 5 MB`);
+                input.value = ''; // Limpiar input
+                preview.innerHTML = '<span class="text-muted small">Vista previa</span>';
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 preview.innerHTML = '<img src="' + e.target.result + '" alt="Vista previa" style="max-height: 150px; max-width: 100%; border-radius: 4px;">';

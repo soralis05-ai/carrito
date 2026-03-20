@@ -51,6 +51,30 @@ def validate_image(filename):
     return ext in SUPPORTED_FORMATS
 
 
+def validate_file_size(file_storage, max_size_mb=5):
+    """
+    Validar tamaño de archivo Flask FileStorage.
+    
+    Args:
+        file_storage: Flask FileStorage object
+        max_size_mb: Tamaño máximo en MB (default: 5)
+    
+    Returns:
+        tuple: (is_valid, error_message, file_size_mb)
+    """
+    # Obtener tamaño
+    file_storage.stream.seek(0, 2)  # Ir al final
+    file_size = file_storage.stream.tell()
+    file_storage.stream.seek(0)  # Volver al inicio
+    
+    file_size_mb = file_size / (1024 * 1024)
+    
+    if file_size_mb > max_size_mb:
+        return False, f'Imagen demasiado grande ({file_size_mb:.2f} MB). Tamaño máximo: {max_size_mb} MB', file_size_mb
+    
+    return True, None, file_size_mb
+
+
 def get_allowed_extensions():
     """Obtener lista de extensiones permitidas para el formulario."""
     return ALLOWED_EXTENSIONS

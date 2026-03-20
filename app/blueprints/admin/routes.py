@@ -184,26 +184,35 @@ def delete_tax_record(record_id):
 
 def _process_uploaded_images(form, existing_images=None):
     """Procesar imágenes subidas y retornar lista de nombres."""
-    image_filenames = list(existing_images) if existing_images else []
+    from app.utils.image_processor import validate_file_size
     
+    image_filenames = list(existing_images) if existing_images else []
+
     image_fields = ['image', 'image2', 'image3', 'image4', 'image5']
     upload_folder = os.path.join(current_app.root_path, 'static', 'img', 'productos')
     os.makedirs(upload_folder, exist_ok=True)
-    
+
     for field_name in image_fields:
         image_file = getattr(form, field_name).data
         if image_file:
+            # Validar formato
             if not validate_image(image_file.filename):
                 flash(f'Formato no soportado: {image_file.filename}', 'danger')
                 continue
             
+            # Validar tamaño
+            is_valid_size, error_msg, size_mb = validate_file_size(image_file, max_size_mb=5)
+            if not is_valid_size:
+                flash(error_msg, 'danger')
+                continue
+
             original_filename = secure_filename(image_file.filename)
             extension = os.path.splitext(original_filename)[1].lower()
             unique_filename = f"{uuid.uuid4().hex}"
-            
+
             temp_path = os.path.join(upload_folder, f"{unique_filename}_temp{extension}")
             image_file.save(temp_path)
-            
+
             output_base = os.path.join(upload_folder, unique_filename)
             result = process_image(
                 temp_path,
@@ -212,15 +221,15 @@ def _process_uploaded_images(form, existing_images=None):
                 output_format='WEBP',
                 quality=85
             )
-            
+
             if os.path.exists(temp_path):
                 os.remove(temp_path)
-            
+
             if result['success']:
                 image_filenames.append(os.path.basename(result['path']))
             else:
                 flash(f'Error procesando imagen: {result["error"]}', 'danger')
-    
+
     return image_filenames
 
 
