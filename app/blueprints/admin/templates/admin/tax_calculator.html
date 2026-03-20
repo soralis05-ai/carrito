@@ -39,8 +39,13 @@
 
                         <div class="mb-3">
                             <label class="form-label">Categoría</label>
-                            <input type="text" class="form-control" name="category" id="productCategory" placeholder="Ej: Amigurumis, Accesorios, Hogar">
-                            <small class="text-muted">Para organizar tus registros</small>
+                            <select class="form-select" name="category" id="productCategory">
+                                <option value="">-- Sin categoría --</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-muted">Selecciona una categoría existente o crea una nueva en Productos</small>
                         </div>
 
                         <div class="row">

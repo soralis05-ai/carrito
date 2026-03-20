@@ -30,7 +30,10 @@ def dashboard():
 @admin_required
 def tax_calculator():
     """Calculadora de impuestos para autónomos."""
-    from app.models import ProductTaxRecord
+    from app.models import ProductTaxRecord, Category
+    
+    # Obtener categorías para el dropdown
+    categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     
     if request.method == 'POST':
         # Guardar registro
@@ -86,7 +89,7 @@ def tax_calculator():
         flash(f'Registro guardado exitosamente: {product_name}', 'success')
         return redirect(url_for('admin.tax_records'))
     
-    return render_template('admin/tax_calculator.html')
+    return render_template('admin/tax_calculator.html', categories=categories)
 
 
 @admin_bp.route('/tax-records')
