@@ -4,8 +4,8 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🚀 Estado del Proyecto
 
-**Versión:** 1.5.0
-**Última actualización:** 13 de marzo de 2026
+**Versión:** 1.6.0
+**Última actualización:** 20 de marzo de 2026
 **Framework:** Flask 3.1+
 **Python:** 3.14
 **Frontend:** Bootstrap 5.3.3 + Bootstrap Icons
@@ -17,7 +17,7 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 
 ## 🎯 Filosofía de Trabajo - Reglas de Oro
 
-> **Nuestra filosofía de desarrollo se basa en 7 reglas fundamentales que guían cada decisión técnica:**
+> **Nuestra filosofía de desarrollo se basa en 10 reglas fundamentales que guían cada decisión técnica:**
 
 ### 1. 🏛️ Separación de Responsabilidades
 **Mantener la separación entre administración y lado público.**
@@ -85,6 +85,30 @@ E-commerce artesanal con panel de administración y portfolio personal integrado
 - ✅ Documentar variables requeridas directamente en el README
 - ✅ En producción usar variables de entorno del servidor
 - ✅ No crear `.env.example` o `.env.template` (regla de seguridad)
+
+### 9. 📦 Dependencias Registradas
+**Todas las nuevas dependencias deben registrarse siempre en `requirements.txt`.**
+
+- ✅ Ejecutar `pip freeze > requirements.txt` después de instalar nuevas librerías
+- ✅ Verificar que `requirements.txt` esté actualizado antes de cada commit
+- ✅ No instalar dependencias en producción sin registrarlas primero
+- ✅ Incluir versiones mínimas requeridas (ej: `Flask>=3.1`)
+
+### 10. ✅ Verificación Antes de Push
+**Siempre verificar que no haya errores de sintaxis antes de enviar a GitHub.**
+
+- ✅ Ejecutar `python -m py_compile archivo.py` en archivos Python modificados
+- ✅ Verificar que la aplicación inicia sin errores
+- ✅ Revisar logs de la aplicación antes de hacer push
+- ✅ No subir código con errores de sintaxis o imports faltantes
+
+### 11. 🚫 Carpetas de Desarrollo
+**Las carpetas `scripts` y `tests` no suben a producción.**
+
+- ✅ `scripts/` - Solo para migraciones y utilidades de desarrollo
+- ✅ `tests/` - Solo para pruebas unitarias de desarrollo
+- ✅ Ambas carpetas están en `.gitignore` para producción
+- ✅ En producción solo: `app/`, `requirements.txt`, `run.py`
 
 ---
 
@@ -711,6 +735,118 @@ if validate_image(filename):
 | Usuarios y auth | 17 marzo | ⏳ Pendiente |
 | Checkout completo | 20 marzo | ⏳ Pendiente |
 | Producción (deploy) | 25 marzo | ⏳ Pendiente |
+
+---
+
+## 🔐 Control de Versiones (Git/GitHub)
+
+### Repositorio Oficial
+```
+URL: https://github.com/soralis05-ai/carrito.git
+Rama: main
+```
+
+### Configuración de Git
+
+**Git instalado en:** `C:\Program Files\Git\bin\git.exe`
+**Credenciales:** Guardadas en Credential Manager de Windows
+
+### Token de Desarrollo
+
+| Característica | Detalle |
+|----------------|---------|
+| **Ubicación** | `%USERPROFILE%\AppData\Local\Git\credentials` |
+| **Permisos** | Lectura/Escritura (`repo`, `workflow`) |
+| **Seguridad** | Encriptado por Windows, solo Git puede leerlo |
+| **NO está en** | Ningún archivo .md, .txt, ni en GitHub |
+
+### Gestión de Credenciales
+
+Para ver, cambiar o eliminar el token guardado:
+
+```cmd
+scripts\git-credentials.bat
+```
+
+Este script proporciona un menú interactivo para:
+1. ✅ Verificar que el token está guardado
+2. ⚠️ Ver el token (no recomendado en público)
+3. 🗑️ Eliminar credenciales (para cambiar token)
+4. 🔌 Verificar conexión con GitHub
+
+### Flujo de Trabajo Diario
+
+```cmd
+# Antes de empezar a trabajar:
+git pull origin main
+
+# Después de hacer cambios:
+git add .
+git commit -m "Descripción clara del cambio"
+git push origin main    # No pide token, ya está guardado
+
+# Ver estado del repositorio:
+git status
+
+# Ver historial de commits:
+git log --oneline
+
+# Ver cambios sin subir:
+git diff
+```
+
+### Comandos Git Útiles
+
+**Diario:**
+```cmd
+git status                    # Ver estado de archivos
+git add .                     # Agregar todos los archivos
+git commit -m "Descripción"   # Hacer commit
+git push                      # Subir cambios a GitHub
+git pull                      # Bajar cambios de GitHub
+```
+
+**Ramas:**
+```cmd
+git checkout -b feature/nueva-funcionalidad   # Crear nueva rama
+git checkout nombre-rama                       # Cambiar de rama
+git branch                                     # Ver ramas
+git merge nombre-rama                          # Fusionar rama
+```
+
+### Token de Producción
+
+Para desplegar en producción (Vetzner, Railway, etc.):
+
+1. **Crea un token NUEVO** en GitHub:
+   - URL: https://github.com/settings/tokens/new
+   - Nombre: `almapunt-production`
+   - Permisos: `public_repo` (solo lectura)
+
+2. **Configúralo en el servidor** como variable de entorno:
+   ```
+   GITHUB_TOKEN=ghp_xxxxxxxxxxxxx
+   ```
+
+3. **NUNCA uses tu token de desarrollo en producción**
+
+### Archivos de Configuración
+
+| Archivo | Propósito | ¿En GitHub? |
+|---------|-----------|-------------|
+| `scripts/git-credentials.bat` | Gestor visual de tokens | ✅ Sí |
+| `.git-config-local.txt` | Referencia de configuración local | ✅ Sí |
+| `.gitignore` | Excluye .env, .venv, __pycache__ | ✅ Sí |
+| `.env` | Variables de entorno reales | ❌ No (seguridad) |
+
+### Solución de Problemas
+
+| Problema | Solución |
+|----------|----------|
+| "Permission denied" al hacer push | Token expirado. Elimina credenciales y vuelve a ingresar |
+| "Git no se reconoce" | Usa ruta completa: `"C:\Program Files\Git\bin\git.exe"` |
+| Conflictos de merge | Edita archivos, busca `<<<<<<<`, resuelve y haz commit |
+| Olvidé hacer commit | `git commit --amend -m "Nuevo mensaje"` |
 
 ---
 
@@ -1444,6 +1580,46 @@ sudo systemctl restart almapunt
 
 ---
 
+## 📝 Historial de Cambios
+
+### Versión 1.6.0 (20 de marzo de 2026) - **ACTUAL** ✨
+
+**🚀 Creación Rápida de Productos:**
+- ✅ Solo nombre e imagen principal requeridos
+- ✅ Precio, stock, descripción opcionales
+- ✅ Producto se guarda como inactivo por defecto
+- ✅ Botón "Publicar" en lista de productos
+
+**📋 Nuevo Botón Publicar/Despublicar:**
+- ✅ Alternar estado activo/inactivo
+- ✅ Confirmación antes de cambiar estado
+- ✅ Mensajes flash informativos
+
+**🧶 Tipo de Lana con Datalist:**
+- ✅ 7 tipos de lana predefinidos
+- ✅ Costo y peso se actualizan automáticamente
+- ✅ Permite tipos personalizados
+
+**💾 Imágenes Persistentes:**
+- ✅ Se guardan en sesión cuando hay error de validación
+- ✅ Se muestran miniaturas de imágenes cargadas
+- ✅ No se pierden al completar campos faltantes
+
+**📜 Nuevas Reglas de Oro (10-11):**
+- ✅ Dependencias registradas en requirements.txt
+- ✅ Verificación de sintaxis antes de push
+- ✅ Scripts y tests no suben a producción
+
+**🔧 .gitignore Actualizado:**
+- ✅ Excluye scripts/, tests/, docs/, migrations/
+- ✅ Excluye .python-version, __pycache__/
+
+**📁 Archivos Eliminados:**
+- ✅ docs/ (contenido movido a README.md)
+- ✅ .env.example (regla de seguridad)
+
+---
+
 ### Versión 1.5.0 (13 de marzo de 2026) - **ACTUAL** ✨
 
 **📊 Registro de Costos e Impuestos:**
@@ -1623,4 +1799,4 @@ sudo systemctl restart almapunt
 
 ---
 
-*Documento actualizado el 13 de marzo de 2026 - v1.5.0 - Calculadora Impuestos y Registro de Costos*
+*Documento actualizado el 20 de marzo de 2026 - v1.6.0 - Creación Rápida y Reglas de Oro*

@@ -58,6 +58,7 @@ logs/
 .DS_Store
 Thumbs.db
 desktop.ini
+.python-version
 
 # Temporary files
 *.tmp
@@ -81,3 +82,9 @@ app/static/img/portfolio/*_detail*
 htmlcov/
 .coverage
 .pytest_cache/
+
+# Desarrollo (no subir a producción)
+scripts/
+tests/
+docs/
+migrations/
