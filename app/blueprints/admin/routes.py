@@ -272,6 +272,21 @@ def upload_product():
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
 
+        # Buscar o crear categoría por nombre
+        category = None
+        category_name = request.form.get('category_id', '').strip()
+        if category_name:
+            category = Category.query.filter_by(name=category_name).first()
+            if not category:
+                # Crear nueva categoría si no existe
+                category = Category(
+                    name=category_name,
+                    slug=category_name.lower().replace(' ', '-').replace('_', '-'),
+                    is_active=True
+                )
+                db.session.add(category)
+                db.session.flush()  # Obtener ID
+
         # Crear producto
         product = Product(
             name=form.name.data,
@@ -280,7 +295,7 @@ def upload_product():
             price=form.price.data,
             stock=form.stock.data,
             sku=sku,
-            category_id=form.category_id.data if form.category_id.data > 0 else None,
+            category_id=category.id if category else None,
             is_featured=form.is_featured.data,
             is_active=form.is_active.data,
             image_main=all_images[0],
@@ -406,7 +421,22 @@ def edit_product(product_id):
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
-        
+
+        # Buscar o crear categoría por nombre
+        category = None
+        category_name = request.form.get('category_id', '').strip()
+        if category_name:
+            category = Category.query.filter_by(name=category_name).first()
+            if not category:
+                # Crear nueva categoría si no existe
+                category = Category(
+                    name=category_name,
+                    slug=category_name.lower().replace(' ', '-').replace('_', '-'),
+                    is_active=True
+                )
+                db.session.add(category)
+                db.session.flush()  # Obtener ID
+
         # Guardar costos en JSON
         costos_data = {
             'lana_costo_rollo': form.lana_costo_rollo.data or 0,
@@ -432,7 +462,7 @@ def edit_product(product_id):
         product.price = form.price.data
         product.stock = form.stock.data
         product.sku = form.sku.data or product.sku
-        product.category_id = form.category_id.data if form.category_id.data > 0 else None
+        product.category_id = category.id if category else None
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
         product.costos = costos_data
