@@ -240,8 +240,8 @@ def upload_product():
 
     if form.validate_on_submit():
         # Procesar imágenes nuevas + las ya subidas
-        new_images = _process_uploaded_images(form)
-        all_images = uploaded_images + new_images
+        new_images = _process_uploaded_images(form, existing_images=uploaded_images)
+        all_images = new_images  # _process_uploaded_images ya incluye existing_images
 
         if not all_images:
             flash('Error: No se pudieron procesar las imágenes', 'danger')
