@@ -249,7 +249,7 @@ def upload_product():
 
     # Procesar imágenes nuevas SIEMPRE (antes de validar)
     new_images = _process_uploaded_images(form, existing_images=uploaded_images)
-    
+
     # Actualizar sesión con todas las imágenes
     if new_images:
         session['temp_images'] = new_images
@@ -344,7 +344,7 @@ def edit_product(product_id):
         form.sku.data = product.sku or ''
         form.category_id.data = product.category_id or 0
         form.is_featured.data = product.is_featured or False
-        form.is_active.data = product.is_active or True
+        form.is_active.data = product.is_active  # Usar valor real del producto, no True por defecto
 
         # Precargar costos si existen
         if product.costos:
@@ -373,7 +373,7 @@ def edit_product(product_id):
         # Validar que el precio no sea 0 o inválido
         if not form.price.data or float(form.price.data) <= 0:
             flash('Error: El precio de venta no puede ser 0. Complete los campos de costos para calcular el precio.', 'danger')
-            return render_template('admin/edit_product.html', form=form, product=product)
+            return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
 
         # Validar que al menos algunos costos estén completos si es amigurumi
         costos_data = {
@@ -401,7 +401,7 @@ def edit_product(product_id):
 
         if not tiene_materiales and float(form.price.data) <= 0:
             flash('Error: Debe ingresar al menos los costos de materiales (lana/relleno) o establecer un precio manualmente.', 'danger')
-            return render_template('admin/edit_product.html', form=form, product=product)
+            return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
 
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
