@@ -101,13 +101,9 @@
                                    value="{{ product.costos.tipo_material if product and product.costos and product.costos.tipo_material else '' }}"
                                    onchange="actualizarCostoLana()">
                             <datalist id="tipoLanaList">
-                                <option value="Acrílico estándar" data-costo="3.50" data-peso="50">
-                                <option value="Acrílico premium" data-costo="5.00" data-peso="50">
-                                <option value="Algodón" data-costo="6.50" data-peso="50">
-                                <option value="Lana merino" data-costo="12.00" data-peso="50">
-                                <option value="Lana alpaca" data-costo="15.00" data-peso="50">
-                                <option value="Bambú" data-costo="8.00" data-peso="50">
-                                <option value="Mezcla algodón/acrílico" data-costo="4.50" data-peso="50">
+                                {% for material_type in material_types %}
+                                <option value="{{ material_type.name }}" data-costo="{{ material_type.default_cost }}" data-peso="{{ material_type.default_weight }}">
+                                {% endfor %}
                             </datalist>
                             <small class="text-muted">Selecciona un tipo o escribe uno nuevo</small>
                         </div>

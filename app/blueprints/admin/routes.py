@@ -238,11 +238,16 @@ def _process_uploaded_images(form, existing_images=None):
 @admin_required
 def upload_product():
     """Subir nuevo producto con imagenes."""
+    from app.models import MaterialType
+    
     form = ProductUploadForm()
 
     # Cargar categorías para el select
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
+    
+    # Cargar tipos de materiales para el datalist
+    material_types = MaterialType.query.filter_by(is_active=True).order_by(MaterialType.name).all()
 
     # Obtener imágenes ya guardadas en sesión
     uploaded_images = session.get('temp_images', [])
@@ -265,7 +270,7 @@ def upload_product():
 
         if not all_images:
             flash('Error: Debes subir al menos una imagen', 'danger')
-            return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images)
+            return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images, material_types=material_types)
 
         # Generar SKU automático si no se proporciona
         sku = form.sku.data
@@ -350,7 +355,7 @@ def upload_product():
                     flash(f'Error: La descripción es requerida.', 'warning')
                 break
 
-    return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images)
+    return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images, material_types=material_types)
 
 
 @admin_bp.route('/products')
@@ -367,17 +372,22 @@ def list_products():
 @admin_required
 def edit_product(product_id):
     """Editar producto existente."""
+    from app.models import MaterialType
+    
     product = Product.query.get_or_404(product_id)
     form = ProductEditForm(obj=product)  # Cargar datos del producto automáticamente
 
     # Cargar categorías para el datalist
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
+    
+    # Cargar tipos de materiales para el datalist
+    material_types = MaterialType.query.filter_by(is_active=True).order_by(MaterialType.name).all()
 
     if request.method == 'GET':
         # Precargar categoría como nombre (no ID)
         if product.category:
             form.category_id.data = product.category.name
-
+        
         # Precargar costos si existen
         if product.costos:
             costos = product.costos
@@ -538,7 +548,7 @@ def edit_product(product_id):
         
         current_app.logger.info('=' * 60)
 
-    return render_template('admin/edit_product.html', form=form, product=product, categories=categories)
+    return render_template('admin/edit_product.html', form=form, product=product, categories=categories, material_types=material_types)
 
 
 @admin_bp.route('/products/delete/<int:product_id>', methods=['POST'])
