@@ -35,16 +35,16 @@ class ProductsService:
     
     @staticmethod
     def get_by_id(product_id):
-        """Obtener producto por ID."""
-        product = Product.query.get(product_id)
+        """Obtener producto por ID (solo activos)."""
+        product = Product.query.filter_by(id=product_id, is_active=True).first()
         if product:
             return ProductsService._to_dict(product)
         return None
     
     @staticmethod
     def get_by_slug(slug):
-        """Obtener producto por slug."""
-        product = Product.query.filter_by(slug=slug).first()
+        """Obtener producto por slug (solo activos)."""
+        product = Product.query.filter_by(slug=slug, is_active=True).first()
         if product:
             return ProductsService._to_dict(product)
         return None
@@ -85,15 +85,15 @@ class ProductsService:
     
     @staticmethod
     def get_related(product_id, limit=4):
-        """Obtener productos relacionados (misma categoría)."""
-        product = Product.query.get(product_id)
+        """Obtener productos relacionados (misma categoría, solo activos)."""
+        product = Product.query.filter_by(id=product_id, is_active=True).first()
         if not product or not product.category_id:
             return []
-        
+
         related = Product.query.filter(
             Product.is_active == True,
             Product.category_id == product.category_id,
             Product.id != product_id
         ).limit(limit).all()
-        
+
         return [ProductsService._to_dict(p) for p in related]
