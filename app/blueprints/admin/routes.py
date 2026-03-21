@@ -404,11 +404,17 @@ def edit_product(product_id):
     # DEBUG: Mostrar datos recibidos
     current_app.logger.info('=' * 60)
     current_app.logger.info(f'DEBUG: Editando producto ID {product_id}')
-    current_app.logger.info(f'Datos recibidos: {request.form.to_dict()}')
+    current_app.logger.info(f'Datos recibidos (request.form): {request.form.to_dict()}')
     
     # DEBUG específico para campo "tipo"
     tipo_material = request.form.get('tipoLana', '').strip()
     current_app.logger.info(f'🧶 TIPO MATERIAL RECIBIDO: "{tipo_material}"')
+    current_app.logger.info(f'🧶 TIPO MATERIAL (repr): {repr(tipo_material)}')
+    current_app.logger.info(f'🧶 TIPO MATERIAL (len): {len(tipo_material)}')
+    
+    # Verificar si el campo viene en request
+    current_app.logger.info(f'📋 "tipoLana" en request.form: {"tipoLana" in request.form}')
+    current_app.logger.info(f'📋 Claves en request.form: {list(request.form.keys())}')
     
     if form.validate_on_submit():
         current_app.logger.info('✅ Formulario válido')
@@ -418,6 +424,13 @@ def edit_product(product_id):
         current_app.logger.info(f'Form data - lana_peso_rollo: {form.lana_peso_rollo.data}')
         current_app.logger.info(f'Form data - lana_peso_usado: {form.lana_peso_usado.data}')
         current_app.logger.info(f'Campo tipoLana (datalist): "{tipo_material}"')
+        
+        # DEBUG: Verificar costos antes de guardar
+        current_app.logger.info('📝 COSTOS ANTES DE GUARDAR:')
+        current_app.logger.info(f'  - tipo_material: "{tipo_material}"')
+        current_app.logger.info(f'  - lana_costo_rollo: {form.lana_costo_rollo.data}')
+        current_app.logger.info(f'  - lana_peso_rollo: {form.lana_peso_rollo.data}')
+        current_app.logger.info(f'  - lana_peso_usado: {form.lana_peso_usado.data}')
         
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
@@ -479,6 +492,13 @@ def edit_product(product_id):
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
         product.costos = costos_data
+        
+        # DEBUG: Verificar qué se guardó
+        current_app.logger.info('💾 COSTOS GUARDADOS EN BD:')
+        current_app.logger.info(f'  - tipo_material: "{costos_data.get("tipo_material")}"')
+        current_app.logger.info(f'  - lana_costo_rollo: {costos_data.get("lana_costo_rollo")}')
+        current_app.logger.info(f'  - lana_peso_rollo: {costos_data.get("lana_peso_rollo")}')
+        current_app.logger.info(f'  - Todos los costos: {costos_data}')
         
         current_app.logger.info(f'Producto actualizado: name={product.name}, price={product.price}, category_id={product.category_id}')
 
