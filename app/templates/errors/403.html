@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}500 - Error Interno del Servidor{% endblock %}
+{% block title %}403 - Acceso Denegado{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -17,14 +17,14 @@
                 </div>
             </div>
 
-            <!-- Número 500 -->
-            <h1 class="display-1 fw-bold text-danger mb-3">500</h1>
+            <!-- Número 403 -->
+            <h1 class="display-1 fw-bold text-warning mb-3">403</h1>
             
             <!-- Mensaje -->
-            <h2 class="h3 mb-4">Error Interno del Servidor</h2>
+            <h2 class="h3 mb-4">Acceso Denegado</h2>
             
             <p class="lead text-muted mb-4">
-                Algo salió mal en nuestro servidor. Estamos trabajando para solucionarlo.
+                No tienes permisos para acceder a esta página.
             </p>
 
             <!-- Enlaces útiles -->
@@ -35,33 +35,38 @@
                 <a href="{{ url_for('portfolio.show') }}" class="btn btn-outline-primary btn-lg">
                     <i class="bi bi-images"></i> Portfolio
                 </a>
-                <a href="javascript:location.reload()" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-clockwise"></i> Recargar Página
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-gear"></i> Panel Admin
                 </a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success">
+                    <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                </a>
+                {% endif %}
             </div>
 
-            <!-- Información técnica -->
+            <!-- Información -->
             <div class="card shadow-sm border-warning">
                 <div class="card-body">
                     <h5 class="card-title mb-3">
-                        <i class="bi bi-exclamation-triangle text-warning"></i> ¿Qué pasó?
+                        <i class="bi bi-shield-exclamation text-warning"></i> ¿Por qué ves esto?
                     </h5>
                     <p class="card-text text-start small">
-                        Ocurrió un error inesperado en el servidor. Nuestro equipo técnico ha sido notificado 
-                        y está trabajando para resolverlo lo antes posible.
+                        Esta página requiere permisos especiales que tu cuenta no tiene actualmente.
                     </p>
                     <ul class="list-unstyled text-start small">
                         <li class="mb-2">
-                            <i class="bi bi-check-circle text-success"></i> 
-                            El error ha sido registrado
+                            <i class="bi bi-circle-fill text-warning"></i> 
+                            Necesitas iniciar sesión
                         </li>
                         <li class="mb-2">
-                            <i class="bi bi-check-circle text-success"></i> 
-                            Nuestro equipo está trabajando en ello
+                            <i class="bi bi-circle-fill text-warning"></i> 
+                            O necesitas rol de administrador
                         </li>
                         <li class="mb-2">
-                            <i class="bi bi-check-circle text-success"></i> 
-                            Intenta nuevamente en unos minutos
+                            <i class="bi bi-circle-fill text-warning"></i> 
+                            O la página es privada
                         </li>
                     </ul>
                 </div>
@@ -69,7 +74,7 @@
 
             <!-- Contacto -->
             <div class="mt-4 text-muted small">
-                <p>¿El problema persiste? Contáctanos:</p>
+                <p>¿Crees que esto es un error? Contáctanos:</p>
                 <a href="mailto:soralis05@gmail.com" class="text-decoration-none">
                     <i class="bi bi-envelope"></i> soralis05@gmail.com
                 </a>

@@ -58,10 +58,26 @@ def create_app():
     def index():
         return render_template('coming_soon.html')
 
+    # Manejador de error 403 (acceso denegado)
+    @app.errorhandler(403)
+    def handle_forbidden(e):
+        return render_template('errors/403.html'), 403
+
     # Manejador de error 404 (página no encontrada)
     @app.errorhandler(404)
     def handle_not_found(e):
         return render_template('errors/404.html'), 404
+
+    # Manejador de error 500 (error interno del servidor)
+    @app.errorhandler(500)
+    def handle_internal_error(e):
+        db.session.rollback()  # Importante: rollback de la sesión
+        return render_template('errors/500.html'), 500
+
+    # Manejador de error 503 (servicio no disponible)
+    @app.errorhandler(503)
+    def handle_service_unavailable(e):
+        return render_template('errors/503.html'), 503
 
     # Manejador de error 413 (archivo demasiado grande)
     @app.errorhandler(413)
