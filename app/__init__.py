@@ -58,6 +58,11 @@ def create_app():
     def index():
         return render_template('coming_soon.html')
 
+    # Manejador de error 404 (página no encontrada)
+    @app.errorhandler(404)
+    def handle_not_found(e):
+        return render_template('errors/404.html'), 404
+
     # Manejador de error 413 (archivo demasiado grande)
     @app.errorhandler(413)
     def handle_too_large(e):

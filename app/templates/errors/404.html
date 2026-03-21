@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}404 - Página No Encontrada{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <!-- Logo Almapunt -->
+            <div class="mb-4">
+                <img src="{{ url_for('static', filename='img/brand/logo.png') }}" 
+                     alt="Almapunt Logo" 
+                     style="max-width: 200px; height: auto;"
+                     onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';">
+                <div id="logo-fallback" style="display: none;">
+                    <i class="bi bi-shop display-1 text-primary"></i>
+                </div>
+            </div>
+
+            <!-- Número 404 -->
+            <h1 class="display-1 fw-bold text-primary mb-3">404</h1>
+            
+            <!-- Mensaje -->
+            <h2 class="h3 mb-4">¡Ups! Página no encontrada</h2>
+            
+            <p class="lead text-muted mb-4">
+                Lo sentimos, la página que buscas no existe o ha sido movida.
+            </p>
+
+            <!-- Enlaces útiles -->
+            <div class="d-grid gap-2 d-md-flex justify-content-center mb-5">
+                <a href="{{ url_for('products.list') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-shop"></i> Ver Productos
+                </a>
+                <a href="{{ url_for('portfolio.show') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-images"></i> Portfolio
+                </a>
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-gear"></i> Admin
+                </a>
+            </div>
+
+            <!-- Búsqueda sugerida -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">
+                        <i class="bi bi-lightbulb text-warning"></i> ¿Qué puedes hacer?
+                    </h5>
+                    <ul class="list-unstyled text-start">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i> 
+                            Verificar la URL escrita
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i> 
+                            Explorar nuestro catálogo de productos
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i> 
+                            Visitar nuestro portfolio
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i> 
+                            Contactar con nosotros si necesitas ayuda
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contacto -->
+            <div class="mt-4 text-muted small">
+                <p>¿Necesitas ayuda? Escríbenos a:</p>
+                <a href="mailto:soralis05@gmail.com" class="text-decoration-none">
+                    <i class="bi bi-envelope"></i> soralis05@gmail.com
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .display-1 {
+        font-size: 6rem;
+        line-height: 1;
+    }
+    
+    @media (max-width: 768px) {
+        .display-1 {
+            font-size: 4rem;
+        }
+    }
+</style>
+{% endblock %}
