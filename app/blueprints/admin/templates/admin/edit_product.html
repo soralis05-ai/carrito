@@ -98,6 +98,7 @@
                             <label class="form-label small">Tipo</label>
                             <input class="form-control form-control-sm" list="tipoLanaList" id="tipoLana" name="tipoLana"
                                    placeholder="Selecciona o escribe tipo de material..."
+                                   value="{{ product.costos.tipo_material if product and product.costos and product.costos.tipo_material else '' }}"
                                    onchange="actualizarCostoLana()">
                             <datalist id="tipoLanaList">
                                 <option value="Acrílico estándar" data-costo="3.50" data-peso="50">
