@@ -1,0 +1,85 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Nuevo Tipo de Material - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}" class="text-decoration-none">Admin</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('admin.list_material_types') }}" class="text-decoration-none">Tipos de Materiales</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Tipo de Material</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre *</label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                   placeholder="Ej: Acrílico estándar">
+                            <small class="text-muted">Nombre del tipo de material</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="default_cost" class="form-label">Costo por Defecto (€)</label>
+                                <input type="number" class="form-control" id="default_cost" name="default_cost"
+                                       step="0.01" min="0" value="0">
+                                <small class="text-muted">Costo predeterminado</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="default_weight" class="form-label">Peso por Defecto (g)</label>
+                                <input type="number" class="form-control" id="default_weight" name="default_weight"
+                                       min="0" value="50">
+                                <small class="text-muted">Peso predeterminado en gramos</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                      placeholder="Descripción opcional del tipo de material..."></textarea>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" checked>
+                            <label class="form-check-label" for="is_active">
+                                Tipo activo
+                            </label>
+                            <small class="text-muted d-block">Visible en el formulario de productos</small>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin.list_material_types') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <h6 class="alert-heading"><i class="bi bi-lightbulb"></i> Consejo</h6>
+                <p class="mb-0 small">
+                    Los tipos de materiales te permiten guardar configuraciones comunes para usarlas rápidamente 
+                    al calcular costos de productos. Puedes editarlos en cualquier momento.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

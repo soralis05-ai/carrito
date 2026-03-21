@@ -1,0 +1,30 @@
+from app import db
+from datetime import datetime
+
+
+class MaterialType(db.Model):
+    """Tipos de materiales para amigurumis."""
+    __tablename__ = 'material_types'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True, index=True)
+    default_cost = db.Column(db.Numeric(10, 2), default=0)  # Costo por defecto
+    default_weight = db.Column(db.Integer, default=50)  # Peso por defecto en gramos
+    description = db.Column(db.Text, nullable=True)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<MaterialType {self.name}>'
+
+    def to_dict(self):
+        """Convertir a diccionario."""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'default_cost': float(self.default_cost) if self.default_cost else 0,
+            'default_weight': self.default_weight,
+            'description': self.description,
+            'is_active': self.is_active
+        }

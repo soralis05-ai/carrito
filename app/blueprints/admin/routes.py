@@ -680,13 +680,13 @@ def edit_category(category_id):
 def delete_category(category_id):
     """Eliminar categoría."""
     category = Category.query.get_or_404(category_id)
-    
+
     # Verificar si tiene productos asociados
     product_count = category.products.count()
     if product_count > 0:
         flash(f'No se puede eliminar: hay {product_count} producto(s) en esta categoría', 'danger')
         return redirect(url_for('admin.list_categories'))
-    
+
     try:
         db.session.delete(category)
         db.session.commit()
@@ -694,5 +694,123 @@ def delete_category(category_id):
     except Exception as e:
         db.session.rollback()
         flash(f'Error al eliminar: {str(e)}', 'danger')
-    
+
     return redirect(url_for('admin.list_categories'))
+
+
+# ============================================
+# GESTIÓN DE TIPOS DE MATERIALES
+# ============================================
+
+@admin_bp.route('/material-types')
+@login_required
+@admin_required
+def list_material_types():
+    """Listar tipos de materiales."""
+    from app.models import MaterialType
+    material_types = MaterialType.query.order_by(MaterialType.name.asc()).all()
+    return render_template('admin/list_material_types.html', material_types=material_types)
+
+
+@admin_bp.route('/material-types/create', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def create_material_type():
+    """Crear nuevo tipo de material."""
+    from app.models import MaterialType
+    
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        default_cost = float(request.form.get('default_cost', 0) or 0)
+        default_weight = int(request.form.get('default_weight', 50) or 50)
+        description = request.form.get('description', '').strip()
+        is_active = request.form.get('is_active', False)
+
+        # Validaciones
+        if not name:
+            flash('El nombre del tipo de material es requerido', 'danger')
+            return redirect(url_for('admin.create_material_type'))
+
+        # Verificar si ya existe
+        if MaterialType.query.filter_by(name=name).first():
+            flash(f'El tipo de material "{name}" ya existe', 'danger')
+            return redirect(url_for('admin.create_material_type'))
+
+        # Crear tipo de material
+        material_type = MaterialType(
+            name=name,
+            default_cost=default_cost,
+            default_weight=default_weight,
+            description=description if description else None,
+            is_active=is_active == 'on'
+        )
+
+        db.session.add(material_type)
+        db.session.commit()
+
+        flash(f'Tipo de material "{name}" creado exitosamente!', 'success')
+        return redirect(url_for('admin.list_material_types'))
+
+    return render_template('admin/create_material_type.html')
+
+
+@admin_bp.route('/material-types/edit/<int:type_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_material_type(type_id):
+    """Editar tipo de material existente."""
+    from app.models import MaterialType
+    
+    material_type = MaterialType.query.get_or_404(type_id)
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        default_cost = float(request.form.get('default_cost', 0) or 0)
+        default_weight = int(request.form.get('default_weight', 50) or 50)
+        description = request.form.get('description', '').strip()
+        is_active = request.form.get('is_active', False)
+
+        # Validaciones
+        if not name:
+            flash('El nombre del tipo de material es requerido', 'danger')
+            return redirect(url_for('admin.edit_material_type', type_id=type_id))
+
+        # Verificar si el nombre ya existe en otro tipo
+        existing = MaterialType.query.filter_by(name=name).first()
+        if existing and existing.id != type_id:
+            flash(f'El tipo de material "{name}" ya existe', 'danger')
+            return redirect(url_for('admin.edit_material_type', type_id=type_id))
+
+        # Actualizar
+        material_type.name = name
+        material_type.default_cost = default_cost
+        material_type.default_weight = default_weight
+        material_type.description = description if description else None
+        material_type.is_active = is_active == 'on'
+
+        db.session.commit()
+
+        flash(f'Tipo de material "{name}" actualizado exitosamente!', 'success')
+        return redirect(url_for('admin.list_material_types'))
+
+    return render_template('admin/edit_material_type.html', material_type=material_type)
+
+
+@admin_bp.route('/material-types/delete/<int:type_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_material_type(type_id):
+    """Eliminar tipo de material."""
+    from app.models import MaterialType
+    
+    material_type = MaterialType.query.get_or_404(type_id)
+
+    try:
+        db.session.delete(material_type)
+        db.session.commit()
+        flash(f'Tipo de material "{material_type.name}" eliminado exitosamente!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al eliminar: {str(e)}', 'danger')
+
+    return redirect(url_for('admin.list_material_types'))
