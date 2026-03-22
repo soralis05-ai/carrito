@@ -300,6 +300,21 @@ def upload_product():
                 db.session.add(category)
                 db.session.flush()  # Obtener ID
 
+        # Si hay un tipo de material nuevo, crearlo en material_types
+        if tipo_material:
+            existing_type = MaterialType.query.filter_by(name=tipo_material).first()
+            if not existing_type:
+                # Crear nuevo tipo de material con valores por defecto
+                new_type = MaterialType(
+                    name=tipo_material,
+                    default_cost=form.lana_costo_rollo.data or 0,
+                    default_weight=form.lana_peso_rollo.data or 50,
+                    description=f'Tipo creado automáticamente desde producto'
+                )
+                db.session.add(new_type)
+                db.session.flush()
+                current_app.logger.info(f'✅ Nuevo tipo de material creado: {tipo_material} (ID: {new_type.id})')
+
         # Crear producto
         product = Product(
             name=form.name.data,
@@ -489,6 +504,21 @@ def edit_product(product_id):
             'utilidad_porcentaje': form.utilidad_porcentaje.data or 0
         }
         current_app.logger.info(f'Costos a guardar: {costos_data}')
+        
+        # Si hay un tipo de material nuevo, crearlo en material_types
+        if tipo_material:
+            existing_type = MaterialType.query.filter_by(name=tipo_material).first()
+            if not existing_type:
+                # Crear nuevo tipo de material con valores por defecto
+                new_type = MaterialType(
+                    name=tipo_material,
+                    default_cost=form.lana_costo_rollo.data or 0,
+                    default_weight=form.lana_peso_rollo.data or 50,
+                    description=f'Tipo creado automáticamente desde producto'
+                )
+                db.session.add(new_type)
+                db.session.flush()
+                current_app.logger.info(f'✅ Nuevo tipo de material creado: {tipo_material} (ID: {new_type.id})')
 
         # Actualizar datos básicos
         product.name = form.name.data
