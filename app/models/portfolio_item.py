@@ -1,3 +1,4 @@
+from typing import List, Optional
 from app import db
 from datetime import datetime, timezone
 
@@ -15,10 +16,10 @@ class PortfolioItem(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<PortfolioItem {self.title}>'
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convierte el objeto a diccionario."""
         return {
             'id': self.id,
@@ -30,6 +31,6 @@ class PortfolioItem(db.Model):
         }
 
     @classmethod
-    def get_all_active(cls):
+    def get_all_active(cls) -> List['PortfolioItem']:
         """Obtiene todos los items activos ordenados."""
         return cls.query.filter_by(is_active=True).order_by(cls.order).all()

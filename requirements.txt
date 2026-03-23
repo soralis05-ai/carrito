@@ -9,3 +9,10 @@ python-dotenv>=1.0
 waitress
 reportlab>=4.0
 pytest>=7.0
+
+# Desarrollo
+pre-commit>=3.6
+black>=24.0
+isort>=5.13
+flake8>=7.0
+flake8-docstrings>=1.7

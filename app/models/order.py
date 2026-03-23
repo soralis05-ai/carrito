@@ -1,3 +1,4 @@
+from typing import Optional
 from app import db
 from datetime import datetime, timezone
 
@@ -55,20 +56,20 @@ class Order(db.Model):
     # Relación con items
     items = db.relationship('OrderItem', backref='order', lazy='dynamic', cascade='all, delete-orphan')
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Order {self.order_number}>'
-    
+
     @property
-    def total_display(self):
+    def total_display(self) -> str:
         """Retorna el total formateado con símbolo de euro."""
         return f"€{self.total}"
-    
+
     @property
-    def items_count(self):
+    def items_count(self) -> int:
         """Cantidad total de items en el pedido."""
         return sum(item.quantity for item in self.items)
-    
-    def generate_order_number(self):
+
+    def generate_order_number(self) -> str:
         """Genera número de pedido único."""
         from datetime import datetime
         date_str = datetime.now().strftime('%Y%m%d')
@@ -102,10 +103,10 @@ class OrderItem(db.Model):
     unit_price = db.Column(db.Numeric(10, 2), nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<OrderItem {self.product_name} x {self.quantity}>'
-    
+
     @property
-    def total_display(self):
+    def total_display(self) -> str:
         """Retorna el total formateado con símbolo de euro."""
         return f"€{self.total}"

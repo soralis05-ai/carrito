@@ -1,3 +1,4 @@
+from typing import Optional
 from app import db
 from datetime import datetime, timezone
 
@@ -15,10 +16,10 @@ class MaterialType(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<MaterialType {self.name}>'
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convertir a diccionario."""
         return {
             'id': self.id,

@@ -81,6 +81,9 @@ htmlcov/
 .coverage
 .pytest_cache/
 
+# Pre-commit
+.pre-commit-cache/
+
 # Desarrollo (no subir a producción)
 scripts/
 tests/

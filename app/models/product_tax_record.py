@@ -1,3 +1,4 @@
+from typing import Optional
 from app import db
 from datetime import datetime, timezone
 
@@ -49,10 +50,10 @@ class ProductTaxRecord(db.Model):
     # Estado
     is_active = db.Column(db.Boolean, default=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<ProductTaxRecord {self.product_name}>'
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convertir a diccionario."""
         return {
             'id': self.id,

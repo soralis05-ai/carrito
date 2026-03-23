@@ -1,3 +1,4 @@
+from typing import Optional
 from app import db
 from datetime import datetime, timezone
 
@@ -15,10 +16,10 @@ class PortfolioInfo(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<PortfolioInfo {self.name}>'
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Convierte el objeto a diccionario."""
         return {
             'name': self.name,
@@ -29,7 +30,7 @@ class PortfolioInfo(db.Model):
         }
 
     @classmethod
-    def get_or_create(cls):
+    def get_or_create(cls) -> 'PortfolioInfo':
         """Obtiene el primer registro o crea uno por defecto."""
         info = cls.query.first()
         if not info:
