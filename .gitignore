@@ -84,8 +84,10 @@ htmlcov/
 # Pre-commit
 .pre-commit-cache/
 
+# Instancia (no subir a producción)
+instance/
+
 # Desarrollo (no subir a producción)
 scripts/
 tests/
 docs/
-migrations/
