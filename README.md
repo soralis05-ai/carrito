@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.10 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.11 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.10"
+  version: "3.0.11"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -267,7 +267,9 @@ git status
 - ✅ Refactorizar en pasos pequeños y commiteables
 - ✅ Verificar que no hay código duplicado después de refactorizar
 - ✅ Actualizar documentación (README.md) si cambia comportamiento
-- ✅ Revisar que todos los imports siguen funcionando
+- ✅ Revisar que todos los imports y variables sigan funcionando
+- ✅ **NUNCA mover variables sin verificar TODAS sus referencias**
+- ✅ **NUNCA eliminar código sin verificar todos sus usos**
 
 **Checklist de Refactorización:**
 ```
@@ -276,10 +278,50 @@ git status
 [ ] Refactorizar en commits pequeños
 [ ] Tests pasan después de cada commit
 [ ] Verificar imports y dependencias
+[ ] Verificar TODAS las referencias de variables movidas
+[ ] Verificar TODAS las referencias de funciones movidas
 [ ] Actualizar README.md si es necesario
 [ ] Code review (si es posible)
 [ ] Merge a main
 ```
+
+**⚠️ ERRORES CRÍTICOS A EVITAR (Basado en incidentes reales):**
+
+```python
+# ❌ ERROR CRÍTICO #1: Mover variable sin verificar referencias
+
+# ANTES (funciona):
+def upload_product():
+    tipo_material = request.form.get('tipoLana', '').strip()
+    # ... código que usa tipo_material
+    if tipo_material:
+        # crear tipo
+
+# DESPUÉS DE REFACTORIZAR MAL (rompe - NameError):
+def upload_product():
+    # ... código que usa tipo_material
+    if tipo_material:  # ❌ NameError: tipo_material no está definida
+        # crear tipo
+    # La variable se movió abajo pero se usa arriba
+
+# ✅ SOLUCIÓN: Verificar TODAS las referencias antes de mover
+def upload_product():
+    tipo_material = request.form.get('tipoLana', '').strip()  # ✅ Definida antes de usar
+    # ... código que usa tipo_material
+    if tipo_material:
+        # crear tipo
+```
+
+**Lección Aprendida (Incidente 2026-03-23 - v3.0.9):**
+> ⚠️ **Error Real:** Durante refactorización de logging (v3.0.9), se movió la definición
+> de `tipo_material` después de su primer uso, causando `NameError` al crear productos.
+>
+> **Causa:** Se agregó logging antes de la definición de la variable, pero el código
+> que usa la variable quedó antes de la definición.
+>
+> ✅ **Solución Aplicada:** Restaurar definición de `tipo_material` antes del primer uso.
+>
+> ✅ **Prevención:** Esta regla ahora incluye verificación explícita de referencias en checklist.
 
 **Ejemplo de Refactorización Segura:**
 ```python
@@ -1550,6 +1592,44 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.11 (23 de marzo de 2026) - **Fix: Regla #11 Refactorización Segura** 🛑
+
+**Motivo:** Incidente de refactorización insegura (NameError en upload_product)
+
+**Mejoras Completadas:**
+- ✅ Regla #11 actualizada con errores críticos documentados
+- ✅ Checklist de refactorización ampliada con verificación de referencias
+- ✅ Lección aprendida del incidente 2026-03-23 agregada
+
+**Archivos Actualizados:**
+- ✅ `README.md` - Regla #11 con ejemplos de errores críticos
+- ✅ `app/blueprints/admin/routes.py` - Fix: `tipo_material` definida antes de usar
+
+**Error Crítico (Incidente Real):**
+```python
+# ❌ DURANTE REFACTORIZACIÓN DE LOGGING (v3.0.9)
+# Se movió la definición de tipo_material después de su uso:
+
+def upload_product():
+    # ... código
+    if tipo_material:  # ❌ NameError: variable no definida aún
+        # crear tipo
+    tipo_material = request.form.get('tipoLana', '')  # Definición movida acá
+
+# ✅ FIX: Restaurar definición antes del primer uso
+def upload_product():
+    tipo_material = request.form.get('tipoLana', '')  # ✅ Primero definir
+    # ... código
+    if tipo_material:  # ✅ Ahora funciona
+        # crear tipo
+```
+
+**Impacto:** ✅ Previene futuros errores de refactorización insegura
+
+**Commit:** Pendiente
+
+---
 
 ### Versión 3.0.10 (23 de marzo de 2026) - **Credenciales de Admin en RAG** 🔐
 

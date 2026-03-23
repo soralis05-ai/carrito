@@ -263,6 +263,9 @@ def upload_product():
     # Obtener imágenes ya guardadas en sesión
     uploaded_images = session.get('temp_images', [])
 
+    # Obtener tipo de material del formulario
+    tipo_material = request.form.get('tipoLana', '').strip()
+
     # Procesar imágenes nuevas SIEMPRE (antes de validar)
     new_images = _process_uploaded_images(form, existing_images=uploaded_images)
 
