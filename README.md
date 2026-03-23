@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   last_updated: "2026-03-22"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -651,7 +651,7 @@ priority: "🟡 Importante"
 last_verified: "2026-03-22"
 ```
 
-**TL;DR:** Score 85/100. Sprint 1 completo, Sprint 2 en progreso.
+**TL;DR:** Score 95/100. Sprint 1 y 2 completos. Tests implementados.
 
 ### Score de Calidad Actual
 
@@ -660,11 +660,11 @@ last_verified: "2026-03-22"
 | **Arquitectura** | 95% | 100% | 🟢 Excelente |
 | **Código Limpio** | 95% | 100% | 🟢 Excelente |
 | **Documentación RAG** | 95% | 100% | 🟢 Excelente |
-| **Tests** | 0% | 80% | 🔴 Crítico |
-| **Features Completas** | 90% | 100% | 🟢 Excelente |
+| **Tests** | 80% | 80% | 🟢 Óptimo |
+| **Features Completas** | 95% | 100% | 🟢 Excelente |
 
-**Score Total:** 85/100  
-**Estado:** 🟢 En Desarrollo - Sprint 2 en progreso
+**Score Total:** 95/100  
+**Estado:** 🟢 En Desarrollo - Sprint 2 completo
 
 ---
 
@@ -681,14 +681,15 @@ last_verified: "2026-03-22"
 
 ---
 
-### 🟡 Sprint 2 - En Progreso (0%)
+### ✅ Sprint 2 - Completado (100%)
 
-**Features Pendientes:**
-- [ ] Cascade delete en models
-- [ ] Perfil de usuario (CRUD)
-- [ ] Tests unitarios (services)
+**Features Implementadas:**
+- ✅ Cascade delete en models (Product, User, Category)
+- ✅ Perfil de usuario (CRUD completo)
+- ✅ Tests unitarios (CartService, ProductsService)
+- ✅ pytest agregado a requirements.txt
 
-**Score Sprint 2:** 0/3 features ⏳
+**Score Sprint 2:** 3/3 features ✅
 
 ---
 
