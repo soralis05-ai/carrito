@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.2"
+  version: "3.0.3"
   last_updated: "2026-03-22"
   total_chunks: 17
   embedding_model: "semantic-markdown"
@@ -518,12 +518,10 @@ Error: Email o contraseña incorrectos
 # Crear usuario administrador
 python scripts/create_admin.py
 
-# Credenciales por defecto:
-# Username: admin
-# Email: admin@almapunt.es
-# Password: admin123
-
-# ⚠️ CAMBIAR CONTRASEÑA DESPUÉS DEL PRIMER LOGIN!
+# Credenciales del administrador:
+# Username: SorayaR
+# Email: soralis05@gmail.com
+# Password: Soraya79@
 ```
 
 **Prevención:**
@@ -896,11 +894,10 @@ item = db.session.get(CartItem, item_id)
 # Crear usuario administrador
 python scripts/create_admin.py
 
-# Credenciales por defecto:
-# Username: admin
-# Email: admin@almapunt.es
-# Password: admin123
-# ⚠️ CAMBIAR DESPUÉS DEL PRIMER LOGIN
+# Credenciales del administrador:
+# Username: SorayaR
+# Email: soralis05@gmail.com
+# Password: Soraya79@
 ```
 
 #### 🟡 Importante (Backlog)
