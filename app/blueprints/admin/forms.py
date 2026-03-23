@@ -92,9 +92,10 @@ class ProductUploadForm(FlaskForm):
         Length(max=50, message='Máximo 50 caracteres')
     ])
 
-    # Categoría
-    category_id = SelectField('Categoría', coerce=int, validators=[
-        Optional()
+    # Categoría (texto libre, se busca o crea en el backend)
+    category_id = StringField('Categoría', validators=[
+        Optional(),
+        Length(max=100, message='Máximo 100 caracteres')
     ])
 
     # Estado
