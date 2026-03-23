@@ -90,7 +90,7 @@
                 </div>
                 
                 <div class="d-grid gap-2 d-md-flex">
-                    <button class="btn btn-primary btn-lg" type="button">
+                    <button class="btn btn-primary btn-lg" type="button" onclick="addToCart({{ product.id }})">
                         <i class="bi bi-cart-plus"></i> Añadir al Carrito
                     </button>
                     <a href="{{ url_for('products.list') }}" class="btn btn-outline-secondary btn-lg">
@@ -120,6 +120,37 @@ function increaseQty() {
 function decreaseQty() {
     const input = document.getElementById('quantity');
     if (input.value > 1) input.value = parseInt(input.value) - 1;
+}
+
+// Añadir producto al carrito
+function addToCart(productId) {
+    const quantity = document.getElementById('quantity')?.value || 1;
+    
+    fetch('{{ url_for("cart.add_to_cart") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            product_id: productId,
+            quantity: parseInt(quantity)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar contador del carrito
+            updateCartCount(data.cart_count);
+            // Mostrar mensaje de éxito
+            showToast('Producto añadido al carrito');
+        } else {
+            alert('Error al añadir el producto');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al añadir el producto');
+    });
 }
 
 // Click en miniaturas para cambiar slide
