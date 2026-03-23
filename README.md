@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.1"
+  version: "3.0.2"
   last_updated: "2026-03-22"
   total_chunks: 17
   embedding_model: "semantic-markdown"
@@ -499,6 +499,38 @@ priority: "🟡 Importante"
 last_verified: "2026-03-22"
 ```
 
+### Troubleshooting
+
+#### 1. No puedo loguearme - Usuario admin no existe
+
+**Síntoma:**
+```
+http://127.0.0.1:5000/auth/login?next=%2Fadmin%2F
+Error: Email o contraseña incorrectos
+```
+
+**Causa:**
+- La base de datos no tiene usuario administrador
+- Los scripts de inicialización no se ejecutaron
+
+**Solución:**
+```bash
+# Crear usuario administrador
+python scripts/create_admin.py
+
+# Credenciales por defecto:
+# Username: admin
+# Email: admin@almapunt.es
+# Password: admin123
+
+# ⚠️ CAMBIAR CONTRASEÑA DESPUÉS DEL PRIMER LOGIN!
+```
+
+**Prevención:**
+> Ejecutar `python scripts/create_admin.py` después de cada migración o cuando se elimine la BD.
+
+---
+
 ### Problemas Comunes y Soluciones
 
 #### 1. Error 413 - Archivo Demasiado Grande
@@ -857,6 +889,19 @@ item = db.session.get(CartItem, item_id)
 | P01 | Migrar `datetime.utcnow()` a `datetime.now(timezone.utc)` | 🟡 Media | Futuros warnings |
 | P02 | Migrar `Query.get()` a `db.session.get()` | 🟡 Media | Legacy API |
 | P03 | Documentar scripts en README (aunque no estén en repo) | 🟢 Baja | Usabilidad |
+| P04 | **Inicializar BD con usuario admin** | 🔴 Alta | **Login no funciona sin admin** |
+
+**Solución P04:**
+```bash
+# Crear usuario administrador
+python scripts/create_admin.py
+
+# Credenciales por defecto:
+# Username: admin
+# Email: admin@almapunt.es
+# Password: admin123
+# ⚠️ CAMBIAR DESPUÉS DEL PRIMER LOGIN
+```
 
 #### 🟡 Importante (Backlog)
 
