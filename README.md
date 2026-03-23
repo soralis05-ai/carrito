@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.8 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.9 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.8"
+  version: "3.0.9"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -1384,7 +1384,14 @@ pre-commit install
 - ✅ **Logging a archivo** - Rotativo (10 MB, 5 backups)
 - ✅ **Formato consistente** - Timestamp, nivel, módulo, mensaje
 - ✅ **Logger de Werkzeug** - Requests HTTP logueados
-- ✅ **Contexto adicional** - User ID, acciones, etc.
+- ✅ **Contexto de request** - User ID, IP, endpoint, método HTTP en cada log
+
+**Contexto de Request (automático en cada log):**
+```
+[2026-03-23 16:45:30] INFO in auth [user:1 ip:192.168.1.100 POST auth.login]: Usuario logueado: SorayaR
+[2026-03-23 16:46:15] INFO in orders [user:1 ip:192.168.1.100 POST orders.checkout]: Pedido creado: PED-20260323164615
+[2026-03-23 16:47:00] WARNING in products [user:anonymous ip:192.168.1.100 GET products.detail]: Producto no encontrado: ID=999
+```
 
 **Uso en blueprints:**
 ```python
@@ -1405,6 +1412,13 @@ logger.error(f'Error al procesar pago: {e}')
 logger.error(f'Error de validación: {form.errors}')
 ```
 
+**Logs por Blueprint:**
+- ✅ **Auth** - Login, logout, registro, actualización de perfil
+- ✅ **Products** - Listado, detalle de productos
+- ✅ **Admin** - Dashboard, creación/edición de productos
+- ✅ **Orders** - Checkout, creación de pedidos
+- ✅ **Cart** - Añadir, actualizar, eliminar items, vaciar carrito
+
 **Logs guardados en:**
 ```
 instance/logs/almapunt.log  # Archivo rotativo
@@ -1415,7 +1429,7 @@ instance/logs/almapunt.log  # Archivo rotativo
 LOG_LEVEL=DEBUG    # DEBUG, INFO, WARNING, ERROR, CRITICAL
 ```
 
-**Impacto:** ✅ Debugging profesional, auditoría, troubleshooting en producción
+**Impacto:** ✅ Debugging profesional, auditoría completa, troubleshooting en producción, trazabilidad de compras
 
 ---
 
@@ -1468,6 +1482,41 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.9 (23 de marzo de 2026) - **Logging: Contexto Request + Orders/Cart** 🪵
+
+**Mejoras Completadas:**
+- ✅ Contexto de request en cada log (user_id, IP, endpoint, método)
+- ✅ Logging en orders blueprint (checkout, creación de pedidos)
+- ✅ Logging en cart services (añadir, actualizar, eliminar items)
+
+**Archivos Actualizados:**
+- ✅ `app/utils/logger.py` - RequestContextFilter agregado
+- ✅ `app/blueprints/orders/routes.py` - Logging en checkout
+- ✅ `app/blueprints/cart/services.py` - Logging en servicios del carrito
+
+**Formato de logs mejorado:**
+```
+[2026-03-23 16:45:30] INFO in auth [user:1 ip:192.168.1.100 POST auth.login]: Usuario logueado
+[2026-03-23 16:46:15] INFO in orders [user:1 ip:192.168.1.100 POST orders.checkout]: Pedido creado
+[2026-03-23 16:47:00] INFO in cart [user:1 ip:192.168.1.100 POST cart.add]: Producto añadido
+```
+
+**Logs de Orders:**
+- ✅ Checkout iniciado (items count, total, user type)
+- ✅ Pedido creado (order number, ID, total, items)
+
+**Logs de Cart:**
+- ✅ Producto añadido (product_id, quantity, user_id)
+- ✅ Carrito actualizado (producto existente, nueva cantidad)
+- ✅ Item eliminado (item_id)
+- ✅ Carrito vaciado (items count eliminados)
+
+**Impacto:** ✅ Trazabilidad completa de compras, debugging contextual, auditoría de sesiones
+
+**Commit:** `917967b`
+
+---
 
 ### Versión 3.0.8 (23 de marzo de 2026) - **Logging Estructurado** 🪵
 
