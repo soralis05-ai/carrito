@@ -45,12 +45,10 @@
                     <li class="nav-item">
                         <a class="nav-link position-relative" href="{{ url_for('cart.view_cart') }}">
                             <i class="bi bi-cart"></i>
-                            {% if cart_count and cart_count > 0 %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                  style="font-size: 0.7rem; min-width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center;">
-                                {{ cart_count }}
+                            <span class="cart-count-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="font-size: 0.7rem; min-width: 1.5rem; height: 1.5rem; display: {% if cart_count and cart_count > 0 %}flex{% else %}none{% endif %}; align-items: center; justify-content: center;">
+                                {{ cart_count if cart_count else 0 }}
                             </span>
-                            {% endif %}
                         </a>
                     </li>
                     
