@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.7 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.8 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.7"
+  version: "3.0.8"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -1365,6 +1365,58 @@ pre-commit install
 
 **Impacto:** ✅ Código consistente automáticamente, previene errores comunes
 
+#### 10. Logging Estructurado (P07)
+
+**Estado:** ✅ COMPLETADO - Sistema de logging centralizado
+
+**Archivos agregados:**
+- ✅ `app/utils/logger.py` - Módulo de logging centralizado
+
+**Archivos actualizados:**
+- ✅ `app/__init__.py` - Setup de logging
+- ✅ `app/config.py` - Configuración de logging
+- ✅ `app/blueprints/auth/routes.py` - Logging de auth
+- ✅ `app/blueprints/products/routes.py` - Logging de productos
+- ✅ `app/blueprints/admin/routes.py` - Logging de admin
+
+**Características:**
+- ✅ **Logging a consola** - DEBUG en desarrollo, INFO en producción
+- ✅ **Logging a archivo** - Rotativo (10 MB, 5 backups)
+- ✅ **Formato consistente** - Timestamp, nivel, módulo, mensaje
+- ✅ **Logger de Werkzeug** - Requests HTTP logueados
+- ✅ **Contexto adicional** - User ID, acciones, etc.
+
+**Uso en blueprints:**
+```python
+from flask import current_app
+
+logger = current_app.logger
+
+# Logs informativos
+logger.info(f'Usuario logueado: {user.username}')
+logger.info(f'Producto creado: {product.name} (SKU={sku})')
+
+# Logs de advertencia
+logger.warning(f'Intento de login fallido: {email}')
+logger.warning(f'Producto no encontrado: ID={id}')
+
+# Logs de error
+logger.error(f'Error al procesar pago: {e}')
+logger.error(f'Error de validación: {form.errors}')
+```
+
+**Logs guardados en:**
+```
+instance/logs/almapunt.log  # Archivo rotativo
+```
+
+**Variables de entorno:**
+```bash
+LOG_LEVEL=DEBUG    # DEBUG, INFO, WARNING, ERROR, CRITICAL
+```
+
+**Impacto:** ✅ Debugging profesional, auditoría, troubleshooting en producción
+
 ---
 
 ### 📋 Pendientes y Mejoras Futuras
@@ -1416,6 +1468,44 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.8 (23 de marzo de 2026) - **Logging Estructurado** 🪵
+
+**Mejoras Completadas:**
+- ✅ P07: Logging estructurado implementado
+- ✅ Logger centralizado en `app/utils/logger.py`
+- ✅ Logging en auth, products, admin blueprints
+
+**Archivos Agregados:**
+- ✅ `app/utils/logger.py` - Módulo de logging (setup_logging, get_logger)
+
+**Archivos Actualizados:**
+- ✅ `app/__init__.py` - Setup de logging
+- ✅ `app/config.py` - LOG_LEVEL, LOG_TO_CONSOLE, LOG_TO_FILE
+- ✅ `app/blueprints/auth/routes.py` - Login, logout, profile logging
+- ✅ `app/blueprints/products/routes.py` - Listado, detalle logging
+- ✅ `app/blueprints/admin/routes.py` - Dashboard, upload producto logging
+- ✅ `README.md` - Documentación de logging
+
+**Características:**
+- ✅ Logs a consola (stdout) y archivo (rotativo 10MB)
+- ✅ Formato: `[YYYY-MM-DD HH:MM:SS] LEVEL in MODULE: message`
+- ✅ Logger de Werkzeug para requests HTTP
+- ✅ Niveles: DEBUG (dev), INFO (prod)
+
+**Ejemplo de uso:**
+```python
+logger = current_app.logger
+logger.info(f'Usuario logueado: {user.username}')
+logger.warning(f'Intento fallido: {email}')
+logger.error(f'Error: {e}')
+```
+
+**Impacto:** ✅ Debugging profesional, auditoría, troubleshooting en producción
+
+**Commit:** Pendiente
+
+---
 
 ### Versión 3.0.7 (23 de marzo de 2026) - **Type Hints en Models + Pre-commit** 📝
 

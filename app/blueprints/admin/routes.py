@@ -10,6 +10,8 @@ from app.utils.image_processor import process_image, validate_image
 from app import db
 from app.models import Product, Category
 
+logger = current_app.logger
+
 
 @admin_bp.route('/')
 @login_required
@@ -19,6 +21,7 @@ def dashboard():
     # Contar productos, categorías
     product_count = Product.query.count()
     category_count = Category.query.count()
+    logger.info(f'Admin dashboard accedido. Productos: {product_count}, Categorías: {category_count}')
 
     return render_template('admin/dashboard.html',
                          product_count=product_count,
@@ -239,22 +242,18 @@ def _process_uploaded_images(form, existing_images=None):
 def upload_product():
     """Subir nuevo producto con imagenes."""
     from app.models import MaterialType
-    
+
     form = ProductUploadForm()
 
     # Cargar categorías para el select
     categories = Category.query.filter_by(is_active=True).order_by(Category.name).all()
     form.category_id.choices = [(0, '-- Sin categoría --')] + [(c.id, c.name) for c in categories]
-    
+
     # Cargar tipos de materiales para el datalist
     material_types = MaterialType.query.filter_by(is_active=True).order_by(MaterialType.name).all()
 
     # Obtener imágenes ya guardadas en sesión
     uploaded_images = session.get('temp_images', [])
-
-    # DEBUG: Obtener tipo de material
-    tipo_material = request.form.get('tipoLana', '').strip()
-    current_app.logger.info(f'🧶 UPLOAD - Tipo material: "{tipo_material}"')
 
     # Procesar imágenes nuevas SIEMPRE (antes de validar)
     new_images = _process_uploaded_images(form, existing_images=uploaded_images)
@@ -269,6 +268,7 @@ def upload_product():
         all_images = uploaded_images
 
         if not all_images:
+            logger.error('Error: Debes subir al menos una imagen')
             flash('Error: Debes subir al menos una imagen', 'danger')
             return render_template('admin/upload_product.html', form=form, categories=categories, uploaded_images=uploaded_images, material_types=material_types)
 
@@ -289,7 +289,7 @@ def upload_product():
             category = Category.query.filter(
                 db.func.lower(Category.name) == category_name.lower()
             ).first()
-            
+
             if not category:
                 # Crear nueva categoría si no existe
                 category = Category(
@@ -299,6 +299,8 @@ def upload_product():
                 )
                 db.session.add(category)
                 db.session.flush()  # Obtener ID
+
+        logger.info(f'Creando producto: {form.name.data} (SKU: {sku})')
 
         # Si hay un tipo de material nuevo, crearlo en material_types
         if tipo_material:
@@ -350,6 +352,8 @@ def upload_product():
         db.session.add(product)
         db.session.commit()
 
+        logger.info(f'Producto creado exitosamente: {form.name.data} (ID={product.id}, SKU={sku})')
+
         # Limpiar imágenes temporales
         session.pop('temp_images', None)
 
@@ -358,6 +362,7 @@ def upload_product():
 
     # Si hay errores de validación, las imágenes YA están guardadas en sesión
     if form.errors:
+        logger.warning(f'Errores de validación en producto: {form.errors}')
         for field, errors in form.errors.items():
             for error in errors:
                 if field == 'stock':

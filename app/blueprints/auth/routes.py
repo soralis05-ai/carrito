@@ -1,9 +1,11 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth_bp
 from app import db
 from app.models import User
+
+logger = current_app.logger
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -13,28 +15,31 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         remember = request.form.get('remember', False)
-        
+
         # Buscar usuario por email
         user = User.query.filter_by(email=email).first()
-        
+
         if user and check_password_hash(user.password_hash, password):
             login_user(user, remember=remember)
+            logger.info(f'Usuario logueado: {user.username} (email: {user.email})')
             flash('¡Bienvenido!', 'success')
-            
+
             # Redirigir al siguiente o según rol
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
-            
+
             # Si es admin, ir al dashboard
             if user.is_admin:
+                logger.info(f'Admin {user.username} accedió al dashboard')
                 return redirect(url_for('admin.dashboard'))
-            
+
             # Si es usuario normal, ir a productos
             return redirect(url_for('products.list'))
         else:
+            logger.warning(f'Intento de login fallido para email: {email}')
             flash('Email o contraseña incorrectos', 'danger')
-    
+
     return render_template('auth/login.html')
 
 
@@ -48,13 +53,13 @@ def register():
         password_confirm = request.form.get('password_confirm')
         first_name = request.form.get('first_name', '')
         last_name = request.form.get('last_name', '')
-        
+
         # Validaciones
         errors = []
-        
+
         if not username or len(username) < 3:
             errors.append('El usuario debe tener al menos 3 caracteres')
-        
+
         if not email or '@' not in email:
             errors.append('Email inválido')
         
@@ -99,6 +104,7 @@ def register():
 @login_required
 def logout():
     """Cerrar sesión."""
+    logger.info(f'Usuario cerró sesión: {current_user.username}')
     logout_user()
     flash('Has cerrado sesión correctamente', 'info')
     return redirect(url_for('products.list'))
@@ -113,23 +119,26 @@ def profile():
         first_name = request.form.get('first_name', '').strip()
         last_name = request.form.get('last_name', '').strip()
         email = request.form.get('email', '').strip()
-        
+
         # Validar email único (si cambió)
         if email != current_user.email:
             existing = User.query.filter_by(email=email).first()
             if existing:
+                logger.warning(f'Intento de usar email duplicado: {email} (user: {current_user.username})')
                 flash('El email ya está en uso', 'danger')
                 return redirect(url_for('auth.profile'))
-        
+
         # Actualizar usuario
+        old_email = current_user.email
         current_user.first_name = first_name
         current_user.last_name = last_name
         current_user.email = email
-        
+
         db.session.commit()
+        logger.info(f'Perfil actualizado: {current_user.username} (email: {old_email} → {email})')
         flash('Perfil actualizado exitosamente', 'success')
         return redirect(url_for('auth.profile'))
-    
+
     return render_template('auth/profile.html', user=current_user)
 
 
