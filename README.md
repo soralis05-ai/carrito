@@ -10,9 +10,9 @@
 
 ```yaml
 rag_metadata:
-  version: "1.6.0"
+  version: "1.7.0"
   last_updated: "2026-03-22"
-  total_chunks: 15
+  total_chunks: 16
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
   retrieval_strategy: "hybrid-search"
@@ -37,20 +37,21 @@ rag_metadata:
 | Chunk ID | Sección | Tags | Estado | Líneas |
 |----------|---------|------|--------|--------|
 | `#001` | [Estado del Proyecto](#001-estado-del-proyecto) | `meta`, `version`, `info` | ✅ Activo | 1-20 |
-| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-100 |
-| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 101-200 |
-| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 201-300 |
-| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 301-400 |
-| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 401-500 |
-| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Activo | 501-550 |
-| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Activo | 551-600 |
-| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 601-650 |
-| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 651-700 |
-| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 701-800 |
-| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 801-850 |
-| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 851-900 |
-| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 901-1000 |
-| `#015` | [Historial de Cambios](#015-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1001-1100 |
+| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-120 |
+| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 121-220 |
+| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 221-320 |
+| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 321-400 |
+| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 401-480 |
+| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ⚠️ Templates | 481-520 |
+| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ⚠️ Incompleto | 521-560 |
+| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 561-600 |
+| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 601-640 |
+| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 641-700 |
+| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 701-740 |
+| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 741-780 |
+| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 781-860 |
+| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 861-960 |
+| `#016` | [Historial de Cambios](#016-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 961-1050 |
 
 ---
 
@@ -237,8 +238,29 @@ last_verified: "2026-03-22"
 - ✅ Testear funcionalidad crítica manualmente
 
 **Lección Aprendida:**
-> ⚠️ **Error Común:** Push rápido sin verificar.  
+> ⚠️ **Error Común:** Push rápido sin verificar.
 > ✅ **Solución:** Checklist pre-push obligatoria.
+
+### Regla 11: 📄 Solo README.md como Documentación
+**Principio:** Solo documentamos en README.md, no existe otro archivo .md en el proyecto.
+
+**Implementación:**
+- ✅ Único README.md como fuente de verdad (RAG system)
+- ✅ No crear archivos .md adicionales (AUDITORIA.md, FEATURES.md, etc.)
+- ✅ No crear carpetas docs/ con documentación
+- ✅ Todo el conocimiento se consolida en el README.md
+- ✅ Scripts de migración/documentación van en scripts/
+
+**Lección Aprendida:**
+> ⚠️ **Error Común:** Crear múltiples .md dispersos (AUDITORIA_RAG.md).
+> ✅ **Solución:** Mover todo al README.md y eliminar archivos duplicados.
+
+**Verificación:**
+```bash
+# Verificar que solo exista README.md
+find . -name "*.md" -not -path "./.git/*"
+# Solo debe mostrar: ./README.md
+```
 
 ---
 
@@ -504,7 +526,181 @@ if form.errors and uploaded_images:
 
 ---
 
-## Chunk #015: Historial de Cambios
+## Chunk #015: Auditoría y Mejoras Propuestas
+
+**Metadata:**
+```yaml
+chunk_id: "#015"
+title: "Auditoría del Proyecto y Mejoras Propuestas"
+tags: ["audit", "improvements", "todo", "quality", "tech-debt"]
+priority: "🟡 Importante"
+last_verified: "2026-03-22"
+```
+
+**TL;DR:** Score 69/100. 3 críticos, 3 importantes, 2 opcionales. Plan de 3 sprints.
+
+### Score de Calidad Actual
+
+| Categoría | Score | Meta | Estado |
+|-----------|-------|------|--------|
+| **Arquitectura** | 95% | 100% | 🟢 Excelente |
+| **Código Limpio** | 90% | 100% | 🟢 Excelente |
+| **Documentación RAG** | 85% | 100% | 🟡 Bueno |
+| **Tests** | 0% | 80% | 🔴 Crítico |
+| **Features Completas** | 75% | 100% | 🟡 En progreso |
+
+**Score Total:** 69/100  
+**Estado:** 🟡 En Desarrollo
+
+---
+
+### 🔴 Problemas Críticos (3)
+
+#### 1. Templates del Carrito Vacíos
+
+**Archivos:**
+```
+app/blueprints/cart/templates/cart/
+├── mini_cart.html  (0 bytes) ❌
+└── view.html       (0 bytes) ❌
+```
+
+**Impacto:** Error 500 al acceder a `/cart/`  
+**Solución:** Crear templates funcionales  
+**Esfuerzo:** 2 horas  
+**Chunk RAG:** #007
+
+#### 2. Checkout No Implementado
+
+**Código:**
+```python
+# app/blueprints/orders/routes.py
+@orders_bp.route('/checkout')
+def checkout():
+    return 'checkout placeholder'  # ❌
+```
+
+**Impacto:** No se puede finalizar compra  
+**Solución:** Implementar formulario + pago  
+**Esfuerzo:** 8 horas  
+**Chunk RAG:** #008
+
+#### 3. Perfil de Usuario Inexistente
+
+**Código:**
+```python
+# app/blueprints/auth/routes.py
+@auth_bp.route('/profile')
+@login_required
+def profile():
+    return render_template('auth/profile.html')  # ❌ No existe
+```
+
+**Impacto:** Usuarios no pueden ver/editar perfil  
+**Solución:** Crear template + funcionalidad  
+**Esfuerzo:** 4 horas  
+**Chunk RAG:** #auth
+
+---
+
+### 🟡 Problemas Importantes (3)
+
+#### 4. Models Sin Cascade Delete
+
+**Problema:** Relaciones sin `cascade='all, delete-orphan'`  
+**Riesgo:** Errores al eliminar productos con items relacionados  
+**Solución:** Agregar cascade a todas las relaciones  
+**Esfuerzo:** 2 horas
+
+#### 5. Variables de Entorno No Documentadas
+
+**Problema:**
+```python
+SECRET_KEY = os.environ.get('SECRET_KEY', 'devkey')  # ⚠️
+```
+
+**Riesgo:** Producción insegura si no se configura  
+**Solución:** Documentar en chunk #004  
+**Esfuerzo:** 1 hora
+
+#### 6. Cero Tests Unitarios
+
+**Archivos:**
+```
+tests/
+├── test_auth.py       (0 bytes) ❌
+├── test_cart.py       (0 bytes) ❌
+└── test_products.py   (0 bytes) ❌
+```
+
+**Riesgo:** Regresiones no detectadas  
+**Solución:** Crear tests para services  
+**Esfuerzo:** 16 horas
+
+---
+
+### 🟢 Mejoras Opcionales (2)
+
+#### 7. helpers.py No Existe
+
+**Problema:** Referenciado en RAG pero no existe  
+**Solución:** Crear o eliminar referencia  
+**Esfuerzo:** 1 hora
+
+#### 8. Scripts Sin Documentar en RAG
+
+**Problema:** 10+ scripts en `scripts/` no documentados  
+**Solución:** Agregar al chunk #004  
+**Esfuerzo:** 1 hora
+
+---
+
+### Plan de Acción - 3 Sprints
+
+#### Sprint 1 - Crítico (1 semana)
+```
+[ ] Crear cart/view.html
+[ ] Crear cart/mini_cart.html
+[ ] Implementar checkout completo
+[ ] Documentar variables de entorno
+```
+
+#### Sprint 2 - Importante (1 semana)
+```
+[ ] Agregar cascade delete a models
+[ ] Crear perfil de usuario
+[ ] Tests para CartService
+[ ] Tests para ProductsService
+```
+
+#### Sprint 3 - Opcional (1 semana)
+```
+[ ] Crear helpers.py o eliminar referencia
+[ ] Documentar scripts en RAG
+[ ] Tests para auth
+```
+
+---
+
+### Checklist de Producción
+
+#### Antes de Deploy
+- [ ] SECRET_KEY configurada (no 'devkey')
+- [ ] DATABASE_URL configurada
+- [ ] DEBUG = False
+- [ ] Templates del carrito creados
+- [ ] Checkout implementado
+- [ ] Tests pasando
+
+#### Después de Deploy
+- [ ] Verificar logs
+- [ ] Testear flujo completo
+- [ ] Monitorear errores
+- [ ] Backup de BD configurado
+
+---
+
+## Chunk #016: Historial de Cambios
 
 **Metadata:**
 ```yaml
