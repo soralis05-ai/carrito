@@ -36,14 +36,12 @@ env/
 # Environment variables
 .env
 .flaskenv
-!.env.example
 .git-config-local.txt
 
 # Database
 *.db
 *.sqlite
 *.sqlite3
-!app.db.example
 
 # Backup
 *.bak
