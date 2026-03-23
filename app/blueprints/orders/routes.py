@@ -15,7 +15,115 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 
-def generate_order_pdf(order):
+@orders_bp.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    """Página de checkout para finalizar compra."""
+    # Obtener items del carrito
+    user_id = current_user.id if current_user.is_authenticated else None
+    session_id = session.get('session_id')
+    
+    if not session_id and not user_id:
+        session['session_id'] = str(uuid.uuid4())
+        session_id = session['session_id']
+    
+    cart_items = CartItem.query.filter(
+        (CartItem.user_id == user_id) | (CartItem.session_id == session_id)
+    ).all()
+    
+    if not cart_items:
+        flash('Tu carrito está vacío', 'warning')
+        return redirect(url_for('cart.view_cart'))
+    
+    # Calcular totales
+    subtotal = sum(item.subtotal for item in cart_items)
+    shipping_cost = 0  # Envío gratis
+    tax = subtotal * 0.21  # 21% IVA
+    total = subtotal + shipping_cost + tax
+    
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        shipping_data = {
+            'name': request.form.get('name', ''),
+            'email': request.form.get('email', ''),
+            'phone': request.form.get('phone', ''),
+            'address': request.form.get('address', ''),
+            'city': request.form.get('city', ''),
+            'zip': request.form.get('zip', ''),
+            'country': request.form.get('country', 'España'),
+            'notes': request.form.get('notes', ''),
+        }
+        
+        # Validar datos requeridos
+        required_fields = ['name', 'email', 'phone', 'address', 'city', 'zip']
+        missing_fields = [f for f in required_fields if not shipping_data.get(f)]
+        
+        if missing_fields:
+            flash(f'Por favor completa los campos requeridos: {", ".join(missing_fields)}', 'danger')
+            return render_template('orders/checkout.html', 
+                                 cart_items=cart_items,
+                                 subtotal=subtotal,
+                                 shipping_cost=shipping_cost,
+                                 tax=tax,
+                                 total=total,
+                                 shipping=shipping_data)
+        
+        # Crear pedido
+        order = Order()
+        order.order_number = f"PED-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        
+        if user_id:
+            order.user_id = user_id
+        else:
+            order.guest_email = shipping_data['email']
+        
+        order.status = Order.STATUS_PENDING
+        order.shipping_name = shipping_data['name']
+        order.shipping_email = shipping_data['email']
+        order.shipping_phone = shipping_data['phone']
+        order.shipping_address = shipping_data['address']
+        order.shipping_city = shipping_data['city']
+        order.shipping_zip = shipping_data['zip']
+        order.shipping_country = shipping_data['country']
+        order.shipping_notes = shipping_data['notes']
+        order.subtotal = subtotal
+        order.shipping_cost = shipping_cost
+        order.tax = tax
+        order.total = total
+        order.payment_method = 'pending'
+        order.payment_status = 'pending'
+        
+        db.session.add(order)
+        db.session.flush()  # Obtener ID
+        
+        # Crear items del pedido
+        for cart_item in cart_items:
+            product = cart_item.product
+            order_item = OrderItem(
+                order_id=order.id,
+                product_id=product.id,
+                product_name=product.name,
+                product_sku=product.sku,
+                quantity=cart_item.quantity,
+                unit_price=product.price,
+                total=cart_item.subtotal
+            )
+            db.session.add(order_item)
+        
+        # Eliminar items del carrito
+        for cart_item in cart_items:
+            db.session.delete(cart_item)
+        
+        db.session.commit()
+        
+        flash(f'¡Pedido confirmado! Número: {order.order_number}', 'success')
+        return redirect(url_for('orders.confirmation', order_id=order.id))
+    
+    return render_template('orders/checkout.html',
+                         cart_items=cart_items,
+                         subtotal=subtotal,
+                         shipping_cost=shipping_cost,
+                         tax=tax,
+                         total=total)
     """Generar PDF de oferta del pedido."""
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=0.5*inch, leftMargin=0.5*inch, topMargin=0.5*inch, bottomMargin=0.5*inch)
@@ -132,115 +240,8 @@ def generate_order_pdf(order):
     # Construir PDF
     doc.build(elements)
     buffer.seek(0)
-    
+
     return buffer
-
-
-@orders_bp.route('/checkout', methods=['GET', 'POST'])
-def checkout():
-    """Página de checkout para finalizar compra."""
-    # Obtener items del carrito
-    user_id = current_user.id if current_user.is_authenticated else None
-    session_id = session.get('session_id')
-    
-    if not session_id and not user_id:
-        session['session_id'] = str(uuid.uuid4())
-        session_id = session['session_id']
-    
-    cart_items = CartItem.query.filter(
-        (CartItem.user_id == user_id) | (CartItem.session_id == session_id)
-    ).all()
-    
-    if not cart_items:
-        flash('Tu carrito está vacío', 'warning')
-        return redirect(url_for('cart.view_cart'))
-    
-    # Calcular totales (IVA ya incluido en el precio de los productos)
-    subtotal = sum(item.subtotal for item in cart_items)
-    shipping_cost = 0  # Envío gratis
-    total = subtotal  # El total es igual al subtotal (IVA ya incluido en precios)
-    
-    if request.method == 'POST':
-        # Obtener datos del formulario
-        shipping_data = {
-            'name': request.form.get('name', ''),
-            'address': request.form.get('address', ''),
-            'city': request.form.get('city', ''),
-            'zip': request.form.get('zip', ''),
-            'country': request.form.get('country', 'España'),
-            'phone': request.form.get('phone', ''),
-            'email': request.form.get('email', ''),
-            'notes': request.form.get('notes', ''),
-        }
-        
-        # Validar datos requeridos
-        required_fields = ['name', 'address', 'city', 'zip', 'phone', 'email']
-        missing_fields = [f for f in required_fields if not shipping_data.get(f)]
-        
-        if missing_fields:
-            flash(f'Por favor completa los campos requeridos: {", ".join(missing_fields)}', 'danger')
-            return render_template('orders/checkout.html', 
-                                 cart_items=cart_items,
-                                 subtotal=subtotal,
-                                 shipping_cost=shipping_cost,
-                                 tax=tax,
-                                 total=total,
-                                 shipping=shipping_data)
-        
-        # Crear pedido
-        order = Order()
-        order.order_number = order.generate_order_number()
-        
-        if user_id:
-            order.user_id = user_id
-        else:
-            order.guest_email = shipping_data['email']
-        
-        order.status = Order.STATUS_CONFIRMED
-        order.shipping_address = shipping_data['address']
-        order.shipping_city = shipping_data['city']
-        order.shipping_zip = shipping_data['zip']
-        order.shipping_country = shipping_data['country']
-        order.shipping_phone = shipping_data['phone']
-        order.subtotal = subtotal
-        order.shipping_cost = shipping_cost
-        order.tax = 0  # IVA ya incluido en el precio de los productos
-        order.total = total
-        order.payment_method = 'pending'
-        order.payment_status = 'pending'
-        order.notes = shipping_data['notes']
-        
-        db.session.add(order)
-        db.session.flush()  # Para obtener el ID del pedido
-        
-        # Crear items del pedido
-        for cart_item in cart_items:
-            product = cart_item.product
-            order_item = OrderItem(
-                order_id=order.id,
-                product_id=product.id,
-                product_name=product.name,
-                product_sku=product.sku,
-                quantity=cart_item.quantity,
-                unit_price=product.price,
-                total=cart_item.subtotal
-            )
-            db.session.add(order_item)
-        
-        # Eliminar items del carrito
-        for cart_item in cart_items:
-            db.session.delete(cart_item)
-        
-        db.session.commit()
-        
-        flash(f'¡Pedido confirmado! Número: {order.order_number}', 'success')
-        return redirect(url_for('orders.confirmation', order_id=order.id))
-    
-    return render_template('orders/checkout.html',
-                         cart_items=cart_items,
-                         subtotal=subtotal,
-                         shipping_cost=shipping_cost,
-                         total=total)
 
 
 @orders_bp.route('/confirmation/<int:order_id>')

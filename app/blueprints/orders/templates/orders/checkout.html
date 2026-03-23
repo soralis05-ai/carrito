@@ -8,7 +8,7 @@
         <i class="bi bi-bag-check"></i> Finalizar Compra
     </h1>
 
-    <form method="POST" class="needs-validation" novalidate>
+    <form method="POST">
         <div class="row">
             <!-- Formulario de envío -->
             <div class="col-lg-8">
@@ -18,59 +18,59 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="name" class="form-label">Nombre Completo *</label>
-                                <input type="text" class="form-control" id="name" name="name" 
-                                       value="{{ shipping.name if shipping else '' }}" required>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Dirección *</label>
-                            <input type="text" class="form-control" id="address" name="address" 
-                                   value="{{ shipping.address if shipping else '' }}" required>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="city" class="form-label">Ciudad *</label>
-                                <input type="text" class="form-control" id="city" name="city" 
-                                       value="{{ shipping.city if shipping else '' }}" required>
+                                <label for="name" class="form-label">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       value="{{ shipping.name if shipping else '' }}">
                             </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="zip" class="form-label">Código Postal *</label>
-                                <input type="text" class="form-control" id="zip" name="zip" 
-                                       value="{{ shipping.zip if shipping else '' }}" required>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label for="country" class="form-label">País *</label>
-                                <select class="form-select" id="country" name="country" required>
-                                    <option value="España" {{ 'selected' if shipping and shipping.country == 'España' else '' }}>España</option>
-                                    <option value="Portugal" {{ 'selected' if shipping and shipping.country == 'Portugal' else '' }}>Portugal</option>
-                                    <option value="Francia" {{ 'selected' if shipping and shipping.country == 'Francia' else '' }}>Francia</option>
-                                    <option value="Alemania" {{ 'selected' if shipping and shipping.country == 'Alemania' else '' }}>Alemania</option>
-                                    <option value="Italia" {{ 'selected' if shipping and shipping.country == 'Italia' else '' }}>Italia</option>
-                                    <option value="Otros" {{ 'selected' if shipping and shipping.country == 'Otros' else '' }}>Otros</option>
-                                </select>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       value="{{ shipping.email if shipping else '' }}">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="phone" class="form-label">Teléfono *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" 
-                                       value="{{ shipping.phone if shipping else '' }}" required>
+                                <input type="tel" class="form-control" id="phone" name="phone" required
+                                       value="{{ shipping.phone if shipping else '' }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                       value="{{ shipping.email if shipping else '' }}" required>
+                                <label for="zip" class="form-label">Código Postal *</label>
+                                <input type="text" class="form-control" id="zip" name="zip" required
+                                       value="{{ shipping.zip if shipping else '' }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Dirección Completa *</label>
+                            <input type="text" class="form-control" id="address" name="address" required
+                                   value="{{ shipping.address if shipping else '' }}">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">Ciudad *</label>
+                                <input type="text" class="form-control" id="city" name="city" required
+                                       value="{{ shipping.city if shipping else '' }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="country" class="form-label">País *</label>
+                                <select class="form-select" id="country" name="country" required>
+                                    <option value="España" {{ 'selected' if not shipping or shipping.country == 'España' }}>España</option>
+                                    <option value="Portugal" {{ 'selected' if shipping and shipping.country == 'Portugal' }}>Portugal</option>
+                                    <option value="Francia" {{ 'selected' if shipping and shipping.country == 'Francia' }}>Francia</option>
+                                    <option value="Alemania" {{ 'selected' if shipping and shipping.country == 'Alemania' }}>Alemania</option>
+                                    <option value="Italia" {{ 'selected' if shipping and shipping.country == 'Italia' }}>Italia</option>
+                                    <option value="Otros" {{ 'selected' if shipping and shipping.country == 'Otros' }}>Otros</option>
+                                </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="notes" class="form-label">Notas del Pedido (Opcional)</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="3" 
+                            <textarea class="form-control" id="notes" name="notes" rows="3"
                                       placeholder="Instrucciones especiales de entrega...">{{ shipping.notes if shipping else '' }}</textarea>
                         </div>
                     </div>
@@ -80,9 +80,10 @@
             <!-- Resumen del pedido -->
             <div class="col-lg-4">
                 <div class="card shadow-sm sticky-top" style="top: 20px; z-index: 1;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Resumen del Pedido</h5>
+                    </div>
                     <div class="card-body">
-                        <h4 class="card-title mb-4">Resumen del Pedido</h4>
-
                         <!-- Lista de productos -->
                         <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
                             {% for item in cart_items %}
@@ -99,7 +100,7 @@
                         <hr>
 
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Total Productos</span>
+                            <span class="text-muted">Subtotal</span>
                             <strong>€{{ "%.2f"|format(subtotal|float) }}</strong>
                         </div>
 
@@ -108,15 +109,20 @@
                             <span class="text-success">GRATIS</span>
                         </div>
 
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">IVA (21%)</span>
+                            <strong>€{{ "%.2f"|format(tax|float) }}</strong>
+                        </div>
+
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
                             <h5 class="mb-0">Total</h5>
-                            <h5 class="mb-0 text-primary">€{{ "%.2f"|format(total|float) }}</h5>
+                            <h5 class="mb-0 text-success">€{{ "%.2f"|format(total|float) }}</h5>
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn btn-success btn-lg">
                                 <i class="bi bi-check-circle"></i> Confirmar Pedido
                             </button>
                             <a href="{{ url_for('cart.view_cart') }}" class="btn btn-outline-secondary">
@@ -125,7 +131,7 @@
                         </div>
 
                         <div class="alert alert-info mt-3 mb-0 small">
-                            <i class="bi bi-info-circle"></i> Precios con IVA incluido
+                            <i class="bi bi-shield-check"></i> Pago seguro
                         </div>
                     </div>
                 </div>
@@ -133,21 +139,4 @@
         </div>
     </form>
 </div>
-
-<script>
-// Validación de formulario
-(function() {
-    'use strict';
-    var forms = document.querySelectorAll('.needs-validation');
-    Array.prototype.slice.call(forms).forEach(function(form) {
-        form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
-})();
-</script>
 {% endblock %}

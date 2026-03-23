@@ -1,18 +1,12 @@
-<!-- Mini Carrito - Widget para mostrar en navbar u otras páginas -->
-{% if cart_count and cart_count > 0 %}
+<!-- Mini Carrito - Widget para navbar -->
 <div class="cart-widget position-relative">
     <a href="{{ url_for('cart.view_cart') }}" class="text-decoration-none text-dark">
         <i class="bi bi-cart3 fs-5"></i>
-        <span class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+        {% if cart_count and cart_count > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
               style="font-size: 0.7rem;">
             {{ cart_count }}
         </span>
+        {% endif %}
     </a>
 </div>
-{% else %}
-<div class="cart-widget">
-    <a href="{{ url_for('cart.view_cart') }}" class="text-decoration-none text-dark">
-        <i class="bi bi-cart3 fs-5"></i>
-    </a>
-</div>
-{% endif %}

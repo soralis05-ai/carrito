@@ -37,21 +37,23 @@ rag_metadata:
 | Chunk ID | Sección | Tags | Estado | Líneas |
 |----------|---------|------|--------|--------|
 | `#001` | [Estado del Proyecto](#001-estado-del-proyecto) | `meta`, `version`, `info` | ✅ Activo | 1-20 |
-| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-120 |
-| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 121-220 |
-| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 221-320 |
-| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 321-400 |
-| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 401-480 |
-| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ⚠️ Templates | 481-520 |
-| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ⚠️ Incompleto | 521-560 |
-| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 561-600 |
-| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 601-640 |
-| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 641-700 |
-| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 701-740 |
-| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 741-780 |
-| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 781-860 |
-| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 861-960 |
-| `#016` | [Historial de Cambios](#016-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 961-1050 |
+| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-180 |
+| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 181-280 |
+| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 281-380 |
+| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 381-460 |
+| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 461-540 |
+| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Implementado | 541-580 |
+| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Implementado | 581-640 |
+| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 641-680 |
+| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 681-720 |
+| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 721-780 |
+| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 781-820 |
+| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 821-860 |
+| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 861-940 |
+| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 941-1040 |
+| `#016` | [Historial de Cambios](#016-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1041-1130 |
+| `#017` | [Tests Unitarios](#017-tests-unitarios) | `tests`, `unittest`, `pytest` | ✅ Implementado | 1131-1180 |
+| `#018` | [Perfil de Usuario](#018-perfil-de-usuario) | `profile`, `user`, `auth` | ✅ Implementado | 1181-1230 |
 
 ---
 
@@ -228,7 +230,7 @@ last_verified: "2026-03-22"
 > ⚠️ **Error Común:** Instalar paquete y olvidar actualizar requirements.txt.  
 > ✅ **Solución:** Script post-install automático o pre-commit hook.
 
-### Regla 10: ✅ Verificación Antes de Push
+### Regla 10: ✅ Verificación de Sintaxis Obligatoria
 **Principio:** Siempre verificar que no haya errores de sintaxis antes de enviar a GitHub.
 
 **Implementación:**
@@ -237,11 +239,77 @@ last_verified: "2026-03-22"
 - ✅ Revisar logs de la aplicación
 - ✅ Testear funcionalidad crítica manualmente
 
+**Checklist Pre-Push:**
+```bash
+# 1. Verificar sintaxis Python
+python -m py_compile app/__init__.py
+python -m py_compile app/blueprints/*/*.py
+
+# 2. Verificar que la app inicia
+python -c "from app import create_app; app = create_app()"
+
+# 3. Verificar templates
+# Navegar a las rutas principales manualmente
+
+# 4. Verificar git status
+git status
+```
+
 **Lección Aprendida:**
 > ⚠️ **Error Común:** Push rápido sin verificar.
 > ✅ **Solución:** Checklist pre-push obligatoria.
 
-### Regla 11: 📄 Solo README.md como Documentación
+### Regla 11: 🔄 Refactorización Segura
+**Principio:** Toda refactorización debe ser segura, probada y sin romper funcionalidad existente.
+
+**Implementación:**
+- ✅ Tests existentes deben pasar antes de refactorizar
+- ✅ Refactorizar en pasos pequeños y commiteables
+- ✅ Verificar que no hay código duplicado después de refactorizar
+- ✅ Actualizar documentación (README.md) si cambia comportamiento
+- ✅ Revisar que todos los imports siguen funcionando
+
+**Checklist de Refactorización:**
+```
+[ ] Tests pasan antes de comenzar
+[ ] Crear branch para refactorización
+[ ] Refactorizar en commits pequeños
+[ ] Tests pasan después de cada commit
+[ ] Verificar imports y dependencias
+[ ] Actualizar README.md si es necesario
+[ ] Code review (si es posible)
+[ ] Merge a main
+```
+
+**Ejemplo de Refactorización Segura:**
+```python
+# ANTES: Código duplicado en routes.py
+def upload_product():
+    categories = Category.query.filter_by(is_active=True).all()
+    # ... código
+
+def edit_product():
+    categories = Category.query.filter_by(is_active=True).all()
+    # ... código
+
+# DESPUÉS: Función compartida
+def get_active_categories():
+    return Category.query.filter_by(is_active=True).all()
+
+def upload_product():
+    categories = get_active_categories()
+    # ... código
+
+def edit_product():
+    categories = get_active_categories()
+    # ... código
+```
+
+**Lección Aprendida:**
+> ⚠️ **Error Común:** Refactorizar todo de una vez y romper funcionalidad.
+> ✅ **Solución:** Pasos pequeños, tests después de cada cambio.
+
+### Regla 12: 📄 Solo README.md como Documentación
 **Principio:** Solo documentamos en README.md, no existe otro archivo .md en el proyecto.
 
 **Implementación:**
