@@ -42,6 +42,46 @@
                                    value="{{ user.email }}">
                         </div>
 
+                        <hr class="my-4">
+                        <h6 class="mb-3"><i class="bi bi-geo-alt"></i> Dirección de Envío</h6>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="phone" name="phone"
+                                   value="{{ user.phone or '' }}" placeholder="+34 600 000 000">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address" name="address"
+                                   value="{{ user.address or '' }}" placeholder="Calle Mayor 123, 1ºA">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">Ciudad</label>
+                                <input type="text" class="form-control" id="city" name="city"
+                                       value="{{ user.city or '' }}" placeholder="Madrid">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="zip_code" class="form-label">Código Postal</label>
+                                <input type="text" class="form-control" id="zip_code" name="zip_code"
+                                       value="{{ user.zip_code or '' }}" placeholder="28001">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="country" class="form-label">País</label>
+                            <select class="form-select" id="country" name="country">
+                                <option value="España" {{ 'selected' if user.country == 'España' }}>España</option>
+                                <option value="Portugal" {{ 'selected' if user.country == 'Portugal' }}>Portugal</option>
+                                <option value="Francia" {{ 'selected' if user.country == 'Francia' }}>Francia</option>
+                                <option value="Alemania" {{ 'selected' if user.country == 'Alemania' }}>Alemania</option>
+                                <option value="Italia" {{ 'selected' if user.country == 'Italia' }}>Italia</option>
+                                <option value="Otros" {{ 'selected' if user.country == 'Otros' }}>Otros</option>
+                            </select>
+                        </div>
+
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle"></i> Guardar Cambios

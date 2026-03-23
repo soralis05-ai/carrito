@@ -127,6 +127,11 @@ def profile():
         first_name = request.form.get('first_name', '').strip()
         last_name = request.form.get('last_name', '').strip()
         email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        address = request.form.get('address', '').strip()
+        city = request.form.get('city', '').strip()
+        zip_code = request.form.get('zip_code', '').strip()
+        country = request.form.get('country', 'España').strip()
 
         # Validar email único (si cambió)
         if email != current_user.email:
@@ -141,6 +146,11 @@ def profile():
         current_user.first_name = first_name
         current_user.last_name = last_name
         current_user.email = email
+        current_user.phone = phone
+        current_user.address = address
+        current_user.city = city
+        current_user.zip_code = zip_code
+        current_user.country = country
 
         db.session.commit()
         logger.info(f'Perfil actualizado: {current_user.username} (email: {old_email} → {email})')
