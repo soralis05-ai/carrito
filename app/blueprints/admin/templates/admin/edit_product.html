@@ -58,18 +58,6 @@
                             <small class="text-muted">Selecciona una categoría existente o escribe una nueva</small>
                         </div>
 
-                        <!-- DEBUG: Mostrar tipo de material guardado -->
-                        {% if product and product.costos %}
-                        <div class="alert alert-info small p-2 mb-3">
-                            <strong>🧶 DEBUG - Tipo Material:</strong><br>
-                            {% if product.costos.tipo_material %}
-                                <span class="text-success">"{{ product.costos.tipo_material }}"</span>
-                            {% else %}
-                                <span class="text-danger">❌ No guardado</span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
                         <div class="mb-3 form-check">
                             {{ form.is_featured(class="form-check-input") }}
                             <label class="form-check-label" for="is_featured">
