@@ -1,10 +1,11 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.19 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.22 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
-> **Base de Datos:** MySQL 8.4 + Flask-Migrate (Alembic)
+> **Base de Datos:** MySQL 8.0 (Oracle Cloud) + Flask-Migrate (Alembic)
 > **Driver:** mysql-connector-python 9.6 (Oracle oficial)
+> **Producción:** Hetzner + Oracle Cloud MySQL
 
 ---
 
@@ -12,15 +13,16 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.19"
+  version: "3.0.22"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
   retrieval_strategy: "hybrid-search"
   quality_score: 1.00
-  database: MySQL 8.4 + mysql-connector-python 9.6
+  database: MySQL 8.0 (Oracle Cloud) + mysql-connector-python 9.6
   migrations: Flask-Migrate (Alembic)
+  production: Hetzner + Oracle Cloud
 ```
 
 **Información del Proyecto:**
@@ -1591,7 +1593,274 @@ LOG_LEVEL=DEBUG    # DEBUG, INFO, WARNING, ERROR, CRITICAL
 | P06 | Migrar a PostgreSQL en desarrollo | 🟢 Baja | Consistencia prod |
 | P08 | Documentar API con Swagger | 🟢 Baja | API docs |
 
-### 📈 Score Final del Proyecto
+---
+
+## 🚀 Deploy en Producción (Hetzner + Oracle Cloud)
+
+### **Arquitectura de Producción**
+
+```
+┌─────────────────┐     ┌──────────────────────┐
+│   Hetzner VPS   │────▶│  Oracle Cloud MySQL  │
+│   (Gunicorn)    │     │   141.147.76.212     │
+│   almapunt.sock │     │   almapunt_db        │
+└─────────────────┘     └──────────────────────┘
+```
+
+### **Requisitos Previos**
+
+1. ✅ **Hetzner VPS** con Python 3.14 + Gunicorn
+2. ✅ **Oracle Cloud MySQL** con database `almapunt_db`
+3. ✅ **Usuario MySQL** con permisos (ej: `jack`)
+4. ✅ **Git** configurado en el servidor
+
+---
+
+### **Paso 1: Clonar Repositorio**
+
+```bash
+# En Hetzner VPS
+cd /root/apps
+git clone https://github.com/soralis05-ai/carrito.git almapunt
+cd almapunt
+
+# Crear virtual environment
+pyenv virtualenv 3.14 almapunt
+pyenv local almapunt
+pip install -r requirements.txt
+```
+
+---
+
+### **Paso 2: Configurar .env**
+
+```bash
+# Editar .env
+nano .env
+```
+
+**Contenido del `.env`:**
+```bash
+# ============================================
+# CONFIGURACIÓN MYSQL - ALMAPUNT PRODUCCIÓN
+# ============================================
+# Driver: mysql-connector-python (Oracle oficial)
+# Versión: MySQL 8.0 (Oracle Cloud)
+# ============================================
+
+# MySQL Connection (Oracle Cloud)
+MYSQL_USER=jack
+MYSQL_PASSWORD=TU_PASSWORD_REAL
+MYSQL_HOST=141.147.76.212
+MYSQL_PORT=3306
+MYSQL_DATABASE=almapunt_db
+
+# Database URI (SQLAlchemy)
+DATABASE_URL=mysql+mysqlconnector://jack:TU_PASSWORD_REAL@141.147.76.212:3306/almapunt_db
+
+# Flask Configuration
+SECRET_KEY=TU_SECRET_KEY_DE_PRODUCCION
+DOMAIN=almapunt.es
+LOG_LEVEL=INFO
+```
+
+---
+
+### **Paso 3: Aplicar Migraciones**
+
+```bash
+# Verificar migraciones
+flask db current
+
+# Aplicar si es necesario
+flask db upgrade
+
+# Verificar
+flask db current
+# Debería mostrar: 01173381ada0 (head)
+```
+
+---
+
+### **Paso 4: Crear Administrador**
+
+```bash
+# Ejecutar script
+python scripts/create_admin.py
+
+# Output esperado:
+# ✅ Usuario administrador creado exitosamente!
+# 📋 Credenciales:
+#    Email: soralis05@gmail.com
+#    Username: SorayaR
+#    Password: Soraya79@
+```
+
+---
+
+### **Paso 5: Configurar Systemd**
+
+```bash
+# Crear servicio
+sudo nano /etc/systemd/system/almapunt.service
+```
+
+**Contenido:**
+```ini
+[Unit]
+Description=Gunicorn Almapunt App
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/root/apps/almapunt
+ExecStart=/root/.pyenv/versions/almapunt/bin/gunicorn \
+    --access-logfile - \
+    --workers 3 \
+    --bind unix:/run/gunicorn/almapunt.sock \
+    run:app
+
+[Install]
+WantedBy=multi-user.target
+```
+
+---
+
+### **Paso 6: Iniciar Servicio**
+
+```bash
+# Recargar systemd
+sudo systemctl daemon-reload
+
+# Habilitar servicio
+sudo systemctl enable almapunt
+
+# Iniciar servicio
+sudo systemctl start almapunt
+
+# Verificar estado
+sudo systemctl status almapunt
+
+# Ver logs
+journalctl -u almapunt -f
+```
+
+---
+
+### **Paso 7: Configurar Nginx**
+
+```bash
+sudo nano /etc/nginx/sites-available/almapunt
+```
+
+**Contenido:**
+```nginx
+server {
+    listen 80;
+    server_name almapunt.es www.almapunt.es;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn/almapunt.sock;
+    }
+
+    location /static {
+        alias /root/apps/almapunt/app/static;
+    }
+}
+```
+
+**Activar:**
+```bash
+sudo ln -s /etc/nginx/sites-available/almapunt /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+---
+
+### **🔄 Actualizar Producción**
+
+```bash
+cd ~/apps/almapunt
+
+# 1. Pull de cambios (directo a main, sin ramas)
+git pull origin main
+
+# 2. Instalar dependencias si hay cambios en requirements.txt
+pip install -r requirements.txt
+
+# 3. Aplicar migraciones si las hay
+flask db upgrade
+
+# 4. Reiniciar servicio
+sudo systemctl restart almapunt
+
+# 5. Verificar logs
+journalctl -u almapunt -f
+```
+
+---
+
+### **⚠️ Regla de Oro: Git en Producción**
+
+```bash
+# ✅ CORRECTO: Todo directo a main
+git pull origin main
+git push origin main
+
+# ❌ INCORRECTO: No crear ramas en producción
+git checkout -b feature-x  # NO hacer esto en producción
+```
+
+**Importante:**
+- ✅ Todo commit va directo a `origin/main`
+- ✅ No crear ramas locales en el servidor
+- ✅ Pull antes de cada deploy
+- ✅ Verificar logs después de cada deploy
+
+---
+
+### **🔧 Troubleshooting**
+
+**Error: "Can't connect to MySQL server"**
+```bash
+# Verificar .env
+cat .env | grep MYSQL_HOST
+
+# Verificar conexión a Oracle Cloud
+mysql -h 141.147.76.212 -u jack -p -e "SELECT 1;"
+
+# Verificar firewall
+sudo ufw status | grep 3306
+```
+
+**Error: "Worker failed to boot"**
+```bash
+# Verificar logs
+journalctl -u almapunt -f
+
+# Verificar .env
+cat .env
+
+# Reiniciar
+sudo systemctl restart almapunt
+```
+
+**Error: "DatabaseError: (mysql.connector.errors.DatabaseError)"**
+```bash
+# Verificar que load_dotenv() está en config.py
+head -10 app/config.py
+
+# Debería mostrar:
+# from dotenv import load_dotenv
+# load_dotenv()
+```
+
+---
+
+### **📊 Score Final del Proyecto**
 
 | Categoría | Score | Estado |
 |-----------|-------|--------|
