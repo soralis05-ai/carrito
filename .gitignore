@@ -91,7 +91,8 @@ instance/
 *.sqlite3
 
 # Desarrollo (no subir a producción)
-scripts/
+scripts/*
+!scripts/create_admin.py
 tests/
 docs/
 MYSQL_SETUP.md
