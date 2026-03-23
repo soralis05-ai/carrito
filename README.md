@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.1 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.5 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,9 +10,9 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.4"
+  version: "3.0.5"
   last_updated: "2026-03-23"
-  total_chunks: 17
+  total_chunks: 18
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
   retrieval_strategy: "hybrid-search"
@@ -39,20 +39,21 @@ rag_metadata:
 | `#001` | [Estado del Proyecto](#001-estado-del-proyecto) | `meta`, `version`, `info` | ✅ Activo | 1-20 |
 | `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-220 |
 | `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 221-320 |
-| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 321-420 |
-| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 421-500 |
-| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 501-580 |
-| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Implementado | 581-620 |
-| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Implementado | 621-680 |
-| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 681-720 |
-| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 721-760 |
-| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 761-820 |
-| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 821-860 |
-| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 861-900 |
-| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 901-980 |
-| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 981-1080 |
-| `#016` | [Estado del Proyecto](#016-estado-del-proyecto) | `status`, `testing`, `observations` | ✅ Actualizado | 1081-1170 |
-| `#017` | [Historial de Cambios](#017-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1171-1260 |
+| `#004` | [Scripts de Utilidad](#004-scripts-de-utilidad) | `scripts`, `migration`, `utils`, `setup`, `admin` | ✅ Actualizado | 321-640 |
+| `#005` | [Instalación y Configuración](#005-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 641-740 |
+| `#006` | [Modelos de Base de Datos](#006-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 741-820 |
+| `#007` | [Blueprint: Productos](#007-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 821-900 |
+| `#008` | [Blueprint: Carrito](#008-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Implementado | 901-940 |
+| `#009` | [Blueprint: Checkout](#009-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Implementado | 941-1000 |
+| `#010` | [Blueprint: Portfolio](#010-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 1001-1040 |
+| `#011` | [Blueprint: Admin](#011-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 1041-1080 |
+| `#012` | [Calculadora de Costos](#012-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 1081-1140 |
+| `#013` | [Gestión de Tipos de Materiales](#013-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 1141-1180 |
+| `#014` | [Procesamiento de Imágenes](#014-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 1181-1220 |
+| `#015` | [Lecciones Aprendidas](#015-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 1221-1300 |
+| `#016` | [Auditoría y Mejoras](#016-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 1301-1400 |
+| `#017` | [Estado del Proyecto](#017-estado-del-proyecto) | `status`, `testing`, `observations` | ✅ Actualizado | 1401-1490 |
+| `#018` | [Historial de Cambios](#018-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1491-1580 |
 
 ---
 
@@ -434,16 +435,22 @@ c:\soraya\carrito\
 │       └── helpers.py
 ├── scripts/
 │   ├── add_costos_column.py              # Agrega columna costos a products
-│   ├── add_portfolio_tables.py           # Crea tablas de portfolio
 │   ├── add_material_types_table.py       # Crea tabla de tipos de materiales
 │   ├── add_order_shipping_fields.py      # Agrega campos de envío a orders
-│   ├── create_admin.py                   # Crear usuario administrador
+│   ├── add_portfolio_tables.py           # Crea tablas de portfolio
+│   ├── add_tax_records_table.py          # Crea tabla de registros de impuestos
+│   ├── clear_sample_products.py          # Elimina productos de ejemplo
+│   ├── create_admin.py                   # Crear/actualizar usuario administrador
 │   ├── create_admin_quick.py             # Crear admin (no interactivo)
-│   ├── init_db.py                        # Inicializar base de datos
-│   ├── manage_users.py                   # Gestionar usuarios
-│   ├── reset_password.py                 # Resetear contraseña por email
+│   ├── deploy.sh                         # Script de despliegue (Hetzner)
+│   ├── init_db.py                        # Inicializar BD con datos de ejemplo
+│   ├── manage_users.py                   # Gestionar usuarios (listar/eliminar/admin)
 │   ├── reset_admin_password.py           # Resetear contraseña admin
-│   └── resize_images.py                  # Redimensionar imágenes batch
+│   ├── reset_password.py                 # Resetear contraseña por email
+│   ├── resize_images.py                  # Redimensionar imágenes batch
+│   ├── run_migrations.py                 # Ejecutar migraciones
+│   ├── setup-github.bat                  # Configurar Git (Windows)
+│   └── git-credentials.bat               # Guardar credenciales Git
 ├── tests/
 ├── run.py
 ├── requirements.txt
@@ -484,7 +491,330 @@ from . import routes
 
 ---
 
-*(Continuará con los chunks restantes...)*
+## Chunk #004: Scripts de Utilidad
+
+**Metadata:**
+```yaml
+chunk_id: "#004"
+title: "Scripts de Utilidad y Migración"
+tags: ["scripts", "migration", "utils", "setup", "admin"]
+priority: "🟡 Importante"
+last_verified: "2026-03-23"
+```
+
+**TL;DR:** Scripts locales para gestión de BD, usuarios y mantenimiento. No están en el repo (Regla #5).
+
+### 📁 Ubicación
+
+```
+scripts/  # Localmente (no en el repositorio)
+```
+
+> **Nota:** Los scripts no están en el repositorio por la **Regla #5: Producción Limpia**. Existen localmente y se ejecutan según necesidad.
+
+---
+
+### 🔐 Administración y Usuarios
+
+#### `create_admin.py` - Crear/Actualizar Administrador
+
+**Propósito:** Crear o actualizar el usuario administrador con credenciales conocidas.
+
+**Uso:**
+```bash
+python scripts/create_admin.py
+```
+
+**Credenciales del Administrador:**
+```
+Username: SorayaR
+Email: soralis05@gmail.com
+Password: Soraya79@
+```
+
+**Cuándo ejecutar:**
+- ✅ Después de inicializar la BD por primera vez
+- ✅ Después de eliminar la BD (`app.db`)
+- ✅ Cuando se olvida la contraseña del admin
+- ✅ Al configurar un nuevo entorno de desarrollo
+
+**Proceso:**
+1. Busca usuario con email `soralis05@gmail.com`
+2. Si existe → actualiza credenciales
+3. Si no existe → crea nuevo usuario admin
+4. Muestra credenciales en consola
+
+---
+
+#### `reset_admin_password.py` - Resetear Contraseña Admin
+
+**Propósito:** Resetear la contraseña del administrador de forma interactiva.
+
+**Uso:**
+```bash
+# Resetear contraseña
+python scripts/reset_admin_password.py
+
+# Solo listar administradores
+python scripts/reset_admin_password.py --list
+```
+
+**Proceso:**
+1. Busca el primer usuario con `is_admin=True`
+2. Pide nueva contraseña (mínimo 6 caracteres)
+3. Confirma la contraseña
+4. Actualiza el hash en la BD
+
+---
+
+#### `manage_users.py` - Gestión de Usuarios
+
+**Propósito:** Listar, eliminar y convertir usuarios en administradores.
+
+**Uso:**
+```bash
+python scripts/manage_users.py
+```
+
+**Opciones del Menú:**
+```
+1. Listar usuarios       - Muestra todos los usuarios con ID, username, email y rol
+2. Eliminar usuario      - Elimina un usuario por ID o email
+3. Convertir en admin    - Convierte un usuario normal en administrador
+4. Salir
+```
+
+**Cuándo usar:**
+- 📋 Listar usuarios para auditoría
+- 🗑️ Eliminar usuarios de prueba o spam
+- 👤 Promover usuario a administrador
+
+---
+
+#### `init_db.py` - Inicializar Base de Datos
+
+**Propósito:** Crear tablas y poblar con datos de ejemplo (desarrollo).
+
+**Uso:**
+```bash
+python scripts/init_db.py
+```
+
+**Proceso:**
+1. Crea todas las tablas en la BD
+2. Pide confirmación si ya hay datos
+3. Crea categorías de ejemplo:
+   - Peluches
+   - Accesorios
+   - Hogar
+   - Papelería
+4. Crea productos de ejemplo (6 productos)
+5. Crea usuario admin genérico (`admin` / `admin@almapunt.es`)
+
+**⚠️ Advertencia:**
+> Este script borra todos los datos existentes si se confirma. **Solo usar en desarrollo.**
+
+**Para producción:**
+```bash
+# En el servidor (Hetzner):
+1. Copiar app.db al servidor
+# O
+2. Ejecutar este script en el servidor (si hay datos de ejemplo)
+```
+
+---
+
+### 🏗️ Migraciones de Base de Datos
+
+#### `add_costos_column.py` - Agregar Columna de Costos
+
+**Propósito:** Agregar columna `costos` (JSON) a la tabla `products`.
+
+**Uso:**
+```bash
+python scripts/add_costos_column.py
+```
+
+**Cuándo ejecutar:**
+- 📊 Cuando se implementa el sistema de cálculo de costos de amigurumis
+
+---
+
+#### `add_material_types_table.py` - Tabla de Tipos de Materiales
+
+**Propósito:** Crear tabla `material_types` para gestión de tipos de lana/materiales.
+
+**Uso:**
+```bash
+python scripts/add_material_types_table.py
+```
+
+**Crea:**
+- Tabla `material_types` con campos: id, name, default_cost, default_weight, description, is_active, created_at, updated_at
+
+---
+
+#### `add_portfolio_tables.py` - Tablas de Portfolio
+
+**Propósito:** Crear tablas `portfolio_info` y `portfolio_items`.
+
+**Uso:**
+```bash
+python scripts/add_portfolio_tables.py
+```
+
+**Crea:**
+- Tabla `portfolio_info` - Información personal del portfolio
+- Tabla `portfolio_items` - Items/gallery del portfolio
+
+---
+
+#### `add_order_shipping_fields.py` - Campos de Envío
+
+**Propósito:** Agregar campos de shipping a la tabla `orders`.
+
+**Uso:**
+```bash
+python scripts/add_order_shipping_fields.py
+```
+
+**Agrega:**
+- `shipping_name`, `shipping_email`, `shipping_phone`
+- `shipping_address`, `shipping_city`, `shipping_zip`, `shipping_country`
+- `shipping_notes`
+
+---
+
+#### `add_tax_records_table.py` - Tabla de Registros de Impuestos
+
+**Propósito:** Crear tabla `product_tax_records` para cálculo de costos e impuestos.
+
+**Uso:**
+```bash
+python scripts/add_tax_records_table.py
+```
+
+**Crea:**
+- Tabla con campos para costos de material, mano de obra, utilidad, IVA, IRPF
+
+---
+
+#### `run_migrations.py` - Ejecutar Migraciones
+
+**Propósito:** Ejecutar migraciones de Flask-Migrate (Alembic).
+
+**Uso:**
+```bash
+python scripts/run_migrations.py
+```
+
+---
+
+### 🖼️ Imágenes
+
+#### `resize_images.py` - Redimensionar Imágenes
+
+**Propósito:** Redimensionar y uniformizar imágenes de productos.
+
+**Uso:**
+```bash
+python scripts/resize_images.py
+```
+
+**Configuración:**
+```python
+INPUT_FOLDER = 'app/static/img/productos'
+OUTPUT_FOLDER = 'app/static/img/productos_resized'
+MAX_SIZE = (800, 800)  # Tamaño máximo
+QUALITY = 85  # Calidad JPEG
+```
+
+**Proceso:**
+1. Lee todas las imágenes del folder de entrada
+2. Convierte a RGB (maneja PNG con transparencia)
+3. Redimensiona manteniendo aspect ratio
+4. Guarda como JPEG uniforme en folder de salida
+
+**Cuándo usar:**
+- 📸 Después de subir muchas imágenes de diferentes tamaños
+- 🎨 Para uniformizar el catálogo de productos
+
+---
+
+### 🧹 Limpieza
+
+#### `clear_sample_products.py` - Eliminar Productos de Ejemplo
+
+**Propósito:** Eliminar productos de ejemplo de la BD.
+
+**Uso:**
+```bash
+python scripts/clear_sample_products.py
+```
+
+**Cuándo usar:**
+- 🧹 Antes de pasar a producción
+- 🗑️ Cuando se quieren eliminar solo productos de ejemplo
+
+---
+
+### 🚀 Despliegue
+
+#### `deploy.sh` - Script de Despliegue
+
+**Propósito:** Desplegar la aplicación en el servidor (Hetzner).
+
+**Uso:**
+```bash
+bash scripts/deploy.sh
+```
+
+**Proceso:**
+1. Conecta al servidor via SSH
+2. Pull del repositorio
+3. Instala dependencias
+4. Ejecuta migraciones
+5. Reinicia el servicio
+
+---
+
+### ⚙️ Configuración Git
+
+#### `setup-github.bat` - Configurar Git (Windows)
+
+**Propósito:** Configurar credenciales de Git en Windows.
+
+**Uso:**
+```bash
+scripts/setup-github.bat
+```
+
+---
+
+#### `git-credentials.bat` - Guardar Credenciales Git
+
+**Propósito:** Guardar credenciales de GitHub en Windows.
+
+**Uso:**
+```bash
+scripts/git-credentials.bat
+```
+
+---
+
+### 📋 Resumen de Scripts
+
+| Script | Propósito | Frecuencia |
+|--------|-----------|------------|
+| `create_admin.py` | Crear/actualizar admin | Una vez por setup |
+| `reset_admin_password.py` | Resetear contraseña admin | Ocasional |
+| `manage_users.py` | Gestionar usuarios | Ocasional |
+| `init_db.py` | Inicializar BD con ejemplos | Una vez por setup |
+| `add_*.py` | Migraciones de BD | Según features |
+| `resize_images.py` | Redimensionar imágenes | Ocasional |
+| `clear_sample_products.py` | Limpiar ejemplos | Una vez (prod) |
+| `deploy.sh` | Desplegar a servidor | Cada release |
+| `setup-github.bat` | Configurar Git | Una vez |
 
 ---
 
@@ -892,41 +1222,57 @@ item = db.session.get(CartItem, item_id)
 
 **Impacto:** ✅ Elimina LegacyAPIWarning en tests
 
-### 📋 Pendientes y Mejoras Futuras
+### ✅ Mejoras Completadas (v3.0.5)
 
-#### 🔴 Crítico (Próximo Sprint)
+#### 3. Documentación de Scripts (P01)
 
-| ID | Tarea | Prioridad | Impacto |
-|----|-------|-----------|---------|
-| P01 | Documentar scripts en README (aunque no estén en repo) | 🟢 Baja | Usabilidad |
-| P02 | **Inicializar BD con usuario admin** | 🔴 Alta | **Login no funciona sin admin** |
+**Estado:** ✅ COMPLETADO - Chunk #004 agregado
 
-**Solución P02:**
-```bash
-# Crear usuario administrador
-python scripts/create_admin.py
+**Archivos actualizados:**
+- ✅ `README.md` - Chunk #004: Scripts de Utilidad
 
-# Credenciales del administrador:
-# Username: SorayaR
-# Email: soralis05@gmail.com
-# Password: Soraya79@
+**Contenido:**
+- ✅ 17 scripts documentados con propósito y uso
+- ✅ Tabla resumen de frecuencia de uso
+- ✅ Credenciales de admin documentadas
+- ✅ Migraciones de BD explicadas
+
+**Impacto:** ✅ Mejora usabilidad y onboarding
+
+#### 4. Admin Funcional (P02)
+
+**Estado:** ✅ COMPLETADO - Admin operativo
+
+**Credenciales:**
 ```
+Username: SorayaR
+Email: soralis05@gmail.com
+Password: Soraya79@
+```
+
+**Scripts relacionados:**
+- ✅ `create_admin.py` - Crear/actualizar admin
+- ✅ `reset_admin_password.py` - Resetear contraseña
+
+---
+
+### 📋 Pendientes y Mejoras Futuras
 
 #### 🟡 Importante (Backlog)
 
 | ID | Tarea | Prioridad | Impacto |
 |----|-------|-----------|---------|
-| P04 | Agregar tests de integración | 🟢 Baja | Cobertura E2E |
-| P05 | Configurar CI/CD (GitHub Actions) | 🟢 Baja | Auto-testing |
-| P06 | Agregar type hints a funciones | 🟢 Baja | Type safety |
+| P03 | Agregar tests de integración | 🟢 Baja | Cobertura E2E |
+| P04 | Configurar CI/CD (GitHub Actions) | 🟢 Baja | Auto-testing |
+| P05 | Agregar type hints a funciones | 🟢 Baja | Type safety |
 
 #### 🟢 Opcional (Future)
 
 | ID | Tarea | Prioridad | Impacto |
 |----|-------|-----------|---------|
-| P07 | Migrar a PostgreSQL en desarrollo | 🟢 Baja | Consistencia prod |
-| P08 | Agregar logging estructurado | 🟢 Baja | Debugging |
-| P09 | Documentar API con Swagger | 🟢 Baja | API docs |
+| P06 | Migrar a PostgreSQL en desarrollo | 🟢 Baja | Consistencia prod |
+| P07 | Agregar logging estructurado | 🟢 Baja | Debugging |
+| P08 | Documentar API con Swagger | 🟢 Baja | API docs |
 
 ### 📈 Score Final del Proyecto
 
@@ -967,7 +1313,30 @@ priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
 
-### Versión 3.0.1 (23 de marzo de 2026) - **Migración de APIs Deprecated** ✨
+### Versión 3.0.5 (23 de marzo de 2026) - **Documentación de Scripts** 📚
+
+**Mejoras:**
+- ✅ Chunk #004 agregado: Scripts de Utilidad (17 scripts documentados)
+- ✅ Índice maestro actualizado: 18 chunks
+- ✅ Estructura de directorios actualizada con todos los scripts
+- ✅ Credenciales de admin documentadas
+- ✅ Migraciones de BD explicadas
+
+**Secciones Agregadas:**
+- ✅ Administración y Usuarios (create_admin, reset_admin_password, manage_users)
+- ✅ Migraciones de Base de Datos (add_*.py)
+- ✅ Imágenes (resize_images)
+- ✅ Limpieza (clear_sample_products)
+- ✅ Despliegue (deploy.sh)
+- ✅ Configuración Git (setup-github.bat, git-credentials.bat)
+
+**Impacto:** ✅ Mejora usabilidad y onboarding
+
+**Commit:** Pendiente
+
+---
+
+### Versión 3.0.4 (23 de marzo de 2026) - **Migración de APIs Deprecated** ✨
 
 **Mejoras Críticas:**
 - ✅ Migración de `datetime.utcnow()` a `datetime.now(timezone.utc)` en 8 modelos
@@ -991,7 +1360,7 @@ last_verified: "2026-03-23"
 - ✅ 27/27 tests passing (0 warnings)
 - ✅ Tiempo: 6.51s (mejora de 11.97s)
 
-**Commit:** Pendiente
+**Commit:** `a425169`
 
 ---
 
