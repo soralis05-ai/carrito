@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.12 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.14 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.12"
+  version: "3.0.14"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -1628,11 +1628,44 @@ priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
 
-### Versión 3.0.12 (23 de marzo de 2026) - **Navbar: Carrito a la Derecha + Separación de Roles** 🎨
+### Versión 3.0.14 (23 de marzo de 2026) - **Cleanup: Eliminar Logs Debug** 🧹
 
 **Mejoras Completadas:**
-- ✅ Carrito movido a la derecha después del nombre del usuario
-- ✅ Separación de responsabilidades en navbar pública
+- ✅ Eliminados todos los logs de debug excesivos (emojis, DEBUG:, etc.)
+- ✅ Logging profesional mantenido solo para información esencial
+
+**Archivos Actualizados:**
+- ✅ `app/blueprints/admin/routes.py` - Eliminados 20+ logs de debug
+- ✅ `app/templates/admin/edit_product.html` - Eliminado debug de tipo material
+
+**Logs Eliminados:**
+```python
+# ❌ ANTES (debug excesivo)
+logger.info('🧶 TIPO MATERIAL RECIBIDO: "{tipo_material}"')
+logger.info('🧶 TIPO MATERIAL (repr): {repr(tipo_material)}')
+logger.info('🧶 TIPO MATERIAL (len): {len(tipo_material)}')
+logger.info('📋 "tipoLana" en request.form: {...}')
+logger.info('📋 Claves en request.form: {...}')
+logger.info('📝 COSTOS ANTES DE GUARDAR:')
+logger.info('💾 COSTOS GUARDADOS EN BD:')
+logger.info('=' * 60)
+
+# ✅ AHORA (logging profesional)
+logger.info(f'Editando producto ID {product_id}')
+logger.info(f'Nuevo tipo de material creado: {tipo_material}')
+logger.info(f'Producto actualizado: {product.name} (ID={product_id})')
+```
+
+**Impacto:** ✅ Logs más limpios, profesionales y fáciles de leer en producción
+
+**Commit:** Pendiente
+
+---
+
+### Versión 3.0.13 (23 de marzo de 2026) - **Cleanup: Eliminar Debug Template** 🧹
+
+**Mejoras Completadas:**
+- ✅ Eliminado debug de tipo material en edit_product.html
 - ✅ Admin NO ve carrito/checkout, Cliente NO ve admin
 
 **Archivos Actualizados:**

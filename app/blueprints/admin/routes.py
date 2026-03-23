@@ -326,7 +326,7 @@ def upload_product():
                 )
                 db.session.add(new_type)
                 db.session.flush()
-                current_app.logger.info(f'✅ Nuevo tipo de material creado: {tipo_material} (ID: {new_type.id})')
+                current_app.logger.info(f'Nuevo tipo de material creado: {tipo_material} (ID={new_type.id})')
 
         # Crear producto
         product = Product(
@@ -442,37 +442,9 @@ def edit_product(product_id):
             form.utilidad_usar.data = bool(costos.get('utilidad_usar'))
             form.utilidad_porcentaje.data = float(costos.get('utilidad_porcentaje') or 0)
 
-    # DEBUG: Mostrar datos recibidos
-    current_app.logger.info('=' * 60)
-    current_app.logger.info(f'DEBUG: Editando producto ID {product_id}')
-    current_app.logger.info(f'Datos recibidos (request.form): {request.form.to_dict()}')
-    
-    # DEBUG específico para campo "tipo"
-    tipo_material = request.form.get('tipoLana', '').strip()
-    current_app.logger.info(f'🧶 TIPO MATERIAL RECIBIDO: "{tipo_material}"')
-    current_app.logger.info(f'🧶 TIPO MATERIAL (repr): {repr(tipo_material)}')
-    current_app.logger.info(f'🧶 TIPO MATERIAL (len): {len(tipo_material)}')
-    
-    # Verificar si el campo viene en request
-    current_app.logger.info(f'📋 "tipoLana" en request.form: {"tipoLana" in request.form}')
-    current_app.logger.info(f'📋 Claves en request.form: {list(request.form.keys())}')
-    
     if form.validate_on_submit():
-        current_app.logger.info('✅ Formulario válido')
-        
-        # DEBUG: Verificar qué datos del formulario se están guardando
-        current_app.logger.info(f'Form data - lana_costo_rollo: {form.lana_costo_rollo.data}')
-        current_app.logger.info(f'Form data - lana_peso_rollo: {form.lana_peso_rollo.data}')
-        current_app.logger.info(f'Form data - lana_peso_usado: {form.lana_peso_usado.data}')
-        current_app.logger.info(f'Campo tipoLana (datalist): "{tipo_material}"')
-        
-        # DEBUG: Verificar costos antes de guardar
-        current_app.logger.info('📝 COSTOS ANTES DE GUARDAR:')
-        current_app.logger.info(f'  - tipo_material: "{tipo_material}"')
-        current_app.logger.info(f'  - lana_costo_rollo: {form.lana_costo_rollo.data}')
-        current_app.logger.info(f'  - lana_peso_rollo: {form.lana_peso_rollo.data}')
-        current_app.logger.info(f'  - lana_peso_usado: {form.lana_peso_usado.data}')
-        
+        current_app.logger.info(f'Editando producto ID {product_id}')
+
         # Generar slug automático desde el nombre
         slug = form.name.data.lower().replace(' ', '-').replace('_', '-')
         slug = ''.join(c for c in slug if c.isalnum() or c == '-')
@@ -480,15 +452,12 @@ def edit_product(product_id):
         # Buscar o crear categoría por nombre (case-insensitive)
         category = None
         category_name = request.form.get('category_id', '').strip()
-        current_app.logger.info(f'Categoría recibida: "{category_name}"')
-        
+
         if category_name:
             # Buscar categoría existente (case-insensitive)
             category = Category.query.filter(
                 db.func.lower(Category.name) == category_name.lower()
             ).first()
-            
-            current_app.logger.info(f'Categoría encontrada: {category.name if category else "None"}')
 
             if not category:
                 # Crear nueva categoría si no existe
@@ -498,12 +467,27 @@ def edit_product(product_id):
                     is_active=True
                 )
                 db.session.add(category)
-                db.session.flush()  # Obtener ID
-                current_app.logger.info(f'✅ Categoría creada: {category.name} (ID: {category.id})')
+                db.session.flush()
+
+        # Si hay un tipo de material nuevo, crearlo en material_types
+        tipo_material = request.form.get('tipoLana', '').strip()
+        if tipo_material:
+            existing_type = MaterialType.query.filter_by(name=tipo_material).first()
+            if not existing_type:
+                # Crear nuevo tipo de material con valores por defecto
+                new_type = MaterialType(
+                    name=tipo_material,
+                    default_cost=form.lana_costo_rollo.data or 0,
+                    default_weight=form.lana_peso_rollo.data or 50,
+                    description=f'Tipo creado automáticamente desde producto'
+                )
+                db.session.add(new_type)
+                db.session.flush()
+                current_app.logger.info(f'Nuevo tipo de material creado: {tipo_material}')
 
         # Guardar costos en JSON
         costos_data = {
-            'tipo_material': tipo_material,  # Guardar tipo seleccionado del datalist
+            'tipo_material': tipo_material,
             'lana_costo_rollo': form.lana_costo_rollo.data or 0,
             'lana_peso_rollo': form.lana_peso_rollo.data or 0,
             'lana_peso_usado': form.lana_peso_usado.data or 0,
@@ -519,22 +503,6 @@ def edit_product(product_id):
             'utilidad_usar': form.utilidad_usar.data or False,
             'utilidad_porcentaje': form.utilidad_porcentaje.data or 0
         }
-        current_app.logger.info(f'Costos a guardar: {costos_data}')
-        
-        # Si hay un tipo de material nuevo, crearlo en material_types
-        if tipo_material:
-            existing_type = MaterialType.query.filter_by(name=tipo_material).first()
-            if not existing_type:
-                # Crear nuevo tipo de material con valores por defecto
-                new_type = MaterialType(
-                    name=tipo_material,
-                    default_cost=form.lana_costo_rollo.data or 0,
-                    default_weight=form.lana_peso_rollo.data or 50,
-                    description=f'Tipo creado automáticamente desde producto'
-                )
-                db.session.add(new_type)
-                db.session.flush()
-                current_app.logger.info(f'✅ Nuevo tipo de material creado: {tipo_material} (ID: {new_type.id})')
 
         # Actualizar datos básicos
         product.name = form.name.data
@@ -543,20 +511,10 @@ def edit_product(product_id):
         product.price = form.price.data if form.price.data else product.price
         product.stock = form.stock.data if form.stock.data is not None else product.stock
         product.sku = form.sku.data or product.sku
-        # category_id ahora es el nombre, buscar o crear categoría
         product.category_id = category.id if category else None
         product.is_featured = form.is_featured.data
         product.is_active = form.is_active.data
         product.costos = costos_data
-        
-        # DEBUG: Verificar qué se guardó
-        current_app.logger.info('💾 COSTOS GUARDADOS EN BD:')
-        current_app.logger.info(f'  - tipo_material: "{costos_data.get("tipo_material")}"')
-        current_app.logger.info(f'  - lana_costo_rollo: {costos_data.get("lana_costo_rollo")}')
-        current_app.logger.info(f'  - lana_peso_rollo: {costos_data.get("lana_peso_rollo")}')
-        current_app.logger.info(f'  - Todos los costos: {costos_data}')
-        
-        current_app.logger.info(f'Producto actualizado: name={product.name}, price={product.price}, category_id={product.category_id}')
 
         # Verificar si se subieron nuevas imágenes
         images_uploaded = any([
@@ -565,7 +523,6 @@ def edit_product(product_id):
         ])
 
         if images_uploaded:
-            current_app.logger.info('📷 Imágenes nuevas subidas')
             # Procesar nuevas imágenes
             existing_images = product.get_all_images()
             image_filenames = _process_uploaded_images(form, existing_images)
@@ -573,19 +530,13 @@ def edit_product(product_id):
             if image_filenames:
                 product.image_main = image_filenames[0]
                 product.images = image_filenames[1:] if len(image_filenames) > 1 else None
-        # Si no se subieron imágenes, mantener las existentes (no hacer nada)
 
         db.session.commit()
-        current_app.logger.info('✅ Producto guardado exitosamente en BD')
-        current_app.logger.info('=' * 60)
+        current_app.logger.info(f'Producto actualizado: {product.name} (ID={product_id})')
 
         flash(f'Producto "{product.name}" actualizado exitosamente!', 'success')
         return redirect(url_for('admin.list_products'))
     else:
-        # Debug: mostrar errores de validación
-        current_app.logger.error('❌ Formulario NO válido')
-        current_app.logger.error(f'Errores: {form.errors}')
-        
         if form.errors:
             for field, errors in form.errors.items():
                 for error in errors:
