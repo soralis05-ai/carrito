@@ -82,12 +82,16 @@ htmlcov/
 .pytest_cache/
 
 # Pre-commit
-.pre-commit-cache/
+.pre-commit-config.yaml
 
-# Instancia (no subir a producción)
+# Instancia y base de datos (no subir a producción)
 instance/
+*.db
+*.sqlite
+*.sqlite3
 
 # Desarrollo (no subir a producción)
 scripts/
 tests/
 docs/
+MYSQL_SETUP.md
