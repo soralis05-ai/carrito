@@ -14,6 +14,16 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
+def get_logger():
+    """Obtener logger de la app."""
+    try:
+        return current_app.logger
+    except RuntimeError:
+        import logging
+        return logging.getLogger(__name__)
+
+logger = get_logger()
+
 
 @orders_bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
@@ -21,25 +31,29 @@ def checkout():
     # Obtener items del carrito
     user_id = current_user.id if current_user.is_authenticated else None
     session_id = session.get('session_id')
-    
+
     if not session_id and not user_id:
         session['session_id'] = str(uuid.uuid4())
         session_id = session['session_id']
-    
+
     cart_items = CartItem.query.filter(
         (CartItem.user_id == user_id) | (CartItem.session_id == session_id)
     ).all()
-    
+
     if not cart_items:
+        logger.warning('Intento de checkout con carrito vacío')
         flash('Tu carrito está vacío', 'warning')
         return redirect(url_for('cart.view_cart'))
-    
+
     # Calcular totales
     subtotal = sum(item.subtotal for item in cart_items)
     shipping_cost = 0  # Envío gratis
     tax = subtotal * 0.21  # 21% IVA
     total = subtotal + shipping_cost + tax
-    
+    items_count = len(cart_items)
+
+    logger.info(f'Checkout iniciado: {items_count} items, Total: €{total:.2f} (user_id={user_id or "guest"})')
+
     if request.method == 'POST':
         # Obtener datos del formulario
         shipping_data = {
@@ -94,7 +108,7 @@ def checkout():
         
         db.session.add(order)
         db.session.flush()  # Obtener ID
-        
+
         # Crear items del pedido
         for cart_item in cart_items:
             product = cart_item.product
@@ -108,13 +122,14 @@ def checkout():
                 total=cart_item.subtotal
             )
             db.session.add(order_item)
-        
+
         # Eliminar items del carrito
         for cart_item in cart_items:
             db.session.delete(cart_item)
-        
+
         db.session.commit()
-        
+
+        logger.info(f'✅ Pedido creado: {order.order_number} (ID={order.id}, total=€{total:.2f}, items={items_count})')
         flash(f'¡Pedido confirmado! Número: {order.order_number}', 'success')
         return redirect(url_for('orders.confirmation', order_id=order.id))
     

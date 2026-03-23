@@ -1,6 +1,17 @@
 from typing import Optional
 from app.models import CartItem, Product
 from app import db
+from flask import current_app
+
+def get_logger():
+    """Obtener logger de la app."""
+    try:
+        return current_app.logger
+    except RuntimeError:
+        import logging
+        return logging.getLogger(__name__)
+
+logger = get_logger()
 
 
 class CartService:
@@ -46,19 +57,20 @@ class CartService:
         """
         # Verificar si ya existe el item
         query = CartItem.query.filter_by(product_id=product_id)
-        
+
         if user_id:
             query = query.filter_by(user_id=user_id)
         elif session_id:
             query = query.filter_by(session_id=session_id)
-        
+
         existing_item = query.first()
-        
+
         if existing_item:
             # Actualizar cantidad
             existing_item.quantity += quantity
             existing_item.updated_at = db.func.now()
             db.session.commit()
+            logger.info(f'🛒 Carrito actualizado: Product ID={product_id}, cantidad={existing_item.quantity} (user_id={user_id})')
             return existing_item
         else:
             # Crear nuevo item
@@ -70,6 +82,7 @@ class CartService:
             )
             db.session.add(new_item)
             db.session.commit()
+            logger.info(f'🛒 Producto añadido al carrito: Product ID={product_id}, cantidad={quantity} (user_id={user_id})')
             return new_item
     
     @staticmethod
@@ -88,20 +101,25 @@ class CartService:
         item = db.session.get(CartItem, item_id)
 
         if not item:
+            logger.warning(f'⚠️ Item no encontrado para actualizar: ID={item_id}')
             return False
 
         # Verificar que pertenece al usuario
         if user_id and item.user_id != user_id:
+            logger.warning(f'⚠️ Intento de actualizar item ajeno: item_id={item_id}, user_id={user_id}')
             return False
 
         if quantity <= 0:
             # Eliminar si cantidad es 0
             db.session.delete(item)
+            db.session.commit()
+            logger.info(f'🗑️ Item eliminado del carrito: ID={item_id}')
         else:
             item.quantity = quantity
             item.updated_at = db.func.now()
+            db.session.commit()
+            logger.info(f'🛒 Item actualizado: ID={item_id}, cantidad={quantity}')
 
-        db.session.commit()
         return True
 
     @staticmethod
@@ -128,17 +146,20 @@ class CartService:
             session_id: ID de sesión
         """
         query = CartItem.query
-        
+
         if user_id:
             query = query.filter_by(user_id=user_id)
         elif session_id:
             query = query.filter_by(session_id=session_id)
-        
+
         items = query.all()
+        items_count = len(items)
+        
         for item in items:
             db.session.delete(item)
-        
+
         db.session.commit()
+        logger.info(f'🗑️ Carrito vaciado: {items_count} items eliminados (user_id={user_id})')
     
     @staticmethod
     def calculate_total(user_id: Optional[int] = None, session_id: Optional[str] = None) -> float:

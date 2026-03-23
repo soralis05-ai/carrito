@@ -14,6 +14,36 @@ import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Optional
+from flask import request, session
+from flask_login import current_user
+
+
+class RequestContextFilter(logging.Filter):
+    """
+    Filtro que agrega contexto de request a cada log.
+    
+    Agrega automáticamente:
+    - user_id: ID del usuario logueado (o 'anonymous')
+    - user_ip: IP del cliente
+    - endpoint: Endpoint solicitado
+    - method: Método HTTP (GET, POST, etc.)
+    """
+    
+    def filter(self, record):
+        try:
+            # Intentar obtener contexto de Flask
+            record.user_id = getattr(current_user, 'id', 'anonymous')
+            record.user_ip = request.remote_addr or 'unknown'
+            record.endpoint = request.endpoint or 'unknown'
+            record.method = request.method or 'unknown'
+        except RuntimeError:
+            # Fuera de contexto de request
+            record.user_id = 'no-context'
+            record.user_ip = 'no-context'
+            record.endpoint = 'no-context'
+            record.method = 'no-context'
+        
+        return True
 
 
 def setup_logging(app) -> None:
@@ -27,9 +57,10 @@ def setup_logging(app) -> None:
     log_dir = Path(app.instance_path) / 'logs'
     log_dir.mkdir(parents=True, exist_ok=True)
     
-    # Configurar formato
+    # Configurar formato con contexto de request
     formatter = logging.Formatter(
-        '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+        '[%(asctime)s] %(levelname)s in %(module)s '
+        '[user:%(user_id)s ip:%(user_ip)s %(method)s %(endpoint)s]: %(message)s',
         datefmt='%Y-%m-%d %H:%M:%S'
     )
     
@@ -37,6 +68,7 @@ def setup_logging(app) -> None:
     stream_handler = logging.StreamHandler(sys.stdout)
     stream_handler.setLevel(logging.DEBUG)
     stream_handler.setFormatter(formatter)
+    stream_handler.addFilter(RequestContextFilter())
     
     # Handler para archivo (rotativo)
     file_handler = RotatingFileHandler(
@@ -47,6 +79,7 @@ def setup_logging(app) -> None:
     )
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)
+    file_handler.addFilter(RequestContextFilter())
     
     # Configurar logger de la app
     app.logger.setLevel(logging.DEBUG)
@@ -58,9 +91,11 @@ def setup_logging(app) -> None:
     werkzeug_logger.setLevel(logging.INFO)
     werkzeug_logger.addHandler(stream_handler)
     werkzeug_logger.addHandler(file_handler)
+    werkzeug_logger.addFilter(RequestContextFilter())
     
     app.logger.info('🚀 Logging configurado exitosamente')
     app.logger.info(f'Logs guardados en: {log_dir}')
+    app.logger.info('✅ Contexto de request habilitado (user_id, ip, endpoint)')
 
 
 def get_logger(name: str) -> logging.Logger:
