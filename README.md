@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.14 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.15 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.14"
+  version: "3.0.15"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -1627,6 +1627,40 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.15 (23 de marzo de 2026) - **Fix: Carrito no Añadía Productos** 🛒
+
+**Problema:** Los productos no se añadían al carrito desde la página de productos.
+
+**Causa Raíz:**
+- ❌ `utils.js` estaba vacío (funciones `updateCartCount` y `showToast` no existían)
+- ❌ Badge del carrito no tenía clase `cart-count-badge`
+
+**Solución:**
+- ✅ `app/static/js/utils.js` - Funciones implementadas
+- ✅ `app/templates/navbar.html` - Badge actualizado con clase correcta
+
+**Archivos Actualizados:**
+- ✅ `app/static/js/utils.js` - 50 líneas agregadas
+- ✅ `app/templates/navbar.html` - Badge con clase `cart-count-badge`
+
+**Funciones Agregadas en utils.js:**
+```javascript
+// Actualizar contador del carrito
+updateCartCount(count)
+
+// Mostrar toast de notificación
+showToast(message, type = 'success')
+
+// Formatear precio
+formatPrice(price)
+```
+
+**Impacto:** ✅ Carrito funciona correctamente, UX mejorada con toasts
+
+**Commit:** `7a01ce1`
+
+---
 
 ### Versión 3.0.14 (23 de marzo de 2026) - **Cleanup: Eliminar Logs Debug** 🧹
 
