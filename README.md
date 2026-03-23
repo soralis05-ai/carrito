@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.0 | **Última actualización:** 22 de marzo de 2026
+> **Versión:** 3.0.1 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,8 +10,8 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.3"
-  last_updated: "2026-03-22"
+  version: "3.0.4"
+  last_updated: "2026-03-23"
   total_chunks: 17
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
@@ -800,7 +800,7 @@ last_verified: "2026-03-22"
 **Total:** 27 tests - **100% Pass Rate**
 
 ```
-====================== 27 passed, 126 warnings in 11.97s =======================
+====================== 27 passed in 6.51s =======================
 
 tests/test_auth.py         13 tests  ✅ 100%
 tests/test_cart.py          6 tests  ✅ 100%
@@ -824,8 +824,8 @@ TOTAL                      27 tests  ✅ 100%
 | **App** | ✅ Funcional | Inicia sin errores |
 | **Blueprints** | ✅ 6/6 | Todos registrados |
 | **Models** | ✅ 8/8 | Todos operativos |
-| **Tests** | ✅ 27/27 | 100% pass rate |
-| **RAG** | ✅ v3.0.0 | Documentación completa |
+| **Tests** | ✅ 27/27 | 100% pass rate (0 warnings) |
+| **RAG** | ✅ v3.0.1 | Documentación completa |
 
 ### ⚠️ Observaciones Importantes
 
@@ -849,34 +849,48 @@ TOTAL                      27 tests  ✅ 100%
 **Recomendación:**
 > Considerar mantener tests en repositorio para CI/CD, eliminar solo scripts de desarrollo.
 
-#### 2. Warnings en Tests (126 warnings)
+### ✅ Mejoras Críticas Completadas (v3.0.1)
 
-**Tipo:** DeprecationWarning - `datetime.utcnow()`
+#### 1. Migración de `datetime.utcnow()` → `datetime.now(timezone.utc)`
+
+**Estado:** ✅ COMPLETADO - 0 warnings
 
 ```python
-# Código actual (deprecated)
-created_at = db.Column(db.DateTime, default=datetime.utcnow)
-
-# Código recomendado (futuro)
+# Código actualizado (23 de marzo de 2026)
 from datetime import datetime, timezone
 created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 ```
 
-**Impacto:** ⚠️ Bajo - No afecta funcionalidad, solo warnings futuros.
+**Archivos actualizados:**
+- ✅ `app/models/user.py`
+- ✅ `app/models/product.py`
+- ✅ `app/models/cart_item.py`
+- ✅ `app/models/order.py`
+- ✅ `app/models/material_type.py`
+- ✅ `app/models/portfolio_info.py`
+- ✅ `app/models/portfolio_item.py`
+- ✅ `app/models/product_tax_record.py`
 
-#### 3. LegacyAPIWarning en Tests
+**Impacto:** ✅ Elimina 126 warnings en tests
 
-**Tipo:** `Query.get()` method deprecated
+#### 2. Migración de `Query.get()` → `db.session.get()`
+
+**Estado:** ✅ COMPLETADO - 0 warnings
 
 ```python
-# Código actual (legacy)
+# Código actualizado (23 de marzo de 2026)
+# Antes (legacy)
 item = CartItem.query.get(item_id)
 
-# Código recomendado (futuro)
+# Ahora (recomendado)
 item = db.session.get(CartItem, item_id)
 ```
 
-**Impacto:** ⚠️ Bajo - No afecta funcionalidad actual.
+**Archivos actualizados:**
+- ✅ `app/__init__.py` - `load_user()`
+- ✅ `app/blueprints/cart/services.py` - `update_item()`
+
+**Impacto:** ✅ Elimina LegacyAPIWarning en tests
 
 ### 📋 Pendientes y Mejoras Futuras
 
@@ -884,12 +898,10 @@ item = db.session.get(CartItem, item_id)
 
 | ID | Tarea | Prioridad | Impacto |
 |----|-------|-----------|---------|
-| P01 | Migrar `datetime.utcnow()` a `datetime.now(timezone.utc)` | 🟡 Media | Futuros warnings |
-| P02 | Migrar `Query.get()` a `db.session.get()` | 🟡 Media | Legacy API |
-| P03 | Documentar scripts en README (aunque no estén en repo) | 🟢 Baja | Usabilidad |
-| P04 | **Inicializar BD con usuario admin** | 🔴 Alta | **Login no funciona sin admin** |
+| P01 | Documentar scripts en README (aunque no estén en repo) | 🟢 Baja | Usabilidad |
+| P02 | **Inicializar BD con usuario admin** | 🔴 Alta | **Login no funciona sin admin** |
 
-**Solución P04:**
+**Solución P02:**
 ```bash
 # Crear usuario administrador
 python scripts/create_admin.py
@@ -948,12 +960,40 @@ python scripts/create_admin.py
 
 **Metadata:**
 ```yaml
-chunk_id: "#015"
+chunk_id: "#017"
 title: "Historial de Cambios y Versiones"
 tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
-last_verified: "2026-03-22"
+last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.1 (23 de marzo de 2026) - **Migración de APIs Deprecated** ✨
+
+**Mejoras Críticas:**
+- ✅ Migración de `datetime.utcnow()` a `datetime.now(timezone.utc)` en 8 modelos
+- ✅ Migración de `Query.get()` a `db.session.get()` en 2 archivos
+- ✅ Eliminación de 126 warnings en tests
+- ✅ Eliminación de LegacyAPIWarning
+
+**Archivos Actualizados:**
+- ✅ `app/models/user.py`
+- ✅ `app/models/product.py`
+- ✅ `app/models/cart_item.py`
+- ✅ `app/models/order.py`
+- ✅ `app/models/material_type.py`
+- ✅ `app/models/portfolio_info.py`
+- ✅ `app/models/portfolio_item.py`
+- ✅ `app/models/product_tax_record.py`
+- ✅ `app/__init__.py`
+- ✅ `app/blueprints/cart/services.py`
+
+**Tests:**
+- ✅ 27/27 tests passing (0 warnings)
+- ✅ Tiempo: 6.51s (mejora de 11.97s)
+
+**Commit:** Pendiente
+
+---
 
 ### Versión 1.6.0 (22 de marzo de 2026) - **ACTUAL** ✨
 
@@ -1002,7 +1042,7 @@ Tu conocimiento proviene EXCLUSIVAMENTE del README.md (Sistema RAG).
 Cuando recibas una consulta:
 1. Identifica el chunk relevante usando tags
 2. Recupera información del chunk específico
-3. Verifica la versión (última: 1.6.0)
+3. Verifica la versión (última: 3.0.1)
 4. Responde con información actualizada
 5. Cita el chunk ID usado
 6. Si no encuentras, di "No documentado en RAG"

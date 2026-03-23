@@ -1,27 +1,27 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class Order(db.Model):
     """Pedidos de clientes."""
     __tablename__ = 'orders'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(50), unique=True, nullable=False, index=True)
-    
+
     # Cliente
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     guest_email = db.Column(db.String(120), nullable=True)  # Para invitados
-    
+
     # Estado del pedido
     STATUS_PENDING = 'pending'
     STATUS_CONFIRMED = 'confirmed'
     STATUS_SHIPPED = 'shipped'
     STATUS_DELIVERED = 'delivered'
     STATUS_CANCELLED = 'cancelled'
-    
+
     status = db.Column(db.String(20), default=STATUS_PENDING, index=True)
-    
+
     # Dirección de envío
     shipping_name = db.Column(db.String(200), nullable=True)
     shipping_email = db.Column(db.String(120), nullable=True)
@@ -31,24 +31,24 @@ class Order(db.Model):
     shipping_zip = db.Column(db.String(20), nullable=True)
     shipping_country = db.Column(db.String(100), default='España')
     shipping_notes = db.Column(db.Text, nullable=True)
-    
+
     # Totales
     subtotal = db.Column(db.Numeric(10, 2), default=0)
     shipping_cost = db.Column(db.Numeric(10, 2), default=0)
     tax = db.Column(db.Numeric(10, 2), default=0)
     total = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Pagos
     payment_method = db.Column(db.String(50), nullable=True)
     payment_status = db.Column(db.String(20), default='pending')
     payment_id = db.Column(db.String(255), nullable=True)  # ID de Stripe/PayPal
-    
+
     # Notas
     notes = db.Column(db.Text, nullable=True)
-    
+
     # Fechas
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     shipped_at = db.Column(db.DateTime, nullable=True)
     delivered_at = db.Column(db.DateTime, nullable=True)
     

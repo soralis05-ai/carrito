@@ -75,17 +75,17 @@ class CartService:
     def update_item(item_id, quantity, user_id=None):
         """
         Actualizar cantidad de un item.
-        
+
         Args:
             item_id: ID del item
             quantity: Nueva cantidad
             user_id: ID del usuario (para verificar propiedad)
-        
+
         Returns:
             True si se actualizó, False si no existe
         """
-        item = CartItem.query.get(item_id)
-        
+        item = db.session.get(CartItem, item_id)
+
         if not item:
             return False
         

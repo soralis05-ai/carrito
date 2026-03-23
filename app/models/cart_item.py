@@ -1,22 +1,22 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class CartItem(db.Model):
     """Elementos del carrito de compras."""
     __tablename__ = 'cart_items'
-    
+
     id = db.Column(db.Integer, primary_key=True)
-    
+
     # Usuario o sesión (para carritos de invitados)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     session_id = db.Column(db.String(100), nullable=True, index=True)
-    
+
     # Producto y cantidad
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False, index=True)
     quantity = db.Column(db.Integer, default=1, nullable=False)
-    added_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    added_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     def __repr__(self):
         return f'<CartItem {self.product_id} x {self.quantity}>'

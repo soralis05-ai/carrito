@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class ProductTaxRecord(db.Model):
@@ -7,45 +7,45 @@ class ProductTaxRecord(db.Model):
     __tablename__ = 'product_tax_records'
 
     id = db.Column(db.Integer, primary_key=True)
-    
+
     # Información del producto
     product_name = db.Column(db.String(200), nullable=False, index=True)
     category = db.Column(db.String(100), nullable=True, index=True)
-    
+
     # Costos de producción
     material_cost = db.Column(db.Numeric(10, 2), default=0)
     material_iva_percent = db.Column(db.Integer, default=21)
     labor_cost = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Utilidad
     profit_percent = db.Column(db.Integer, default=20)
     profit_amount = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Cálculos derivados
     material_base = db.Column(db.Numeric(10, 2), default=0)
     material_iva = db.Column(db.Numeric(10, 2), default=0)
     cost_total = db.Column(db.Numeric(10, 2), default=0)
     base_price = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Impuestos
     iva_repercutido = db.Column(db.Numeric(10, 2), default=0)
     iva_soportado = db.Column(db.Numeric(10, 2), default=0)
     iva_ingresar = db.Column(db.Numeric(10, 2), default=0)
     irpf_percent = db.Column(db.Integer, default=15)
     irpf_amount = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Precio final
     sale_price = db.Column(db.Numeric(10, 2), default=0)
     net_profit = db.Column(db.Numeric(10, 2), default=0)
-    
+
     # Datos fiscales
     autonomo_fee = db.Column(db.Numeric(10, 2), default=80)
     monthly_units = db.Column(db.Integer, default=10)
-    
+
     # Fechas
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
     # Estado
     is_active = db.Column(db.Boolean, default=True)
 

@@ -1,17 +1,17 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class Category(db.Model):
     """Categorías de productos."""
     __tablename__ = 'categories'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     slug = db.Column(db.String(100), unique=True, nullable=False, index=True)
     description = db.Column(db.Text, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     
     # Relación con productos
     products = db.relationship('Product', backref='category', lazy='dynamic', cascade='all, delete-orphan')
@@ -45,8 +45,8 @@ class Product(db.Model):
     # Estado
     is_active = db.Column(db.Boolean, default=True)
     is_featured = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     # Relaciones
     cart_items = db.relationship('CartItem', backref='product', lazy='dynamic', cascade='all, delete-orphan')
