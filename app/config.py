@@ -1,5 +1,9 @@
 import os
 import logging
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env (primero!)
+load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
