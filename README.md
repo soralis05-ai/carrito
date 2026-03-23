@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.11 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.12 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.11"
+  version: "3.0.12"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -119,17 +119,52 @@ last_verified: "2026-03-22"
 > **Nuestra filosofía de desarrollo se basa en 10 reglas fundamentales que guían cada decisión técnica:**
 
 ### Regla 1: 🏛️ Separación de Responsabilidades
-**Principio:** Mantener la separación entre administración y lado público.
+
+**Principio:** Mantener la separación entre administración y lado público. Los administradores NO deben acceder a la página pública de compras, y los clientes NO deben acceder al panel de administración.
 
 **Implementación:**
 - ✅ Templates independientes: `base.html` (público) vs `admin_base.html` (administración)
 - ✅ Navbars separadas: `navbar.html` (pública) vs `admin_navbar.html` (admin)
 - ✅ Blueprints bien delimitados: cada módulo tiene su responsabilidad clara
 - ✅ Contextos diferentes: el admin nunca comparte layout con el público
+- ✅ **Navbar pública diferenciada por rol:**
+  - **Admin:** Solo ve "Panel Admin" y "Cerrar Sesión" (NO ve carrito, checkout, productos)
+  - **Cliente:** Ve carrito, checkout, productos, perfil (NO ve panel admin)
+
+**Implementación en navbar.html:**
+```html
+{% if current_user.is_admin %}
+<!-- ADMIN: Solo ve Panel Admin, NO ve carrito ni checkout -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+        <i class="bi bi-gear"></i> Panel Admin
+    </a>
+</li>
+{% else %}
+<!-- CLIENTE: Ve carrito, checkout y perfil -->
+<li class="nav-item">
+    <a class="nav-link position-relative" href="{{ url_for('cart.view_cart') }}">
+        <i class="bi bi-cart"></i> Carrito
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('orders.checkout') }}">
+        <i class="bi bi-receipt"></i> Checkout
+    </a>
+</li>
+{% endif %}
+```
+
+**Seguridad:**
+- ✅ Admin NO tiene enlaces a `/cart/`, `/orders/checkout`, `/products/`
+- ✅ Cliente NO tiene enlaces a `/admin/`
+- ✅ Decorador `@admin_required` protege rutas de admin
+- ✅ Login redirige según rol (admin → dashboard, cliente → products)
 
 **Lección Aprendida:**
-> ⚠️ **Error Común:** Intentar reutilizar templates entre admin y público causa conflictos de CSS y JS.  
+> ⚠️ **Error Común:** Intentar reutilizar templates entre admin y público causa conflictos de CSS y JS.
 > ✅ **Solución:** Mantener templates separados aunque parezca duplicación.
+> ✅ **Refuerzo:** El navbar público ahora diferencia explícitamente entre admin y cliente.
 
 ### Regla 2: 🎨 Diseño Consistente
 **Principio:** Mantener el diseño en todas las plantillas, tanto públicas como de administración.
@@ -1592,6 +1627,52 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.12 (23 de marzo de 2026) - **Navbar: Carrito a la Derecha + Separación de Roles** 🎨
+
+**Mejoras Completadas:**
+- ✅ Carrito movido a la derecha después del nombre del usuario
+- ✅ Separación de responsabilidades en navbar pública
+- ✅ Admin NO ve carrito/checkout, Cliente NO ve admin
+
+**Archivos Actualizados:**
+- ✅ `app/templates/navbar.html` - Rediseño completo del navbar
+
+**Cambios en Navbar Pública:**
+
+**ANTES (carrito duplicado, mezclado):**
+```
+[Logo] [Portfolio] [Productos] [Carrito] [Checkout] ... [Usuario]
+```
+
+**AHORA (separado por roles):**
+```
+[Logo] [Portfolio] [Productos]  ...  [Carrito] [Checkout] [Usuario ▼]
+                                  (solo clientes)
+```
+
+**Para Admin:**
+```
+[Logo] [Portfolio] [Productos]  ...  [Panel Admin] [Cerrar Sesión]
+                                  (solo admin, NO ve carrito/checkout)
+```
+
+**Para Cliente:**
+```
+[Logo] [Portfolio] [Productos]  ...  [🛒2] [Checkout] [SorayaR ▼]
+                                  (carrito con badge, perfil, logout)
+```
+
+**Regla #1 Actualizada:**
+- ✅ Documentación ampliada con implementación de navbar
+- ✅ Ejemplos de código HTML para diferenciación de roles
+- ✅ Lista de seguridad (qué NO ve cada rol)
+
+**Impacto:** ✅ UX mejorada, separación clara de responsabilidades, sin duplicación de carrito
+
+**Commit:** Pendiente
+
+---
 
 ### Versión 3.0.11 (23 de marzo de 2026) - **Fix: Regla #11 Refactorización Segura** 🛑
 

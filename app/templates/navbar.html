@@ -7,50 +7,72 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarMain">
+            <!-- Menú izquierdo (solo enlaces públicos) -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('products.list') }}">
-                        <i class="bi bi-grid"></i> Productos
-                    </a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('portfolio.show') }}">
                         <i class="bi bi-images"></i> Portfolio
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('cart.view_cart') }}" class="position-relative">
-                        <i class="bi bi-cart"></i> Carrito
-                        {% if cart_count and cart_count > 0 %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                              style="font-size: 0.7rem;">
-                            {{ cart_count }}
-                        </span>
-                        {% endif %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('orders.checkout') }}">
-                        <i class="bi bi-receipt"></i> Checkout
+                    <a class="nav-link" href="{{ url_for('products.list') }}">
+                        <i class="bi bi-grid"></i> Productos
                     </a>
                 </li>
             </ul>
-            <ul class="navbar-nav">
+            
+            <!-- Menú derecho (usuario, carrito, admin) -->
+            <ul class="navbar-nav align-items-center">
                 {% if current_user.is_authenticated %}
                     <!-- Usuario logueado -->
+                    
+                    {% if current_user.is_admin %}
+                    <!-- ADMIN: Solo ve Panel Admin, NO ve carrito ni checkout -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                            <i class="bi bi-gear"></i> Panel Admin
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                    {% else %}
+                    <!-- CLIENTE: Ve carrito, checkout y perfil -->
+                    
+                    <!-- Carrito con contador -->
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{{ url_for('cart.view_cart') }}">
+                            <i class="bi bi-cart"></i>
+                            {% if cart_count and cart_count > 0 %}
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                  style="font-size: 0.7rem; min-width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center;">
+                                {{ cart_count }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    
+                    <!-- Checkout -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('orders.checkout') }}">
+                            <i class="bi bi-receipt"></i> Checkout
+                        </a>
+                    </li>
+                    
+                    <!-- Dropdown de usuario -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i> {{ current_user.username }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            {% if current_user.is_admin %}
                             <li>
-                                <a class="dropdown-item" href="{{ url_for('admin.dashboard') }}">
-                                    <i class="bi bi-gear"></i> Panel Admin
+                                <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+                                    <i class="bi bi-person"></i> Mi Perfil
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            {% endif %}
                             <li>
                                 <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
                                     <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
@@ -58,6 +80,8 @@
                             </li>
                         </ul>
                     </li>
+                    {% endif %}
+                    
                 {% else %}
                     <!-- Usuario no logueado -->
                     <li class="nav-item">
@@ -66,7 +90,7 @@
                         </a>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="nav-link btn btn-light text-primary fw-bold" href="{{ url_for('auth.register') }}">
+                        <a class="nav-link btn btn-light text-primary fw-bold px-3" href="{{ url_for('auth.register') }}">
                             <i class="bi bi-person-plus"></i> Registrarse
                         </a>
                     </li>
