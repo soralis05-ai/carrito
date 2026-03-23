@@ -1,7 +1,7 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.9 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.10 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
 
 ---
@@ -10,7 +10,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.9"
+  version: "3.0.10"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -39,7 +39,7 @@ rag_metadata:
 | `#001` | [Estado del Proyecto](#001-estado-del-proyecto) | `meta`, `version`, `info` | ✅ Activo | 1-20 |
 | `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-220 |
 | `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 221-320 |
-| `#004` | [Scripts de Utilidad](#004-scripts-de-utilidad) | `scripts`, `migration`, `utils`, `setup`, `admin` | ✅ Actualizado | 321-640 |
+| `#004` | [Scripts de Utilidad](#004-scripts-de-utilidad) | `scripts`, `migration`, `utils`, `setup`, `admin`, `credentials` | ✅ Actualizado | 321-700 |
 | `#005` | [Instalación y Configuración](#005-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 641-740 |
 | `#006` | [Modelos de Base de Datos](#006-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 741-820 |
 | `#007` | [Blueprint: Productos](#007-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 821-900 |
@@ -503,6 +503,74 @@ last_verified: "2026-03-23"
 ```
 
 **TL;DR:** Scripts locales para gestión de BD, usuarios y mantenimiento. No están en el repo (Regla #5).
+
+---
+
+## 🔐 CREDENCIALES DE ADMINISTRADOR (PERMANENTE)
+
+> **⚠️ IMPORTANTE:** Estas credenciales son PERMANENTES y deben mantenerse en el proyecto.
+> **NO ELIMINAR, NO MODIFICAR** esta sección del README.
+
+### Credenciales Fijas del Administrador
+
+```yaml
+# ============================================
+# CREDENCIALES DE ADMINISTRADOR - ALMAPUNT
+# ============================================
+# Usuario: SorayaR
+# Email:   soralis05@gmail.com
+# Password: Soraya79@
+# ============================================
+# ✅ Estas credenciales se crean automáticamente
+#    al ejecutar scripts/create_admin.py
+# ✅ El script actualiza el usuario si ya existe
+# ✅ Seguro para producción (password hasheado)
+# ============================================
+```
+
+### Crear/Restaurar Administrador
+
+```bash
+# Ejecutar script de creación
+python scripts/create_admin.py
+
+# Resultado esperado:
+# ✅ Usuario administrador creado/actualizado exitosamente
+# 📋 Credenciales mostradas en consola
+```
+
+### Verificación
+
+```bash
+# Verificar que el admin existe
+python scripts/reset_admin_password.py --list
+
+# Debe mostrar:
+# ID   Username             Email
+# 1    SorayaR              soralis05@gmail.com
+```
+
+### Troubleshooting
+
+**Problema:** No puedo loguearme como admin
+
+**Solución:**
+```bash
+# 1. Ejecutar create_admin.py
+python scripts/create_admin.py
+
+# 2. Verificar credenciales
+# Username: SorayaR
+# Email: soralis05@gmail.com
+# Password: Soraya79@
+
+# 3. Intentar login en /auth/login
+
+# 4. Si persiste el error, resetear contraseña
+python scripts/reset_admin_password.py
+```
+
+---
 
 ### 📁 Ubicación
 
@@ -1482,6 +1550,47 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.10 (23 de marzo de 2026) - **Credenciales de Admin en RAG** 🔐
+
+**Mejoras Completadas:**
+- ✅ Credenciales de administrador documentadas permanentemente en RAG
+- ✅ Sección fija en Chunk #004 con credenciales fijas
+- ✅ Troubleshooting agregado para problemas de login
+
+**Archivos Actualizados:**
+- ✅ `README.md` - Sección permanente de credenciales en Chunk #004
+
+**Credenciales Permanentes:**
+```yaml
+# ============================================
+# CREDENCIALES DE ADMINISTRADOR - ALMAPUNT
+# ============================================
+# Usuario: SorayaR
+# Email:   soralis05@gmail.com
+# Password: Soraya79@
+# ============================================
+```
+
+**Importante:**
+- ✅ Estas credenciales **NO deben eliminarse ni modificarse**
+- ✅ El script `create_admin.py` crea/actualiza el usuario automáticamente
+- ✅ Seguro para producción (password hasheado con Werkzeug)
+
+**Troubleshooting:**
+```bash
+# Si no podés loguearte como admin:
+python scripts/create_admin.py
+
+# Verificar que el admin existe:
+python scripts/reset_admin_password.py --list
+```
+
+**Impacto:** ✅ Credenciales nunca se pierden, siempre disponibles en RAG
+
+**Commit:** Pendiente
+
+---
 
 ### Versión 3.0.9 (23 de marzo de 2026) - **Logging: Contexto Request + Orders/Cart** 🪵
 
