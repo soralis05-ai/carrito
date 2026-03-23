@@ -1,9 +1,10 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.18 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.19 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
-> **Base de Datos:** MySQL 8.4 + mysql-connector-python (Oracle oficial)
+> **Base de Datos:** MySQL 8.4 + Flask-Migrate (Alembic)
+> **Driver:** mysql-connector-python 9.6 (Oracle oficial)
 
 ---
 
@@ -11,7 +12,7 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.18"
+  version: "3.0.19"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
@@ -19,6 +20,7 @@ rag_metadata:
   retrieval_strategy: "hybrid-search"
   quality_score: 1.00
   database: MySQL 8.4 + mysql-connector-python 9.6
+  migrations: Flask-Migrate (Alembic)
 ```
 
 **Información del Proyecto:**
@@ -1629,6 +1631,41 @@ tags: ["changelog", "version", "history", "releases"]
 priority: "🟢 Opcional"
 last_verified: "2026-03-23"
 ```
+
+### Versión 3.0.19 (23 de marzo de 2026) - **Flask-Migrate + Migración Inicial** 🔄
+
+**Mejoras Completadas:**
+- ✅ Flask-Migrate (Alembic) inicializado correctamente
+- ✅ Migración inicial creada: `01173381ada0_initial_schema`
+- ✅ Migración aplicada a MySQL
+- ✅ `.gitignore` actualizado (migrations/ ahora se sube, instance/ no)
+
+**Archivos Agregados:**
+- ✅ `migrations/alembic.ini` - Configuración de Alembic
+- ✅ `migrations/env.py` - Environment de migración
+- ✅ `migrations/script.py.mako` - Template para migraciones
+- ✅ `migrations/versions/01173381ada0_initial_schema.py` - Migración inicial
+
+**Comandos Útiles:**
+```bash
+# Crear nueva migración
+flask db migrate -m "Descripción del cambio"
+
+# Aplicar migraciones
+flask db upgrade
+
+# Revertir última migración
+flask db downgrade -1
+
+# Ver estado actual
+flask db current
+```
+
+**Impacto:** ✅ Gestión profesional de schema de base de datos, versionado de migraciones
+
+**Commit:** `ea1be37`
+
+---
 
 ### Versión 3.0.18 (23 de marzo de 2026) - **mysql-connector-python (Oracle Oficial)** 🐍
 
