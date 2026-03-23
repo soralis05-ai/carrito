@@ -5,7 +5,15 @@ from . import auth_bp
 from app import db
 from app.models import User
 
-logger = current_app.logger
+def get_logger():
+    """Obtener logger de la app."""
+    try:
+        return current_app.logger
+    except RuntimeError:
+        import logging
+        return logging.getLogger(__name__)
+
+logger = get_logger()
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])

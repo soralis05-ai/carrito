@@ -2,7 +2,15 @@ from flask import render_template, abort, current_app
 from . import products_bp
 from .services import ProductsService
 
-logger = current_app.logger
+def get_logger():
+    """Obtener logger de la app."""
+    try:
+        return current_app.logger
+    except RuntimeError:
+        import logging
+        return logging.getLogger(__name__)
+
+logger = get_logger()
 
 @products_bp.route('/')
 def list():

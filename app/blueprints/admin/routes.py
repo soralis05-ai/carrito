@@ -10,7 +10,15 @@ from app.utils.image_processor import process_image, validate_image
 from app import db
 from app.models import Product, Category
 
-logger = current_app.logger
+def get_logger():
+    """Obtener logger de la app."""
+    try:
+        return current_app.logger
+    except RuntimeError:
+        import logging
+        return logging.getLogger(__name__)
+
+logger = get_logger()
 
 
 @admin_bp.route('/')
