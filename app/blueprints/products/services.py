@@ -1,65 +1,66 @@
+from typing import Optional
 from app.models import Product
 
 
 class ProductsService:
     """Servicio de productos usando base de datos."""
-    
+
     @staticmethod
-    def get_all(limit=None, category_id=None, featured_only=False):
+    def get_all(limit: Optional[int] = None, category_id: Optional[int] = None, featured_only: bool = False) -> list[dict]:
         """
         Obtener todos los productos.
-        
+
         Args:
             limit: Límite de resultados (None para todos)
             category_id: Filtrar por categoría
             featured_only: Solo productos destacados
-        
+
         Returns:
             Lista de productos (dict format para compatibilidad)
         """
         query = Product.query.filter_by(is_active=True)
-        
+
         if category_id:
             query = query.filter_by(category_id=category_id)
-        
+
         if featured_only:
             query = query.filter_by(is_featured=True)
-        
+
         query = query.order_by(Product.name)
-        
+
         if limit:
             query = query.limit(limit)
-        
+
         products = query.all()
         return [ProductsService._to_dict(p) for p in products]
-    
+
     @staticmethod
-    def get_by_id(product_id):
+    def get_by_id(product_id: int) -> Optional[dict]:
         """Obtener producto por ID (solo activos)."""
         product = Product.query.filter_by(id=product_id, is_active=True).first()
         if product:
             return ProductsService._to_dict(product)
         return None
-    
+
     @staticmethod
-    def get_by_slug(slug):
+    def get_by_slug(slug: str) -> Optional[dict]:
         """Obtener producto por slug (solo activos)."""
         product = Product.query.filter_by(slug=slug, is_active=True).first()
         if product:
             return ProductsService._to_dict(product)
         return None
-    
+
     @staticmethod
-    def search(query_text):
+    def search(query_text: str) -> list[dict]:
         """Buscar productos por nombre o descripción."""
         products = Product.query.filter(
             Product.is_active == True,
             Product.name.ilike(f'%{query_text}%')
         ).all()
         return [ProductsService._to_dict(p) for p in products]
-    
+
     @staticmethod
-    def _to_dict(product):
+    def _to_dict(product: Product) -> dict:
         """Convertir modelo Product a diccionario (para compatibilidad con templates)."""
         return {
             'id': product.id,
@@ -79,12 +80,12 @@ class ProductsService:
         }
     
     @staticmethod
-    def get_featured(limit=4):
+    def get_featured(limit: int = 4) -> list[dict]:
         """Obtener productos destacados."""
         return ProductsService.get_all(limit=limit, featured_only=True)
-    
+
     @staticmethod
-    def get_related(product_id, limit=4):
+    def get_related(product_id: int, limit: int = 4) -> list[dict]:
         """Obtener productos relacionados (misma categoría, solo activos)."""
         product = Product.query.filter_by(id=product_id, is_active=True).first()
         if not product or not product.category_id:
