@@ -1,8 +1,9 @@
 # 🧠 Almapunt RAG - Sistema de Documentación Inteligente
 
 > **Retrieval-Augmented Generation System** para Almapunt E-commerce
-> **Versión:** 3.0.15 | **Última actualización:** 23 de marzo de 2026
+> **Versión:** 3.0.17 | **Última actualización:** 23 de marzo de 2026
 > **Estado:** ✅ COMPLETO - Score 100/100
+> **Base de Datos:** MySQL 8.4 (desarrollo)
 
 ---
 
@@ -10,13 +11,14 @@
 
 ```yaml
 rag_metadata:
-  version: "3.0.15"
+  version: "3.0.17"
   last_updated: "2026-03-23"
   total_chunks: 18
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
   retrieval_strategy: "hybrid-search"
   quality_score: 1.00
+  database: MySQL 8.4
 ```
 
 **Información del Proyecto:**
