@@ -54,6 +54,20 @@ def checkout():
 
     logger.info(f'Checkout iniciado: {items_count} items, Total: €{total:.2f} (user_id={user_id or "guest"})')
 
+    # Pre-llenar datos del cliente si está logueado
+    shipping = {}
+    if current_user.is_authenticated:
+        shipping = {
+            'name': f'{current_user.first_name or ""} {current_user.last_name or ""}'.strip() or current_user.username,
+            'email': current_user.email,
+            'phone': '',
+            'address': '',
+            'city': '',
+            'zip': '',
+            'country': 'España',
+            'notes': ''
+        }
+
     if request.method == 'POST':
         # Obtener datos del formulario
         shipping_data = {
@@ -138,7 +152,8 @@ def checkout():
                          subtotal=subtotal,
                          shipping_cost=shipping_cost,
                          tax=tax,
-                         total=total)
+                         total=total,
+                         shipping=shipping)
     """Generar PDF de oferta del pedido."""
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=0.5*inch, leftMargin=0.5*inch, topMargin=0.5*inch, bottomMargin=0.5*inch)
