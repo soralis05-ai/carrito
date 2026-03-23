@@ -10,8 +10,8 @@ waitress
 reportlab>=4.0
 pytest>=7.0
 
-# MySQL
-PyMySQL>=1.1.0
+# MySQL (Driver Oficial Oracle)
+mysql-connector-python>=9.0
 cryptography>=41.0
 
 # Desarrollo

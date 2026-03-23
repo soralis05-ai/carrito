@@ -6,16 +6,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY', 'devkey')
     
-    # MySQL para desarrollo (default)
+    # MySQL para desarrollo (driver oficial Oracle)
     MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
     MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'root123')
     MYSQL_HOST = os.environ.get('MYSQL_HOST', 'localhost')
     MYSQL_PORT = os.environ.get('MYSQL_PORT', '3306')
     MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'almapunt_dev')
     
-    # Database URL (MySQL por defecto, SQLite como fallback)
+    # Database URL (MySQL con mysql-connector-python por defecto)
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
-        f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}')
+        f'mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}')
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DOMAIN = os.environ.get('DOMAIN', 'almapunt.es')
