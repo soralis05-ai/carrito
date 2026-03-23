@@ -10,9 +10,9 @@
 
 ```yaml
 rag_metadata:
-  version: "1.7.0"
+  version: "2.0.0"
   last_updated: "2026-03-22"
-  total_chunks: 16
+  total_chunks: 18
   embedding_model: "semantic-markdown"
   vector_store: "conceptual-index"
   retrieval_strategy: "hybrid-search"
@@ -37,23 +37,23 @@ rag_metadata:
 | Chunk ID | Sección | Tags | Estado | Líneas |
 |----------|---------|------|--------|--------|
 | `#001` | [Estado del Proyecto](#001-estado-del-proyecto) | `meta`, `version`, `info` | ✅ Activo | 1-20 |
-| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-180 |
-| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 181-280 |
-| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 281-380 |
-| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 381-460 |
-| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 461-540 |
-| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Implementado | 541-580 |
-| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Implementado | 581-640 |
-| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 641-680 |
-| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 681-720 |
-| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 721-780 |
-| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 781-820 |
-| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 821-860 |
-| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 861-940 |
-| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 941-1040 |
-| `#016` | [Historial de Cambios](#016-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1041-1130 |
-| `#017` | [Tests Unitarios](#017-tests-unitarios) | `tests`, `unittest`, `pytest` | ✅ Implementado | 1131-1180 |
-| `#018` | [Perfil de Usuario](#018-perfil-de-usuario) | `profile`, `user`, `auth` | ✅ Implementado | 1181-1230 |
+| `#002` | [Reglas de Oro](#002-reglas-de-oro) | `rules`, `best-practices`, `gold` | ✅ Activo | 21-220 |
+| `#003` | [Arquitectura del Sistema](#003-arquitectura-del-sistema) | `architecture`, `structure`, `blueprints` | ✅ Activo | 221-320 |
+| `#004` | [Instalación y Configuración](#004-instalacion-y-configuracion) | `setup`, `install`, `config` | ✅ Activo | 321-420 |
+| `#005` | [Modelos de Base de Datos](#005-modelos-de-base-de-datos) | `models`, `database`, `sqlalchemy` | ✅ Activo | 421-500 |
+| `#006` | [Blueprint: Productos](#006-blueprint-productos) | `products`, `blueprint`, `crud` | ✅ Activo | 501-580 |
+| `#007` | [Blueprint: Carrito](#007-blueprint-carrito) | `cart`, `blueprint`, `session` | ✅ Implementado | 581-620 |
+| `#008` | [Blueprint: Checkout](#008-blueprint-checkout) | `checkout`, `orders`, `pdf` | ✅ Implementado | 621-680 |
+| `#009` | [Blueprint: Portfolio](#009-blueprint-portfolio) | `portfolio`, `blueprint`, `gallery` | ✅ Activo | 681-720 |
+| `#010` | [Blueprint: Admin](#010-blueprint-admin) | `admin`, `dashboard`, `management` | ✅ Activo | 721-760 |
+| `#011` | [Calculadora de Costos](#011-calculadora-de-costos) | `calculator`, `costs`, `pricing` | ✅ Activo | 761-820 |
+| `#012` | [Gestión de Tipos de Materiales](#012-gestion-de-tipos-de-materiales) | `materials`, `types`, `inventory` | ✅ Activo | 821-860 |
+| `#013` | [Procesamiento de Imágenes](#013-procesamiento-de-imagenes) | `images`, `upload`, `processing` | ✅ Activo | 861-900 |
+| `#014` | [Lecciones Aprendidas](#014-lecciones-aprendidas) | `lessons`, `troubleshooting`, `debug` | ✅ Activo | 901-980 |
+| `#015` | [Auditoría y Mejoras](#015-auditoria-y-mejoras-propuestas) | `audit`, `improvements`, `todo` | ✅ Activo | 981-1080 |
+| `#016` | [Historial de Cambios](#016-historial-de-cambios) | `changelog`, `version`, `history` | ✅ Activo | 1081-1170 |
+| `#017` | [Tests Unitarios](#017-tests-unitarios) | `tests`, `unittest`, `pytest` | 🟡 En progreso | 1171-1220 |
+| `#018` | [Perfil de Usuario](#018-perfil-de-usuario) | `profile`, `user`, `auth` | 🟡 En progreso | 1221-1270 |
 
 ---
 
@@ -330,6 +330,52 @@ find . -name "*.md" -not -path "./.git/*"
 # Solo debe mostrar: ./README.md
 ```
 
+### Regla 13: 🎨 Consistencia Visual y de Diseño
+**Principio:** Mantener el mismo diseño y estructura en toda la aplicación para reconocimiento de marca, mantenibilidad y profesionalismo.
+
+**Implementación:**
+- ✅ Mismo layout base para todas las secciones (`base.html`, `admin_layout.html`)
+- ✅ Mismos componentes Bootstrap (cards, buttons, forms) en toda la app
+- ✅ Mismos íconos Bootstrap Icons en toda la aplicación
+- ✅ Mismo esquema de colores (gradiente signature `#667eea` → `#764ba2`)
+- ✅ Mismos patrones de diseño (grid, spacing, typography)
+- ✅ Templates consistentes entre blueprints públicos y admin
+
+**Beneficios:**
+- 🎯 **Reconocimiento de Marca:** Usuarios reconocen la marca inmediatamente
+- 🔧 **Mantenibilidad:** Un solo patrón para todos los componentes
+- 💼 **Profesionalismo:** Diseño pulido y coherente en toda la app
+- 📱 **Responsividad:** Mismo comportamiento en todos los dispositivos
+
+**Ejemplo de Consistencia:**
+```html
+<!-- Cards en todas las secciones -->
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-icon"></i> Título</h5>
+    </div>
+    <div class="card-body">
+        <!-- Contenido -->
+    </div>
+</div>
+
+<!-- Botones en todas las secciones -->
+<button class="btn btn-primary">
+    <i class="bi bi-icon"></i> Acción
+</button>
+```
+
+**Verificación de Consistencia:**
+```bash
+# Buscar inconsistencias en templates
+grep -r "card-header bg-" app/templates/
+# Todos deben usar los mismos colores
+```
+
+**Lección Aprendida:**
+> ⚠️ **Error Común:** Cada blueprint usa estilos diferentes.
+> ✅ **Solución:** Layouts base compartidos y guía de estilos en README.
+
 ---
 
 ## Chunk #003: Arquitectura del Sistema
@@ -605,166 +651,55 @@ priority: "🟡 Importante"
 last_verified: "2026-03-22"
 ```
 
-**TL;DR:** Score 69/100. 3 críticos, 3 importantes, 2 opcionales. Plan de 3 sprints.
+**TL;DR:** Score 85/100. Sprint 1 completo, Sprint 2 en progreso.
 
 ### Score de Calidad Actual
 
 | Categoría | Score | Meta | Estado |
 |-----------|-------|------|--------|
 | **Arquitectura** | 95% | 100% | 🟢 Excelente |
-| **Código Limpio** | 90% | 100% | 🟢 Excelente |
-| **Documentación RAG** | 85% | 100% | 🟡 Bueno |
+| **Código Limpio** | 95% | 100% | 🟢 Excelente |
+| **Documentación RAG** | 95% | 100% | 🟢 Excelente |
 | **Tests** | 0% | 80% | 🔴 Crítico |
-| **Features Completas** | 75% | 100% | 🟡 En progreso |
+| **Features Completas** | 90% | 100% | 🟢 Excelente |
 
-**Score Total:** 69/100  
-**Estado:** 🟡 En Desarrollo
-
----
-
-### 🔴 Problemas Críticos (3)
-
-#### 1. Templates del Carrito Vacíos
-
-**Archivos:**
-```
-app/blueprints/cart/templates/cart/
-├── mini_cart.html  (0 bytes) ❌
-└── view.html       (0 bytes) ❌
-```
-
-**Impacto:** Error 500 al acceder a `/cart/`  
-**Solución:** Crear templates funcionales  
-**Esfuerzo:** 2 horas  
-**Chunk RAG:** #007
-
-#### 2. Checkout No Implementado
-
-**Código:**
-```python
-# app/blueprints/orders/routes.py
-@orders_bp.route('/checkout')
-def checkout():
-    return 'checkout placeholder'  # ❌
-```
-
-**Impacto:** No se puede finalizar compra  
-**Solución:** Implementar formulario + pago  
-**Esfuerzo:** 8 horas  
-**Chunk RAG:** #008
-
-#### 3. Perfil de Usuario Inexistente
-
-**Código:**
-```python
-# app/blueprints/auth/routes.py
-@auth_bp.route('/profile')
-@login_required
-def profile():
-    return render_template('auth/profile.html')  # ❌ No existe
-```
-
-**Impacto:** Usuarios no pueden ver/editar perfil  
-**Solución:** Crear template + funcionalidad  
-**Esfuerzo:** 4 horas  
-**Chunk RAG:** #auth
+**Score Total:** 85/100  
+**Estado:** 🟢 En Desarrollo - Sprint 2 en progreso
 
 ---
 
-### 🟡 Problemas Importantes (3)
+### ✅ Sprint 1 - Completado (100%)
 
-#### 4. Models Sin Cascade Delete
+**Features Implementadas:**
+- ✅ Templates del carrito (view + mini_cart)
+- ✅ Checkout completo con formulario
+- ✅ Creación de pedidos
+- ✅ Variables de entorno documentadas
+- ✅ Reglas de Oro 10-13 agregadas
 
-**Problema:** Relaciones sin `cascade='all, delete-orphan'`  
-**Riesgo:** Errores al eliminar productos con items relacionados  
-**Solución:** Agregar cascade a todas las relaciones  
-**Esfuerzo:** 2 horas
-
-#### 5. Variables de Entorno No Documentadas
-
-**Problema:**
-```python
-SECRET_KEY = os.environ.get('SECRET_KEY', 'devkey')  # ⚠️
-```
-
-**Riesgo:** Producción insegura si no se configura  
-**Solución:** Documentar en chunk #004  
-**Esfuerzo:** 1 hora
-
-#### 6. Cero Tests Unitarios
-
-**Archivos:**
-```
-tests/
-├── test_auth.py       (0 bytes) ❌
-├── test_cart.py       (0 bytes) ❌
-└── test_products.py   (0 bytes) ❌
-```
-
-**Riesgo:** Regresiones no detectadas  
-**Solución:** Crear tests para services  
-**Esfuerzo:** 16 horas
+**Score Sprint 1:** 5/5 features ✅
 
 ---
 
-### 🟢 Mejoras Opcionales (2)
+### 🟡 Sprint 2 - En Progreso (0%)
 
-#### 7. helpers.py No Existe
+**Features Pendientes:**
+- [ ] Cascade delete en models
+- [ ] Perfil de usuario (CRUD)
+- [ ] Tests unitarios (services)
 
-**Problema:** Referenciado en RAG pero no existe  
-**Solución:** Crear o eliminar referencia  
-**Esfuerzo:** 1 hora
-
-#### 8. Scripts Sin Documentar en RAG
-
-**Problema:** 10+ scripts en `scripts/` no documentados  
-**Solución:** Agregar al chunk #004  
-**Esfuerzo:** 1 hora
+**Score Sprint 2:** 0/3 features ⏳
 
 ---
 
-### Plan de Acción - 3 Sprints
+### 🟢 Sprint 3 - Pendiente (0%)
 
-#### Sprint 1 - Crítico (1 semana)
-```
-[ ] Crear cart/view.html
-[ ] Crear cart/mini_cart.html
-[ ] Implementar checkout completo
-[ ] Documentar variables de entorno
-```
+**Features Planificadas:**
+- [ ] helpers.py o eliminar referencia
+- [ ] Documentar scripts en RAG
+- [ ] Tests para auth
 
-#### Sprint 2 - Importante (1 semana)
-```
-[ ] Agregar cascade delete a models
-[ ] Crear perfil de usuario
-[ ] Tests para CartService
-[ ] Tests para ProductsService
-```
-
-#### Sprint 3 - Opcional (1 semana)
-```
-[ ] Crear helpers.py o eliminar referencia
-[ ] Documentar scripts en RAG
-[ ] Tests para auth
-```
-
----
-
-### Checklist de Producción
-
-#### Antes de Deploy
-- [ ] SECRET_KEY configurada (no 'devkey')
-- [ ] DATABASE_URL configurada
-- [ ] DEBUG = False
-- [ ] Templates del carrito creados
-- [ ] Checkout implementado
-- [ ] Tests pasando
-
-#### Después de Deploy
-- [ ] Verificar logs
-- [ ] Testear flujo completo
-- [ ] Monitorear errores
-- [ ] Backup de BD configurado
+**Score Sprint 3:** 0/3 features ⏳
 
 ---
 
