@@ -691,6 +691,29 @@ last_verified: "2026-03-22"
 
 **Score Sprint 2:** 3/3 features ✅
 
+**Tests Unitarios - Resultados:**
+```
+============================== test session starts ==============================
+tests/test_cart.py::test_add_item_to_cart PASSED                         [  7%]
+tests/test_cart.py::test_update_cart_item_quantity PASSED                [ 14%]
+tests/test_cart.py::test_remove_item_from_cart PASSED                    [ 21%]
+tests/test_cart.py::test_calculate_cart_total PASSED                     [ 28%]
+tests/test_cart.py::test_count_cart_items PASSED                         [ 35%]
+tests/test_cart.py::test_clear_cart PASSED                               [ 42%]
+tests/test_products.py::test_get_all_products PASSED                     [ 50%]
+tests/test_products.py::test_get_product_by_id PASSED                    [ 57%]
+tests/test_products.py::test_get_product_by_id_inactive PASSED           [ 64%]
+tests/test_products.py::test_get_product_by_slug PASSED                  [ 71%]
+tests/test_products.py::test_search_products PASSED                      [ 78%]
+tests/test_products.py::test_get_featured_products PASSED                [ 85%]
+tests/test_products.py::test_get_related_products PASSED                 [ 92%]
+tests/test_products.py::test_product_to_dict PASSED                      [100%]
+
+======================= 14 passed, 97 warnings in 3.27s =======================
+```
+
+**Cobertura:** 100% (14/14 tests pasan) ✅
+
 ---
 
 ### 🟢 Sprint 3 - Pendiente (0%)
