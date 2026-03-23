@@ -14,7 +14,7 @@ class Category(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     # Relación con productos
-    products = db.relationship('Product', backref='category', lazy='dynamic')
+    products = db.relationship('Product', backref='category', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<Category {self.name}>'
@@ -49,8 +49,8 @@ class Product(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relaciones
-    cart_items = db.relationship('CartItem', backref='product', lazy='dynamic')
-    order_items = db.relationship('OrderItem', backref='product', lazy='dynamic')
+    cart_items = db.relationship('CartItem', backref='product', lazy='dynamic', cascade='all, delete-orphan')
+    order_items = db.relationship('OrderItem', backref='product', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<Product {self.name}>'

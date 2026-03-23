@@ -19,7 +19,7 @@ class User(UserMixin, db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relaciones
-    orders = db.relationship('Order', backref='customer', lazy='dynamic')
+    orders = db.relationship('Order', backref='customer', lazy='dynamic', cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<User {self.username}>'

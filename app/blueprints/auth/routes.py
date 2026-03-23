@@ -104,8 +104,61 @@ def logout():
     return redirect(url_for('products.list'))
 
 
-@auth_bp.route('/profile')
+@auth_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    """Perfil de usuario."""
-    return render_template('auth/profile.html')
+    """Perfil de usuario - Ver y editar."""
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        email = request.form.get('email', '').strip()
+        
+        # Validar email único (si cambió)
+        if email != current_user.email:
+            existing = User.query.filter_by(email=email).first()
+            if existing:
+                flash('El email ya está en uso', 'danger')
+                return redirect(url_for('auth.profile'))
+        
+        # Actualizar usuario
+        current_user.first_name = first_name
+        current_user.last_name = last_name
+        current_user.email = email
+        
+        db.session.commit()
+        flash('Perfil actualizado exitosamente', 'success')
+        return redirect(url_for('auth.profile'))
+    
+    return render_template('auth/profile.html', user=current_user)
+
+
+@auth_bp.route('/profile/change-password', methods=['POST'])
+@login_required
+def change_password():
+    """Cambiar contraseña."""
+    current_password = request.form.get('current_password', '')
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+    
+    # Validar contraseña actual
+    if not check_password_hash(current_user.password_hash, current_password):
+        flash('Contraseña actual incorrecta', 'danger')
+        return redirect(url_for('auth.profile'))
+    
+    # Validar nueva contraseña
+    if len(new_password) < 6:
+        flash('La contraseña debe tener al menos 6 caracteres', 'danger')
+        return redirect(url_for('auth.profile'))
+    
+    # Validar confirmación
+    if new_password != confirm_password:
+        flash('Las contraseñas no coinciden', 'danger')
+        return redirect(url_for('auth.profile'))
+    
+    # Actualizar contraseña
+    current_user.password_hash = generate_password_hash(new_password)
+    db.session.commit()
+    
+    flash('Contraseña actualizada exitosamente', 'success')
+    return redirect(url_for('auth.profile'))
