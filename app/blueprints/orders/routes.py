@@ -60,11 +60,11 @@ def checkout():
         shipping = {
             'name': f'{current_user.first_name or ""} {current_user.last_name or ""}'.strip() or current_user.username,
             'email': current_user.email,
-            'phone': '',
-            'address': '',
-            'city': '',
-            'zip': '',
-            'country': 'España',
+            'phone': current_user.phone or '',
+            'address': current_user.address or '',
+            'city': current_user.city or '',
+            'zip': current_user.zip_code or '',
+            'country': current_user.country or 'España',
             'notes': ''
         }
 
