@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 import logging
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -10,7 +11,12 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object('app.config.DevelopmentConfig')
+    cfg = (
+        'app.config.ProductionConfig'
+        if os.environ.get('FLASK_ENV', '').lower() == 'production'
+        else 'app.config.DevelopmentConfig'
+    )
+    app.config.from_object(cfg)
 
     # Configurar logging
     from app.utils.logger import setup_logging
