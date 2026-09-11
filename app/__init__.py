@@ -40,6 +40,22 @@ def create_app():
         response.headers.setdefault(
             "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
         )
+        # CSP: Bootstrap/Icons/Bootswatch desde jsDelivr; Minty @import Google Fonts.
+        # 'unsafe-inline' en script/style por onclick/onerror y <style>/<script> inline
+        # existentes en plantillas. Sin unsafe-eval.
+        response.headers.setdefault(
+            "Content-Security-Policy",
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+            "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; "
+            "img-src 'self' data: blob:; "
+            "connect-src 'self'; "
+            "object-src 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self'; "
+            "frame-ancestors 'none'",
+        )
         if app.config.get("SESSION_COOKIE_SECURE"):
             response.headers.setdefault(
                 "Strict-Transport-Security",
