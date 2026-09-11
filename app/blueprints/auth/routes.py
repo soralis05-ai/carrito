@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth_bp
 from app import db
 from app.models import User
+from app.utils.login_guard import is_locked, record_failure, record_success
 
 def get_logger():
     """Obtener logger de la app."""
@@ -23,11 +24,19 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         remember = request.form.get('remember', False)
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr or '').split(',')[0].strip() or 'unknown'
+
+        locked, retry_after = is_locked(ip, email)
+        if locked:
+            flash('Demasiados intentos fallidos. Espera unos minutos e inténtalo de nuevo.', 'danger')
+            logger.warning('login rate-limit ip=%s email=%s retry=%s', ip, email, retry_after)
+            return render_template('auth/login.html'), 429
 
         # Buscar usuario por email
         user = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password_hash, password):
+            record_success(ip, email)
             login_user(user, remember=remember)
             logger.info(f'Usuario logueado: {user.username} (email: {user.email})')
             flash('¡Bienvenido!', 'success')
@@ -45,6 +54,10 @@ def login():
             # Si es usuario normal, ir a productos
             return redirect(url_for('products.list'))
         else:
+            delay = record_failure(ip, email)
+            if delay:
+                import time
+                time.sleep(delay)
             logger.warning(f'Intento de login fallido para email: {email}')
             flash('Email o contraseña incorrectos', 'danger')
 
