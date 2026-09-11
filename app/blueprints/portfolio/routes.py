@@ -1,10 +1,12 @@
 import os
 import uuid
 from flask import render_template, redirect, url_for, flash, current_app, request
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 from . import portfolio_bp
 from .forms import PortfolioItemForm, PortfolioInfoForm
 from app.utils.image_processor import process_image, validate_image
+from app.utils.decorators import admin_required
 from app import db
 from app.models.portfolio_info import PortfolioInfo
 from app.models.portfolio_item import PortfolioItem
@@ -25,6 +27,8 @@ def show():
 
 
 @portfolio_bp.route('/admin')
+@login_required
+@admin_required
 def admin_dashboard():
     """Panel de administración del portfolio."""
     portfolio_info = PortfolioInfo.get_or_create()
@@ -36,6 +40,8 @@ def admin_dashboard():
 
 
 @portfolio_bp.route('/admin/info', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def admin_info():
     """Editar información personal del portfolio."""
     form = PortfolioInfoForm()
@@ -68,6 +74,8 @@ def admin_info():
 
 
 @portfolio_bp.route('/admin/items')
+@login_required
+@admin_required
 def admin_items():
     """Listar items del portfolio."""
     portfolio_items = PortfolioItem.query.order_by(PortfolioItem.order).all()
@@ -75,6 +83,8 @@ def admin_items():
 
 
 @portfolio_bp.route('/admin/items/upload', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def admin_upload():
     """Subir nuevo item al portfolio."""
     form = PortfolioItemForm()
@@ -139,6 +149,8 @@ def admin_upload():
 
 
 @portfolio_bp.route('/admin/items/delete/<int:item_id>')
+@login_required
+@admin_required
 def admin_delete(item_id):
     """Eliminar item del portfolio."""
     portfolio_item = PortfolioItem.query.get_or_404(item_id)
@@ -152,6 +164,8 @@ def admin_delete(item_id):
 
 
 @portfolio_bp.route('/admin/items/edit/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def admin_edit(item_id):
     """Editar item del portfolio."""
     portfolio_item = PortfolioItem.query.get_or_404(item_id)
