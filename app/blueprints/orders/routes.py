@@ -25,6 +25,20 @@ def get_logger():
 logger = get_logger()
 
 
+def _puede_ver_pedido(order: Order) -> bool:
+    """Dueño, admin, o pedido recién creado en esta sesión (checkout invitado)."""
+    if current_user.is_authenticated:
+        if getattr(current_user, "is_admin", False):
+            return True
+        if order.user_id is not None and order.user_id == current_user.id:
+            return True
+    allowed = session.get("order_access_ids") or []
+    try:
+        return int(order.id) in {int(x) for x in allowed}
+    except (TypeError, ValueError):
+        return False
+
+
 @orders_bp.route('/checkout', methods=['GET', 'POST'])
 def checkout():
     """Página de checkout para finalizar compra."""
@@ -278,6 +292,9 @@ def checkout():
 def confirmation(order_id):
     """Página de confirmación de pedido."""
     order = Order.query.get_or_404(order_id)
+    if not _puede_ver_pedido(order):
+        flash('No tienes permiso para ver este pedido', 'danger')
+        return redirect(url_for('products.list'))
     return render_template('orders/confirmation.html', order=order)
 
 
@@ -285,13 +302,11 @@ def confirmation(order_id):
 def download_offer(order_id):
     """Descargar oferta en PDF."""
     order = Order.query.get_or_404(order_id)
-    
-    # Verificar que el usuario puede acceder al pedido
-    if current_user.is_authenticated:
-        if order.user_id != current_user.id:
-            flash('No tienes permiso para acceder a este pedido', 'danger')
-            return redirect(url_for('products.list'))
-    
+
+    if not _puede_ver_pedido(order):
+        flash('No tienes permiso para acceder a este pedido', 'danger')
+        return redirect(url_for('products.list'))
+
     # Generar PDF
     pdf_buffer = generate_order_pdf(order)
     
