@@ -28,6 +28,14 @@ class Config:
     # Límite de tamaño para subida de archivos (16 MB)
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB máximo por request
 
+    # Cookies de sesión / remember (endurecimiento)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SAMESITE = 'Lax'
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_TIME_LIMIT = 3600
+
     # Tamaño máximo por imagen (5 MB)
     MAX_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB por imagen
     
@@ -42,10 +50,14 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG')
+    SESSION_COOKIE_SECURE = False
+    REMEMBER_COOKIE_SECURE = False
 
 class ProductionConfig(Config):
     DEBUG = False
     LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    SESSION_COOKIE_SECURE = True
+    REMEMBER_COOKIE_SECURE = True
 
 
     

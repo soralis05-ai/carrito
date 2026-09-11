@@ -80,7 +80,8 @@
                                 <form action="{{ url_for('admin.delete_category', category_id=category.id) }}" 
                                       method="POST" 
                                       class="d-inline"
-                                      onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?{% if category.products.count() > 0 %} Tiene productos asociados.{% endif %}');">
+                                      onsubmit="return confirm('¿Estás seguro de eliminar esta categoría?{% if category.products.count() >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> 0 %} Tiene productos asociados.{% endif %}');">
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </button>

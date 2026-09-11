@@ -98,6 +98,7 @@
                                       method="POST"
                                       class="d-inline"
                                       title="Despublicar (ocultar de la tienda)">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                     <button type="submit" class="btn btn-sm btn-outline-warning"
                                             onclick="return confirm('¿Ocultar este producto de la tienda?');">
                                         <i class="bi bi-eye-slash"></i>
@@ -108,6 +109,7 @@
                                       method="POST"
                                       class="d-inline"
                                       title="Publicar (mostrar en la tienda)">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                     <button type="submit" class="btn btn-sm btn-outline-success"
                                             onclick="return confirm('¿Publicar este producto en la tienda?');">
                                         <i class="bi bi-eye"></i>
@@ -129,6 +131,7 @@
                                       method="POST"
                                       class="d-inline"
                                       onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                     <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </button>

@@ -80,6 +80,7 @@
                                           method="POST"
                                           class="d-inline"
                                           onsubmit="return confirm('¿Eliminar este tipo de material?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                         <button type="submit" class="btn btn-outline-danger" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </button>
