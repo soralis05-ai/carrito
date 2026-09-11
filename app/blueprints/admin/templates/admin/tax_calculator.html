@@ -22,6 +22,7 @@
     </div>
 
     <form method="POST" id="taxCalculatorForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="row">
             <!-- Formulario de entrada -->
             <div class="col-lg-6">

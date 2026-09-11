@@ -1,4 +1,5 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, flash
+from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
@@ -8,6 +9,7 @@ import os
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
@@ -28,6 +30,22 @@ def create_app():
     login_manager.login_message = 'Debes iniciar sesión para acceder a esta página'
     login_manager.login_message_category = 'warning'
     migrate.init_app(app, db)
+    csrf.init_app(app)
+
+    @app.after_request
+    def _security_headers(response):
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault(
+            "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
+        )
+        if app.config.get("SESSION_COOKIE_SECURE"):
+            response.headers.setdefault(
+                "Strict-Transport-Security",
+                "max-age=31536000; includeSubDomains",
+            )
+        return response
 
     # User loader para Flask-Login
     @login_manager.user_loader

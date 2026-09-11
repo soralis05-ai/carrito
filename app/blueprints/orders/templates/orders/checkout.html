@@ -9,6 +9,7 @@
     </h1>
 
     <form method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="row">
             <!-- Formulario de envío -->
             <div class="col-lg-8">

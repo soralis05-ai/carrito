@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, current_app
+from flask import render_template, redirect, url_for, flash, request, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import auth_bp
@@ -37,6 +37,7 @@ def login():
 
         if user and check_password_hash(user.password_hash, password):
             record_success(ip, email)
+            session.clear()  # anti session-fixation
             login_user(user, remember=remember)
             logger.info(f'Usuario logueado: {user.username} (email: {user.email})')
             flash('¡Bienvenido!', 'success')
